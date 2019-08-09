@@ -1,3 +1,15 @@
+##################################################
+#                                                #
+# This is just a copy of                         #
+# pm25_collocated_precision_by_pqao.R            #
+# with no changes other than this added comment  #
+# used for testing GitHub access                 #
+#                                                #
+# this file will be deleted 8/14/2019            #
+#                                                #
+##################################################
+
+
 # Analyze collocated PM2.5 precision data by PQAO for selected methods
 # Current configuration is to analyze data for Thermo 5014i monitors 
 # across multiple PQAOs. Data retrieved from AQS API
