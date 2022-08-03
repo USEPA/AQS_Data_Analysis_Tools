@@ -1,0 +1,520 @@
+---
+title: "Overview of Ozone (O~3~) Air Quality in the United States"
+date: "`r paste('Updated:',format(Sys.time(), '%B %d, %Y'))`"
+output: pdf_document
+geometry: left=0.5in,right=0.5in,top=0.5in,bottom=0.75in
+params:
+  curr.year: 2021
+  nei.year: 2017
+  ghg.year: 2020
+urlcolor: blue
+---
+
+```{r label="00-intro",echo=FALSE,message=FALSE,warning=FALSE}
+## Initialize R workspace
+knitr::opts_chunk$set(cache=TRUE,echo=FALSE,message=FALSE,warning=FALSE,fig.width=7.5)
+options(stringsAsFactors=FALSE,scipen=10,warn=-1)
+library(data.table); library(knitr); library(kableExtra); library(plyr); library(reshape2); library(trend);
+source("C:/Users/bwells01/Documents/R/piechart.r")
+source("C:/Users/bwells01/Documents/Census/shape2014/rmapfuns.r")
+pa <- list(projection='albers',parameters=c(33,45),orientation=c(90,0,-100))
+base.dir <- "C:/Users/bwells01/Documents/NAAQS_AQ/"
+```
+
+## 1. Introduction
+
+|     The overall purpose of this document is to maintain an up-to-date graphical summary of air quality information that supports the review of the National Ambient Air Quality Standards (NAAQS) for ozone (O~3~). In previous reviews of the O~3~ NAAQS, this type of information has generally been included in atmospheric sections of the Integrated Science Assessment (ISA) and Policy Assessment (PA) for O~3~ and related photochemical oxidants. This stand-alone document will either replace or complement the air quality emissions and monitoring data in the atmospheric sections of future O~3~ NAAQS documents, and will be updated at regular intervals as new data becomes available.
+
+|      The content of past NAAQS documents’ atmospheric sections has included major sections on emissions and concentration trends utilizing maps and data from the EPA’s National Emissions Inventory (NEI) and the EPA's Air Quality System (AQS) database. In past NAAQS reviews, this often involved adaptation of figures and tables prepared for other reports, or development of new figures and tables using data analysis and mapping software. Additionally, the release of updated emission inventories and ambient monitoring data may not coincide with the schedule for the development of NAAQS documents. As a result, data access and resources can limit the availability of the most recent information for inclusion in NAAQS documents. 
+
+|      This stand-alone document allows the content to be updated as soon as new data becomes available, rather than pulling from whatever is available at the time of publication. It also ensures that the public will have access to a consistent set of maps and figures for each NAAQS pollutant that are updated on a routine basis, rather than separated by several years following the disparate schedules of the various NAAQS reviews for each pollutant. Moreover, a stand-alone document can be expanded to include new air quality analyses as they are completed, rather than following the timeline for the public release of the NAAQS documents. Finally, this document takes advantage of a more flexible digital format for the routinely prepared maps and trends figures, with an end product that more strongly emphasizes visual presentation of data and reduces the amount text, while also creating a more interactive presentation of the information through the use of external links.
+
+|      This document follows an organization similar to the structure of the atmospheric sections of past O~3~ NAAQS documents. The subsequent sections are as follows: 2. Atmospheric Chemistry; 3. Sources and Emissions of O~3~ Precursors; 4. Ambient Air Monitoring Requirements and Monitoring Networks; 5. Data Handling Conventions and Computations for Determining Whether the Standards are Met; and 6. O~3~ Concentrations Measured at Ambient Air Monitoring Sites Across the U.S. These sections are broad enough in scope to handle changes in what is known about O~3~ atmospheric science as it advances but specific enough that NAAQS-relevant information will be able to be quickly retrieved by users of the document.
+
+## 2. Atmospheric Chemistry
+
+|      O~3~ is one of a group of photochemical oxidants formed in the troposphere[^1] by photochemical reactions of precursor gases in the presence of sunlight and is generally not directly emitted from specific sources[^2]. Tropospheric O~3~ and other oxidants, such as peroxyacetyl nitrate (PAN) and hydrogen peroxide, form in polluted areas by atmospheric reactions involving two main classes of precursor pollutants: volatile organic compounds (VOCs) and nitrogen oxides (NO~X~). This occurs especially during the summer, as a result of the photolysis of primary pollutants such as nitrogen dioxide (NO~2~). The reaction is disrupted by the presence of VOCs, the radical that results from methane (CH~4~) oxidation; or a reaction between carbon monoxide (CO) and the hydroxyl radical (OH) in the atmosphere. Thus, the substances NO~X~, VOC, CH~4~ and CO are considered to be the primary precursors of tropospheric O~3~. The formation of O~3~, other oxidants and oxidation products from these precursors is a complex, nonlinear function of many factors including (1) the intensity and spectral distribution of sunlight; (2) atmospheric mixing; (3) concentrations of precursors in the ambient air and the rates of chemical reactions of these precursors; and (4) processing on cloud and aerosol particles.
+
+|      O~3~ is present not only in polluted urban atmospheres, but throughout the troposphere, even in remote areas of the globe. The same basic processes involving photochemical reactions of NO~X~, VOCs, and CO contribute to O~3~ formation throughout the troposphere. These processes also lead to the formation of other photochemical products, such as PAN, HNO~3~, and H~2~SO~4~, and to other gaseous compounds, such as HCHO and other carbonyl compounds, as well as a number of particulate compounds. 
+
+|      Prior to 1979, the indicator for the NAAQS for photochemical oxidants was total photochemical oxidants. Early ambient air monitoring indicated similarities between O~3~ measurements and the photochemical oxidant measurements, as well as reduced precision and accuracy of the latter. To address these issues, the EPA established O~3~ as the indicator for the NAAQS for photochemical oxidants in 1979, and it is currently the only photochemical oxidant other than NO~2~ that is routinely monitored in a national ambient air monitoring network.
+
+|      Rather than varying directly with emissions of its precursors, O~3~ changes in a nonlinear fashion with the concentrations of its precursors. Emissions of NO~X~ lead to both the formation and destruction of O~3~, depending on the local quantities of NO~X~, VOCs, radicals, and sunlight. O~3~ chemistry is often described in terms of which precursors most directly impact formation rates. A NO~X~-limited regime indicates that O~3~ concentrations will decrease in response to decreases in ambient NO~X~ concentrations and vice-versa. These conditions tend to occur when NO~X~ concentrations are generally low compared to VOC concentrations and during warm, sunny conditions when NO~X~ photochemistry is relatively fast. NO~X~-limited conditions are more common during daylight hours, in the summertime, in suburban and rural areas, and in portions of the country with high biogenic VOC emissions like the Southeast. In contrast, NO~X~-saturated conditions (also referred to as VOC-limited or radical-limited) indicate that O~3~ will increase as a result of NO~X~ reductions but will decrease as a result of VOC reductions. NO~x~-saturated conditions occur at times and locations with lower levels of available sunlight, resulting in slower photochemical formation of O~3~, and when NO~X~ concentrations are in excess compared to VOC concentrations. NO~X~-saturated conditions are more common during nighttime hours, in the wintertime, and in densely populated urban areas or industrial plumes. These varied relationships between precursor emissions and O~3~ chemistry result in localized areas in which O~3~ concentrations are suppressed compared to surrounding areas, but which contain NO~2~ that contributes to subsequent O~3~ formation further downwind. Consequently, O~3~ response to reductions in NO~X~ emissions is complex and may include decreases in O~3~ concentrations at some times and locations and increases in O~3~ concentrations at other times and locations. Over the past decade, there have been substantial decreases in NO~X~ emissions in the U.S. and many locations have transitioned from NO~X~-saturated to NO~X~-limited during times of year that are conducive to O~3~ formation (generally summer). As these NO~X~ emissions reductions have occurred, lower O~3~ concentrations have generally increased while the higher O~3~ concentrations have generally decreased, resulting in a compressed O~3~ distribution, relative to historical conditions.
+
+|      As mentioned above, the formation of O~3~ from precursor emissions is also affected by meteorological parameters such as the intensity of sunlight and atmospheric mixing. Major episodes of high O~3~ concentrations in the eastern U.S. are often associated with slow-moving high-pressure systems which can persist for several days. High pressure systems during the warmer seasons are associated with the sinking of air, resulting in warm, generally cloudless skies, with light winds. The sinking of air results in the development of stable conditions near the surface which inhibit or reduce the vertical mixing of O~3~ precursors, concentrating them near the surface. Photochemical activity involving these precursors is enhanced because of higher temperatures and the availability of sunlight during the warmer seasons. In the eastern U.S., concentrations of O~3~ and other photochemical oxidants are determined by meteorological and chemical processes extending typically over areas of several hundred thousand square kilometers. Therefore, O~3~ episodes are often regarded as regional in nature, although more localized episodes often occur in some areas, largely the result of local pollution sources during summer. In addition, in some parts of the U.S. (e.g., Los Angeles, CA), mountain barriers limit O~3~ dispersion and result in a higher frequency and duration of days with elevated O~3~ concentrations.
+
+|      More recently, high O~3~ concentrations of up to 150 parts per billion (ppb) have been measured during the wintertime in two western U.S. mountain basins. Wintertime mountain basin O~3~ episodes occur on cold winter days with low wind speeds, clear skies, substantial snow cover, extremely shallow boundary layers driven by strong temperature inversions, and substantial precursor emissions activity from the oil and gas sector. The results of recent modeling studies suggest that photolysis of VOCs provides the source of reactive chemical species (radicals) needed to initiate the chemistry driving these wintertime O~3~ episodes. This mechanism is markedly different from the chemistry driving summertime O~3~ formation, which is initiated with the photolysis of NO~2~ followed by the formation of the OH radicals.
+
+|      O~3~ concentrations in a region are affected both by local formation and by transport of O~3~ and its precursors from upwind areas. O~3~ transport occurs on many spatial scales including local transport within urban areas, regional transport over large regions of the U.S., and long-range transport which may also include international transport. In addition, O~3~ can be transferred into the troposphere from the stratosphere, which is rich in naturally occurring O~3~, through stratosphere-troposphere exchange (STE). These intrusions usually occur behind cold fronts, bringing stratospheric air with them and typically affect O~3~ concentrations in higher elevation areas (e.g., above 1500 m) more than areas at lower elevations.
+
+**Sources:** [Integrated Science Assessment for Ozone and Related Photochemical Oxidants, February 2013 (Chapter 3)](http://cfpub.epa.gov/ncea/isa/recordisplay.cfm?deid=247492)
+
+[Integrated Science Assessment for Ozone and Related Photochemical Oxidants, April 2020 (Appendix 1)](https://cfpub.epa.gov/ncea/isa/recordisplay.cfm?deid=348522)
+
+[Policy Assessment for the Review of the Ozone NAAQS, May 2020 (Chapter 2)](https://www.epa.gov/sites/default/files/2020-05/documents/o3-final_pa-05-29-20compressed.pdf)
+
+## 3. Sources and Emissions of O~3~ Precursors
+
+|      Sources of emissions of O~3~ precursor compounds can be divided into anthropogenic and natural source categories, with natural sources further divided into emissions from biological processes of living organisms (e.g., plants, microbes, and animals) and emissions from chemical or physical processes (e.g., biomass burning, lightning, and geogenic sources). Anthropogenic emissions associated with combustion processes, including mobile sources and power plants, account for the majority of U.S. NO~X~ and CO emissions (Figure 1). Emissions of these chemicals from mobile sources have declined appreciably since 2002 (Figure 2). Anthropogenic sources are also important for VOC emissions, though in some locations and times of the year (e.g., southeastern states during summer) the majority of VOC emissions come from vegetation[^3]. In practice, the distinction between natural and anthropogenic sources is often unclear, as human activities directly or indirectly affect emissions from what would have been considered natural sources during the preindustrial era. Thus, precursor emissions from plants, animals, and wildfires could be considered either natural or anthropogenic, depending on whether emissions result from agricultural practices, forest management practices, lightning strikes, or other types of events. Additional challenges are presented because much O~3~ results from reactions between anthropogenic and natural precursors.
+
+|      The [National Emissions Inventory (NEI)](https://www.epa.gov/air-emissions-inventories) is a comprehensive and detailed estimate of air emissions of criteria pollutants, precursors to criteria pollutants, and hazardous air pollutants from air emissions sources. The NEI is released every three years based primarily upon data provided by State, Local, and Tribal air agencies for sources in their jurisdictions and supplemented by data developed by the US EPA. The NEI is built using the EPA’s Emissions Inventory System (EIS) first to collect the data from State, Local, and Tribal air agencies and then to blend that data with other data sources.
+
+|      Accuracy in an emissions inventory reflects the extent to which the inventory represents the actual emissions that occurred. Anthropogenic emissions of air pollutants result from a variety of sources such as power plants, industrial sources, motor vehicles and agriculture. The emissions from any individual source typically varies in both time and space. For the thousands of sources that make up the NEI, there is uncertainty in one or both of these factors. For some sources, such as power plants, direct emission measurements enable the emission factors derived from them to be more certain than sources without such direct measurements. However, it is not practically possible to directly monitor each of the emission sources individually and, therefore, emission inventories necessarily contain assumptions, interpolation and extrapolation from a limited set of sample data.
+
+```{r label="01-emissions-piecharts",fig.height=6}
+## Set parameters for emissions piecharts
+curr.year <- params$curr.year; ghg.year <- params$ghg.year; nei.year <- params$nei.year;
+ch4.file <- paste(base.dir,"data/",curr.year,"/CH4_sector_data_1990_",ghg.year,".csv",sep="")
+nei.file <- paste(base.dir,"data/",curr.year,"/NEI",nei.year,"_allpoll_bycounty_sector.Rdata",sep="")
+pie.colors <- c("lightgreen","lightpink","lightblue","wheat")
+
+## Build data.frame for CO piechart
+load(nei.file)
+co.df <- data.frame(sector=c("Biogenics","Wildfires","Other Fires","Fuel Comb","Industrial",
+  "Onroad","Non-Road","Other"),emis=NA)
+co.df$emis[1] <- sector.data$CO[grep("Biogenics",sector.data$sector)]
+co.df$emis[2] <- sector.data$CO[grep("Wildfires",sector.data$sector)]
+co.df$emis[3] <- sum(sector.data$CO[c(grep("Fires - Ag",sector.data$sector),
+  grep("Fires - Pre",sector.data$sector))])
+co.df$emis[4] <- sum(sector.data$CO[grep("Fuel Comb",sector.data$sector)])
+co.df$emis[5] <- sum(sector.data$CO[grep("Industrial Processes",sector.data$sector)])
+co.df$emis[6] <- sum(sector.data$CO[grep("Mobile - On-Road",sector.data$sector)])
+co.df$emis[7] <- sum(sector.data$CO[setdiff(grep("Mobile -",sector.data$sector),
+  grep("On-Road",sector.data$sector))])
+co.df$emis[8] <- sum(sector.data$CO,na.rm=TRUE)-sum(co.df$emis[1:7])
+co.df$pct <- 100*co.df$emis/sum(co.df$emis)
+co.labels <- paste(c("Biogenics","Wildfires","Agricultural &\nPrescribed\nFires",
+  "Stationary Fuel\n Combustion","Industrial\nProcesses","Highway Vehicles",
+  "Non-Road\nMobile","Other")," ",round(co.df$pct),"%",sep="")
+co.title <- paste("C) CO (",format(round(sum(co.df$emis/1000)),big.mark=",")," kTon/yr)",sep="")
+
+## Build data.frame for NOx piechart
+nox.df <- data.frame(sector=c("Biogenics","Fires","Fuel Comb","Industrial",
+  "Onroad","Non-Road","Other"),emis=NA)
+nox.df$emis[1] <- sector.data$NOx[grep("Biogenics",sector.data$sector)]
+nox.df$emis[2] <- sum(sector.data$NOx[grep("Fires -",sector.data$sector)])
+nox.df$emis[3] <- sum(sector.data$NOx[grep("Fuel Comb",sector.data$sector)])
+nox.df$emis[4] <- sum(sector.data$NOx[grep("Industrial Processes",sector.data$sector)])
+nox.df$emis[5] <- sum(sector.data$NOx[grep("Mobile - On-Road",sector.data$sector)])
+nox.df$emis[6] <- sum(sector.data$NOx[setdiff(grep("Mobile -",sector.data$sector),
+  grep("On-Road",sector.data$sector))])
+nox.df$emis[7] <- sum(sector.data$NOx,na.rm=TRUE)-sum(nox.df$emis[1:6])
+nox.df$pct <- 100*nox.df$emis/sum(nox.df$emis)
+nox.labels <- paste(c("Biogenics","All Fires","Stationary Fuel Combustion","Industrial\nProcesses",
+  "Highway\nVehicles","Non-Road\nMobile","Other")," ",round(nox.df$pct),"%",sep="")
+nox.title <- paste("A) NOx (",format(round(sum(nox.df$emis/1000)),big.mark=",")," kTon/yr)",sep="")
+
+## Build data.frame for VOC piechart
+voc.df <- data.frame(sector=c("Biogenics","Wildfires","Other Fires","Solvents","Industrial",
+  "Mobile","Other"),emis=NA)
+voc.df$emis[1] <- sector.data$VOC[grep("Biogenics",sector.data$sector)]
+voc.df$emis[2] <- sector.data$VOC[grep("Wildfires",sector.data$sector)]
+voc.df$emis[3] <- sum(sector.data$VOC[c(grep("Fires - Ag",sector.data$sector),
+  grep("Fires - Pre",sector.data$sector))])
+voc.df$emis[4] <- sum(sector.data$VOC[grep("Solvent -",sector.data$sector)])
+voc.df$emis[5] <- sum(sector.data$VOC[grep("Industrial Processes",sector.data$sector)])
+voc.df$emis[6] <- sum(sector.data$VOC[grep("Mobile - ",sector.data$sector)])
+voc.df$emis[7] <- sum(sector.data$VOC,na.rm=TRUE)-sum(voc.df$emis[1:6])
+voc.df$pct <- 100*voc.df$emis/sum(voc.df$emis)
+voc.labels <- paste(c("Biogenics","Wildfires","Agricultural &\nPrescribed Fires",
+  "Solvent Utilization","Industrial\nProcesses","Mobile\nSources","Other"),
+  " ",round(voc.df$pct),"%",sep="")
+voc.title <- paste("B) VOCs (",format(round(sum(voc.df$emis/1000)),big.mark=",")," kTon/yr)",sep="")
+
+## Build data.frame for CH4 piechart
+ch4.data <- read.csv(ch4.file)
+vals <- ch4.data[,ncol(ch4.data)]*44092 ## Convert to U.S. tons
+ch4.df <- data.frame(sector=c("Energy","Agriculture","Waste","Other"),emis=NA)
+ch4.df$emis[1:3] <- vals[1:3]; ch4.df$emis[4] <- sum(vals[4:5]);
+ch4.df$pct <- 100*ch4.df$emis/sum(ch4.df$emis)
+ch4.labels <- paste(c("Energy/Fossil Fuels","Agriculture","Waste Disposal/\nLandfills","Other"),
+  " ",round(ch4.df$pct),"%",sep="")
+ch4.title <- paste("D) CH4 (",format(round(sum(ch4.df$emis/1000)),big.mark=",")," kTon/yr)",sep="")
+
+## Figure 1: Emissions pie charts
+par(mfrow=c(2,2),mar=c(1,5,1,5),bg="gray95")
+pie.chart(x=nox.df$emis,labels=nox.labels,main=nox.title,col=pie.colors,radius=1,cex=0.75)
+lines(x=c(1.94,1.94),y=c(-2,2),xpd=TRUE)
+lines(x=c(-2,2),y=c(-1.5,-1.5),xpd=TRUE)
+pie.chart(x=voc.df$emis,labels=voc.labels,main=voc.title,col=pie.colors,radius=1,cex=0.75)
+lines(x=c(-2,2),y=c(-1.5,-1.5),xpd=TRUE)
+pie.chart(x=co.df$emis,labels=co.labels,main=co.title,col=pie.colors,radius=1,cex=0.75)
+lines(x=c(1.94,1.94),y=c(-2,2),xpd=TRUE)
+pie.chart(x=ch4.df$emis,labels=ch4.labels,main=ch4.title,col=pie.colors,radius=1,cex=0.75)
+```
+**Figure 1.** U.S. O~3~ precursor emissions by sector: A) NO~X~; B) CO; C) VOCs; D) CH~4~. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data) for panels A)-C), [Inventory of U.S. Greenhouse Gas Emissions and Sinks: 1990-`r params$ghg.year`  ](https://www.epa.gov/ghgemissions/inventory-us-greenhouse-gas-emissions-and-sinks-1990-2019) for panel D).
+
+```{r label="02-emissions-trends",fig.height=7}
+## Set parameters for emissions trends figure
+trends.file <- paste(base.dir,"data/",curr.year,"/emissions_trends_2002_",curr.year,".Rdata",sep="")
+trend.years <- c(2002:curr.year); ny <- length(trend.years);
+ghg.years <- c(2002:ghg.year); ny2 <- length(ghg.years);
+trend.border <- c("chocolate","gray50","red","green4","blue")
+trend.colors <- c("wheat","gray90","lightpink","lightgreen","lightblue")
+source.cat <- c("HIGHWAY VEHICLES","OFF-HIGHWAY","Stationary fuel combustion",
+  "Industrial and other processes","Miscellaneous without wildfires")
+
+## Pull in emissions trends data for each pollutant
+load(trends.file)
+co.trends <- trends.data$CO[match(source.cat,trends.data$CO$source),
+  c("source",as.character(2002:curr.year))]
+co.totals <- apply(co.trends[c(nrow(co.trends):1),-1],2,cumsum)
+nox.trends <- trends.data$NOx[match(source.cat,trends.data$NOx$source),
+  c("source",as.character(2002:curr.year))]
+nox.totals <- apply(nox.trends[c(nrow(nox.trends):1),-1],2,cumsum)
+voc.trends <- trends.data$VOC[match(source.cat,trends.data$VOC$source),
+  c("source",as.character(2002:curr.year))]
+voc.totals <- apply(voc.trends[c(nrow(voc.trends):1),-1],2,cumsum)
+ch4.data <- read.csv(ch4.file)
+ch4.data[,-1] <- ch4.data[,-1]*44.092 ## Convert from millions of metric tons CO2 to U.S. tons
+colnames(ch4.data) <- c("source",1990:ghg.year)
+ch4.trends <- rbind(ch4.data[1:3,c("source",as.character(2002:ghg.year))],
+                    c(NA,apply(ch4.data[4:5,as.character(2002:ghg.year)],2,sum)))
+ch4.totals <- apply(ch4.trends[c(nrow(ch4.trends):1),-1],2,cumsum)
+co.nox.voc <- c("Highway Vehicles","Non-Road Mobile","Stationary Fuel Combustion",
+  "Industrial and Other Processes","Other Anthropogenic Sources")
+ch4.labels <- c("Energy/Fossil Fuels","Agriculture","Waste Disposal/Landfills",
+  "Other Anthropogenic Sources")
+
+## Create four panel trends figure with bottom legend panel
+layout(mat=matrix(c(1,3,5,2,4,6),nrow=3,ncol=2),widths=c(0.5,0.5),heights=c(0.42,0.42,0.16))
+par(mar=c(5,5,1,1),mgp=c(3.5,0.7,0),las=2,bg="gray95")
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xaxs='i',xlim=c(2002,curr.year),
+  xlab="Inventory Year",yaxs='i',ylim=c(0,24000),ylab="NOx Emissions (kTons/year)")
+axis(side=1,at=seq(2002,curr.year,3),labels=seq(2002,curr.year,3))
+axis(side=2,at=seq(0,24000,4000),labels=seq(0,24000,4000))
+polygon(x=c(2002,rep(curr.year,2),2002),y=c(0,0,24000,24000),col="gray80")
+abline(h=seq(2000,22000,2000),v=trend.years,col="white")
+text(x=curr.year,y=22000,labels="A) NOx",pos=2,cex=2)
+polygon(x=c(trend.years,rev(trend.years)),y=c(nox.totals[1,],rep(0,ny)),
+  col=trend.colors[1],border=trend.colors[1])
+for (i in 2:nrow(nox.trends)) {
+  polygon(x=c(trend.years,rev(trend.years)),y=c(nox.totals[i,],rev(nox.totals[(i-1),])),
+    col=trend.colors[i],border=trend.colors[i])
+}
+for (i in 1:nrow(nox.trends)) { lines(x=trend.years,y=nox.totals[i,],col=trend.border[i],lwd=2) }
+box(); par(mar=c(5,5,1,1),mgp=c(3.5,0.7,0),las=2)
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xaxs='i',xlim=c(2002,curr.year),
+  xlab="Inventory Year",yaxs='i',ylim=c(0,24000),ylab="VOC Emissions (kTons/year)")
+axis(side=1,at=seq(2002,curr.year,3),labels=seq(2002,curr.year,3))
+axis(side=2,at=seq(0,24000,4000),labels=seq(0,24000,4000))
+polygon(x=c(2002,rep(curr.year,2),2002),y=c(0,0,24000,24000),col="gray80")
+abline(h=seq(2000,22000,2000),v=trend.years,col="white")
+text(x=curr.year,y=22000,labels="B) VOC",pos=2,cex=2)
+polygon(x=c(trend.years,rev(trend.years)),y=c(voc.totals[1,],rep(0,ny)),
+  col=trend.colors[1],border=trend.colors[1])
+for (i in 2:nrow(voc.trends)) {
+  polygon(x=c(trend.years,rev(trend.years)),y=c(voc.totals[i,],rev(voc.totals[(i-1),])),
+    col=trend.colors[i],border=trend.colors[i])
+}
+for (i in 1:nrow(voc.trends)) { lines(x=trend.years,y=voc.totals[i,],col=trend.border[i],lwd=2) }
+box(); par(mar=c(5,5,1,1),mgp=c(3.5,0.7,0),las=2)
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xaxs='i',xlim=c(2002,curr.year),
+  xlab="Inventory Year",yaxs='i',ylim=c(0,90000),ylab="CO Emissions (kTons/year)")
+axis(side=1,at=seq(2002,curr.year,3),labels=seq(2002,curr.year,3))
+axis(side=2,at=seq(0,90000,10000),labels=seq(0,90000,10000))
+polygon(x=c(2002,rep(curr.year,2),2002),y=c(0,0,90000,90000),col="gray80")
+abline(h=seq(5000,85000,5000),v=trend.years,col="white")
+text(x=curr.year,y=82500,labels="C) CO",pos=2,cex=2)
+polygon(x=c(trend.years,rev(trend.years)),y=c(co.totals[1,],rep(0,ny)),
+  col=trend.colors[1],border=trend.colors[1])
+for (i in 2:nrow(co.trends)) {
+  polygon(x=c(trend.years,rev(trend.years)),y=c(co.totals[i,],rev(co.totals[(i-1),])),
+    col=trend.colors[i],border=trend.colors[i])
+}
+for (i in 1:nrow(co.trends)) { lines(x=trend.years,y=co.totals[i,],col=trend.border[i],lwd=2) }
+box();  par(mar=c(5,5,1,1),mgp=c(3.5,0.7,0),las=2)
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xaxs='i',xlim=c(2002,curr.year),
+  xlab="Inventory Year",yaxs='i',ylim=c(0,40000),ylab="CH4 Emissions (kTons/year)")
+axis(side=1,at=seq(2002,curr.year,3),labels=seq(2002,curr.year,3))
+axis(side=2,at=seq(0,40000,5000),labels=seq(0,40000,5000))
+polygon(x=c(2002,rep(curr.year,2),2002),y=c(0,0,40000,40000),col="gray80")
+abline(h=seq(2500,37500,2500),v=trend.years,col="white")
+text(x=curr.year,y=36600,labels="D) CH4",pos=2,cex=2)
+polygon(x=c(ghg.years,rev(ghg.years)),y=c(ch4.totals[1,],rep(0,ny2)),
+  col=trend.colors[1],border=trend.colors[1])
+for (i in 2:nrow(ch4.trends)) {
+  polygon(x=c(ghg.years,rev(ghg.years)),y=c(ch4.totals[i,],rev(ch4.totals[(i-1),])),
+    col=trend.colors[i],border=trend.colors[i])
+}
+for (i in 1:nrow(ch4.trends)) { lines(x=ghg.years,y=ch4.totals[i,],col=trend.border[i],lwd=2) }
+box(); par(mar=c(0,0,2,0));
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1),main="Legend: CO, NOx, VOC")
+legend("top",legend=co.nox.voc,fill=rev(trend.colors),border=rev(trend.border),bg="gray80")
+par(mar=c(0,0,2,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1),main="Legend: CH4")
+legend("top",legend=ch4.labels,fill=trend.colors[4:1],border=trend.border[4:1],bg="gray80")
+```
+**Figure 2.**	U.S. anthropogenic O~3~ precursor emissions trends for: A) NO~X~; B) CO; C) VOCs; and D) CH~4~. **Source:** [EPA’s Air Pollutant Emissions Trends Data ](https://www.epa.gov/air-emissions-inventories/air-pollutant-emissions-trends-data) for panels A)-C), [Inventory of U.S. Greenhouse Gas Emissions and Sinks: 1990-`r params$ghg.year` ](https://www.epa.gov/ghgemissions/inventory-us-greenhouse-gas-emissions-and-sinks-1990-2019) for panel D). 
+
+|      Figure 3, Figure 4 and Figure 5 show county-level estimates of U.S. emissions densities (in tons/year/mi^2^) for CO, NO~X~, and VOCs, respectively. In general, CO and NO~x~ emissions tend to be highest in urban areas which typically have the most anthropogenic sources, however, CO emissions may be higher in some rural areas due to fires, and similarly NO~X~ emissions may be higher in some rural areas due to sources such as electricity generation, oil and gas extraction, and traffic along major highways. While there are some significant anthropogenic sources of VOC emissions in urban areas, in rural areas the vast majority of VOC emissions come from plants and trees (biogenics), particularly in the southeastern U.S. In other areas of the U.S., such as the Great Plains region and parts of the inter-mountain west, areas with higher levels of VOC emissions are largely due to oil and gas extraction.
+
+|      It should be noted that O~3~ levels in a given area are impacted by both local emissions that form O~3~ in the area as well as remote emissions that form O~3~ which is then transported into the area. Biogenic VOC emissions that lead to O~3~ formation may vary greatly depending on the type and amount of vegetation, which is generally much lower in urban areas than in rural areas. However, biogenic VOC emissions that are upwind of an urban area can have a significant impact on urban O~3~ levels. Thus, while the county-level maps shown in Figure 3, Figure 4 and Figure 5 illustrate the variability in precursor emissions in the U.S., it is not sufficient to look only at the patterns in local emissions when considering the impact on O~3~ concentrations.
+
+```{r label="03-emissions-map-CO"}
+## Set parameters for emissions density maps
+map.colors <- c("#EFF3FF","#BDD7E7","#6BAED6","#3182BD","#08519C")
+
+## CO county-level emissions density map
+load(nei.file)
+breaks <- c(10,20,50,100)
+density <- county.data$CO/county.data$area_km*2.59
+county.data$color <- assign.colors(density,discrete=TRUE,breaks=breaks,palette=map.colors)
+N <- table(cut(density,breaks=c(0,breaks,Inf),include.lowest=TRUE))
+map.legend <- paste(c(0,breaks),"-",c((breaks-0.1),round(max(density)))," (",N,")",sep="")
+map.title <- "Carbon Monoxide Emissions Density in tons/year/mi^2 (# Counties)"
+layout(matrix(c(1,2),2,1),widths=1,heights=c(0.9,0.1))
+par(bg="gray95")
+draw.map("state",proj.args=pa)
+for (i in 1:nrow(county.data)) {
+  draw.map("county",county.data$fips[i],add=TRUE,proj.args=pa,col=county.data$color[i],lwd=0.5)
+}
+draw.map("state",proj.args=pa,add=TRUE)
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("top",legend=map.legend,ncol=5,fill=map.colors,title=map.title,cex=0.75,bty='n')
+```
+**Figure 3.**	U.S. county-level CO emissions density estimates in tons/year/mi^2^. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data)
+
+```{r label="04-emissions-map-NOx"}
+## NOx county-level emissions density map
+load(nei.file)
+breaks <- c(2,5,10,20)
+density <- county.data$NOx/county.data$area_km*2.59
+county.data$color <- assign.colors(density,discrete=TRUE,breaks=breaks,palette=map.colors)
+N <- table(cut(density,breaks=c(0,breaks,Inf),include.lowest=TRUE))
+map.legend <- paste(c(0,breaks),"-",c((breaks-0.1),round(max(density)))," (",N,")",sep="")
+map.title <- "Nitrogen Oxides Emissions Density in tons/year/mi^2 (# Counties)"
+layout(matrix(c(1,2),2,1),widths=1,heights=c(0.9,0.1))
+par(bg="gray95")
+draw.map("state",proj.args=pa)
+for (i in 1:nrow(county.data)) {
+  draw.map("county",county.data$fips[i],add=TRUE,proj.args=pa,col=county.data$color[i],lwd=0.5)
+}
+draw.map("state",proj.args=pa,add=TRUE)
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("top",legend=map.legend,ncol=5,fill=map.colors,title=map.title,cex=0.75,bty='n')
+```
+**Figure 4.**	U.S. county-level NO~x~ emissions density estimates in tons/year/mi^2^. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data)
+
+```{r label="05-emissions-map-VOC"}
+## VOC county-level emissions density map
+load(nei.file)
+breaks <- c(5,10,20,50)
+density <- county.data$VOC/county.data$area_km*2.59
+county.data$color <- assign.colors(density,discrete=TRUE,breaks=breaks,palette=map.colors)
+N <- table(cut(density,breaks=c(0,breaks,Inf),include.lowest=TRUE))
+map.legend <- paste(c(0,breaks),"-",c((breaks-0.1),round(max(density)))," (",N,")",sep="")
+map.title <- "Volatile Organic Compounds Emissions Density in tons/year/mi^2 (# Counties)"
+layout(matrix(c(1,2),2,1),widths=1,heights=c(0.9,0.1))
+par(bg="gray95")
+draw.map("state",proj.args=pa)
+for (i in 1:nrow(county.data)) {
+  draw.map("county",county.data$fips[i],add=TRUE,proj.args=pa,col=county.data$color[i],lwd=0.5)
+}
+draw.map("state",proj.args=pa,add=TRUE)
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("top",legend=map.legend,ncol=5,fill=map.colors,title=map.title,cex=0.75,bty='n')
+```
+**Figure 5.**	U.S. county-level VOC emissions density estimates in tons/year/mi^2^. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data)
+
+## 4. Ambient Air Monitoring Requirements and Monitoring Networks
+
+|      State and local environmental agencies operate O~3~ monitors at state or local air monitoring stations (SLAMS) as part of the SLAMS network. The requirements for the SLAMS network depend on the population and most recent O~3~ design values[^4] in the area. The minimum number of O~3~ monitors required in a metropolitan statistical area (MSA) ranges from zero for areas with a population less than 350,000 and no recent history of an O~3~ design value greater than 85 percent of the level of the standard, to four for areas with a population greater than 10 million and an O~3~ design value greater than 85 percent of the standard level.[^5] Within an O~3~ monitoring network, at least one site for each MSA must be designed to record the maximum concentration for that particular metropolitan area. Siting criteria for SLAMS includes horizontal and vertical inlet probe placement; spacing from minor sources, obstructions, trees, and roadways; inlet probe material; and sample residence times.[^6]  Adherence to these criteria ensures uniform collection and comparability of O~3~ data. Since the highest O~3~ concentrations tend to be associated with a particular season for various locations, the EPA requires O~3~ monitoring during specific O~3~ monitoring seasons (shown in Figure 6) which vary by state from five months (May to September in Oregon and Washington) to all twelve months (in 11 states), with the most common season being March to October (in 27 states).[^7]
+
+![O3 Monitoring Seasons](`r paste(base.dir,"docs/O3 seasons map.jpg",sep="")`)
+**Figure 6:** Current O~3~ monitoring seasons in the U.S. Numbers in each state indicate the months of the year the state is required to monitor for O~3~ (e.g., 3-10 means O~3~ monitoring is required from March through October).
+
+|      Most of the state, local, and tribal air monitoring stations that report data to the EPA use ultraviolet Federal Equivalent Methods (FEMs). The Federal Reference Method (FRM) was revised in 2015 to include a new chemiluminescence by nitric oxide (NO-CL) method. The previous ethylene (ET-CL) method, while still included in the CFR as an acceptable method, is no longer used due to lack of availability and safety concerns with ethylene.[^8] The NO-CL method is beginning to be implemented in the SLAMS network.
+
+|      Ambient air quality data and associated quality assurance (QA) data are reported to the EPA via the [Air Quality System (AQS)](https://www.epa.gov/aqs). Data are reported quarterly and must be submitted to AQS within 90 days after the end of the quarterly reporting period. Each monitoring agency is required to certify data that is submitted to AQS from the previous year. The data are certified, taking into consideration any QA findings, and a data certification letter is sent to the EPA Regional Administrator. Data must be certified by May 1st of the following year. Data collected by FRM or FEM monitors that meet the QA requirements must be certified.[^9] To provide decision makers with an assessment of data quality, the EPA’s QA group derives estimates of both precision and bias for O~3~ and the other gaseous criteria pollutants from quality control (QC) checks using calibration gas, performed at each site by the monitoring agency. The data quality goal for precision and bias is 7 percent.[^10]
+
+```{r label="06-load-monitors"}
+## Load monitor metadata to get numbers for this section
+load(paste(base.dir,"data/",curr.year,"/monitors_",curr.year-2,"_",curr.year,".Rdata",sep=""))
+o3.sites <- subset(o3.monitors,!duplicated(substr(id,1,9)))
+```
+
+|      In `r params$curr.year`, there were over `r format(100*floor(nrow(o3.monitors)/100),big.mark=",")` federal, state, local, and tribal ambient air monitors reporting O~3~ concentrations to the EPA. Figure 7 shows the locations of such monitoring sites that reported data to the EPA at any time during the `r params$curr.year-2`-`r params$curr.year` period. About 80% of this network are SLAMS monitors operated by state and local governments to meet regulatory requirements and provide air quality information to public health agencies; these sites are largely focused on urban and suburban areas.
+
+|      Two important subsets of SLAMS sites separately make up the [National Core (NCore)](https://www.epa.gov/amtic/ncore-monitoring-network) multi-pollutant monitoring network and the [Photochemical Assessment Monitoring Stations (PAMS)](https://www.epa.gov/amtic/photochemical-assessment-monitoring-stations-pams) network. Each state is required to have at least one NCore station, and O~3~ monitors at NCore sites are required to operate year-round. At each NCore site located in a MSA with a population of 1 million or more (based on the most recent census), a PAMS network site is required.[^11] At a minimum, monitoring sites in the PAMS network are required to measure certain O~3~ precursors during the months of June, July and August, although some precursor monitoring may be required for longer periods of time to improve the usefulness of data collected during an area’s O~3~ season. In addition to reporting O~3~ concentrations, the NCore and PAMS networks provide data on O~3~ precursor chemicals. The NCore sites feature co-located measurements of chemical species such as nitrogen oxide and total reactive nitrogen, along with various meteorological measurements. The additional data collected at the PAMS sites include measurements of NO~X~, and a target set of VOCs. The enhanced monitoring at sites in these two networks informs our understanding of local O~3~ formation.
+
+|      While the SLAMS network has a largely urban and population-based focus, there are monitoring sites in other networks that can be used to track compliance with the NAAQS in rural areas. For example, the [Clean Air Status and Trends Network (CASTNET)](https://www.epa.gov/castnet) sites are located in rural areas. There were `r sum(o3.sites$network == "CASTNET")` CASTNET sites operating in `r params$curr.year`, with most of the sites in the eastern U.S. being operated by the EPA, and most of the sites in the western U.S. being operated by the National Park Service (NPS). Finally, there are also a number of Special Purpose Monitors (SPMs), which are not required but are often operated by air agencies for short periods of time (i.e., less than 3 years) to collect data for human health and welfare studies, as well as other types of monitoring sites, including monitors operated by tribes and industrial sources. The SPMs are typically not used to assess compliance with the NAAQS.[^12]
+
+```{r label="07-monitor-map"}
+## Generate O3 monitoring network map
+colors <- c("gray50","blue3","yellow3","red3")
+o3.monitors$site <- substr(o3.monitors$id,1,9)
+o3.monitors$class <- mapply(function(type,network) ifelse(network == "CASTNET","CASTNET",
+  ifelse(network %in% c("NCORE","PAMS","UNOFFICIAL PAMS"),"NCORE/PAMS",
+  ifelse(type == "SLAMS","SLAMS","SPM/OTHER"))),o3.monitors$monitor_type,o3.monitors$network)
+t <- ddply(o3.monitors,"site",summarize,latitude=latitude[1],
+  longitude=longitude[1],class=min(class))
+t$color <- sapply(substr(t$class,1,2),function(x) switch(x,
+  CA=colors[3],NC=colors[2],SL=colors[1],colors[4]))
+t <- t[order(t$class,t$site,decreasing=TRUE),]
+N <- table(t$class)[c(3,2,1,4)]
+legend.lab <- paste(names(N)," (",N,")",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,col="grey95")
+for (i in 1:nrow(t)) {
+  add.layer(type="points",x=t$longitude[i],y=t$latitude[i],
+    proj.args=pa,bg=t$color[i],pch=21)
+}
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab,pt.bg=colors,cex=0.75,pt.cex=1,
+  pch=21,bty='n',ncol=4)
+```
+**Figure 7:** Map of U.S. O~3~ monitoring sites reporting data to the EPA during the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+## 5. Data Handling Conventions and Computations for Determining Whether the Standards are Met
+
+|      To assess whether a monitoring site or geographic area (usually a county or urban area) meets or exceeds a NAAQS, the monitoring data are analyzed consistent with the established regulatory requirements for the handling of monitoring data for the purposes of deriving a design value. A design value summarizes ambient air concentrations for an area in terms of the indicator, averaging time and form for a given standard such that its comparison to the level of the standard indicates whether the area meets or exceeds the standard. The procedures for calculating design values for the current O~3~ NAAQS (established in 2015) are detailed in [Appendix U to 40 CFR Part 50](https://www.ecfr.gov/current/title-40/part-50/appendix-Appendix%20U%20to%20Part%2050) and are summarized below.
+
+|      Hourly average O~3~ concentrations at the monitoring sites used for assessing whether an area meets or exceeds the NAAQS are required to be reported in parts per million (ppm) to the third decimal place, with additional digits truncated, consistent with the typical measurement precision associated with most O~3~ monitoring instruments. Monitored hourly O~3~ concentrations flagged by the States as having been affected by an exceptional event, having been the subject of a demonstration submitted by the State, and having received concurrence from the appropriate EPA Regional Office, are excluded from design value calculations consistent with [40 CFR 50.14](https://www.ecfr.gov/current/title-40/section-50.14).[^13] The hourly concentrations are used to compute moving 8-hour averages, which are stored in the first hour of each 8-hour period (e.g., the 8-hour average for the 7:00 AM to 3:00 PM period is stored in the 7:00 AM hour), and digits to the right of the third decimal place are truncated. Each 8-hour average is considered valid if 6 or more hourly concentrations are available for the 8-hour period.
+
+|      Next, the daily maximum 8-hour average (MDA8) concentration for each day is identified as the highest of the 17 consecutive, valid 8-hour average concentrations beginning at 7:00 AM and ending at 11:00 PM (which includes hourly O~3~ concentrations from the subsequent day). MDA8 values are considered valid if at least 13 valid 8-hour averages are available for the day, or if the MDA8 value is greater than the level of the NAAQS. Finally, the O~3~ design value is calculated as the 3-year average of the annual 4th highest MDA8 value.[^14] An O~3~ design value less than or equal to the level of the NAAQS is considered to be valid if valid MDA8 values are available for at least 90% of the days in the O~3~ monitoring season (as defined for each state and shown in Figure 6) on average over the 3 years, with a minimum of 75% data completeness in any individual year. Design values greater than the level of the NAAQS are always considered to be valid. The level of the current O~3~ NAAQS is 70 ppb.
+
+|      An O~3~ monitoring site meets the NAAQS if it has a valid design value less than or equal to the level of the standard, and it exceeds the NAAQS if it has a design value greater than the level of the standard. A geographic area meets the NAAQS if all ambient air monitoring sites in the area have valid design values meeting the standard. Conversely, if one or more monitoring sites has a design value exceeding the standard, then the area exceeds the NAAQS.
+
+## 6. O~3~ Concentrations Measured at Ambient Air Monitoring Sites Across the U.S.
+
+|      Table 1 below presents summary statistics based on three daily O~3~ metrics commonly used in health studies, the daily maximum 1-hour (MDA1) metric, the daily maximum 8-hour (MDA8) metric, and the daily 24-hour average (DA24) metric. These statistics are presented for year-round and each season (winter=Dec/Jan/Feb, spring=Mar/Apr/May, summer=Jun/Jul/Aug, autumn=Sep/Oct/Nov) for monitors that have complete year-round data (defined as having at least 75% data completeness based on a year-round O~3~ monitoring season) in AQS for `r params$curr.year-2`-`r params$curr.year`. Table 2 presents the same summary statistics as Table 1 for each [NOAA Climate Region](https://www.ncei.noaa.gov/monitoring-references/maps/us-climate-regions)[^15] based on monitoring sites with at least 75% data completeness during the May - September period (i.e., the months where every state is required to monitor for O~3~).
+
+**Table 1.** National distribution of O~3~ concentrations in ppb from the year-round dataset for `r params$curr.year-2`-`r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+```{r label="Table1"}
+load(paste(base.dir,"data/",curr.year,"/conctables",curr.year-2,"_",curr.year,".Rdata",sep=""))
+kbl(o3.table1[,-2],booktabs=TRUE,format.args=list(big.mark=",")) %>% kable_styling(latex_options=c("hold_position","scale_down")) %>% row_spec(0,bold=TRUE)
+```
+N.sites = number of sites; N.obs = number of observations; SD = standard deviation; min = minimum; p1, p5, p10, p25, p50, p90, p95, p98, p99 = 1st, 5th, 10th, 25th, 50th, 90th, 95th, 98th, 99th percentiles; max = maximum; max.site = AQS ID number for the monitoring site corresponding to the observation in the max column.
+winter = December/January/February; spring = March/April/May; summer = June/July/August; autumn = September/October/November.
+
+\newpage
+
+**Table 2.** National distribution of O~3~ concentrations in ppb from the May-September dataset for `r params$curr.year-2`-`r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs). 
+```{r label="Table2"}
+kbl(o3.table2[,-3],booktabs=TRUE,format.args=list(big.mark=",")) %>% kable_styling(latex_options=c("hold_position","scale_down")) %>% row_spec(0,bold=TRUE)
+```
+N.sites = number of sites; N.obs = number of observations; SD = standard deviation; min = minimum; p1, p5, p10, p25, p50, p90, p95, p98, p99 = 1st, 5th, 10th, 25th, 50th, 90th, 95th, 98th, 99th percentiles; max = maximum; max.site = AQS ID number for the monitoring site corresponding to the observation in the max column. 
+Central = Illinois, Indiana, Kentucky, Missouri, Ohio, Tennessee, West Virginia; East North Central = Iowa, Minnesota, Michigan, Wisconsin; Northeast = Connecticut, Delaware, Maine, Maryland, Massachusetts, New Hampshire, New Jersey, New York, Pennsylvania, Rhode Island, Vermont; Northwest = Alaska, Idaho, Oregon, Washington; South = Arkansas, Kansas, Louisiana, Mississippi, Oklahoma, Texas; Southeast = Alabama, Florida, Georgia, North Carolina, South Carolina, Virginia; Southwest = Arizona, Colorado, New Mexico, Utah; West = California, Hawaii, Nevada; West North Central = Montana, Nebraska, North Dakota, South Dakota, Wyoming.
+
+\newpage
+
+|      Figure 8 below shows a map of the O~3~ design values at U.S. ambient air monitoring sites based on data from the `r params$curr.year-2`-`r params$curr.year` period. From the figure it is apparent that many monitoring sites have design values exceeding the current NAAQS, and that most of these sites are located in or near urban areas. The highest design values are located in California, Texas, along the shoreline of Lake Michigan, and near large urban areas in the northeastern and western U.S. There are also high design values associated with wintertime O~3~ in the Uinta Basin in Utah. The lowest design values are located in the north central region of the U.S., rural parts of New England and the southeastern U.S., and along the Pacific Ocean, including Alaska and Hawaii.
+
+```{r label="08-design-value-map"}
+## Generate O3 design value map for most recent 3-year period
+load(paste(base.dir,"data/",curr.year,"/O3dvs2000_",curr.year,".Rdata",sep=""))
+dvs.o3.8hr <- subset(o3.dvs,year == curr.year & valid_8hr == "Y",
+  c("site","latitude","longitude","year","dv_8hr"))
+ny <- length(unique(o3.dvs$year))
+vals <- dvs.o3.8hr$dv_8hr; o <- order(vals);
+bins <- c(61,66,71,76,85)
+dv.colors <- c("blue3","cyan3","yellow3","orange3","red3","purple3") 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=dv.colors)
+bin.min <- c(min(vals),bins); bin.max <- c(bins-1,max(vals));
+n.sites <- table(cut(vals,breaks=c(0,bins-1,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(bin.min," - ",bin.max," ppb (",n.sites," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=dvs.o3.8hr$longitude[o],y=dvs.o3.8hr$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],cex=0.75,bty='n',
+  pch=21,col="black",pt.bg=dv.colors[keep],ncol=3)
+```
+**Figure 8:** O~3~ design values in ppb for the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+\newpage
+
+|      Figure 9 below shows a map of the site-level trends in the O~3~ design values at U.S. monitoring sites having valid design values in at least `r ceiling(0.75*(ny-2))` of the `r (ny-2)` 3-year periods from 2000 through `r params$curr.year`. The trends were computed using the Thiel-Sen estimator, and tests for significance were computed using the Mann-Kendall test. From this figure it is apparent that design values have decreased significantly over most of the eastern U.S. during this period. These decreases are in part due to EPA programs such as the Clean Air Interstate Rule and the Cross-State Air Pollution Rule with the goal of achieving broad, regional reductions in summertime NO~X~ emissions, as well as mobile emission reductions from federal motor vehicle emissions and fuel standards and local controls resulting from implementation of the existing O~3~ standards. Other areas of the country have also experienced decreases in design values, most notably in California and near urban areas in the intermountain west.
+
+```{r label="09-dv-trends-map"}
+## Map of site-level O3 DV trends
+count <- function(x) { return(sum(!is.na(x))) }
+max.na <- function(x) { return(ifelse(all(is.na(x)),NA,max(x,na.rm=TRUE))) }
+curr.year <- as.numeric(substr(Sys.Date(),1,4)) - ifelse(as.numeric(substr(Sys.Date(),6,7)) > 4,1,2)
+pt.col <- c("#0000FFFF","#AAAAFFFF","#FFFFFFFF","#FFAAAAFF","#FF0000FF")
+pt.cex <- c(1.25,1,0.75,1,1.25); pt.pch <- c(25,25,21,24,24);
+
+load(paste(base.dir,"data/",curr.year,"/O3trends2000_",curr.year,".Rdata",sep=""))
+txt <- c("Decreasing > 1 ppb/yr","Decreasing < 1 ppb/yr","No Significant Trend",
+  "Increasing < 1 ppb/yr","Increasing > 1 ppb/yr")
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 1,4,5),ifelse(slope > -1,2,1))),
+  pval=o3.site.dvs.8hr$pval,slope=o3.site.dvs.8hr$slope)
+ind <- as.integer(names(table(cat))); r <- order(abs(o3.site.dvs.8hr$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=o3.site.dvs.8hr$longitude[r],y=o3.site.dvs.8hr$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,cex=0.75,bty='n',col="black",
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+
+## Get numbers for paragraph below
+median.curr <- median(o3.site.dvs.8hr[,as.character(curr.year)],na.rm=TRUE)
+median.past <- median(o3.site.dvs.8hr[,c("2000")],na.rm=TRUE)
+pct.change <- round(100*(median.past-median.curr)/median.past)
+
+```
+**Figure 9:** Site-level trends in O~3~ design values based on data from 2000 through `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs), trends computed using R statistical software.
+
+\newpage
+
+|      Figure 10 below shows the national trend in the design values based on the `r nrow(o3.site.dvs.8hr)` monitoring sites shown in Figure 9. The U.S. median design value decreased by `r pct.change`% from 2000 (`r round(median.past)` ppb) to `r params$curr.year` (`r round(median.curr)` ppb). Additional information from the published literature has examined trends in MDA8 concentrations across the distribution of high and low O~3~ days. O~3~ metrics impacted by high hourly O~3~ concentrations, such as the design value, decreased at most U.S. sites during the time periods studied. Concurrently, metrics that are impacted by averaging longer time periods of hourly O~3~ measurements were more varied with fewer sites exhibiting decreases and most other sites exhibiting no trend.
+
+```{r label="10-national-trend"}
+o3.trend.dvs.8hr <- apply(o3.site.dvs.8hr[,-c(1:3)],2,quantile,probs=c(0.1,0.5,0.9),na.rm=TRUE)
+trend.years <- c(2000:curr.year)
+par(mar=c(3.5,3.5,0.5,0.5),mgp=c(2,0.75,0),cex.axis=0.75,cex.lab=0.75)
+plot(x=NULL,y=NULL,type='n',xaxs='i',xaxt='n',xlim=c(1999.5,curr.year+0.5),
+  xlab="",yaxs='i',ylim=c(50,105),ylab="O3 Design Value (ppb)",main="")
+axis(side=1,at=trend.years,labels=trend.years,las=2)
+polygon(x=c(1999.5,rep(curr.year+0.5,2),1999.5),y=c(50,50,105,105),col="gray80")
+abline(h=seq(55,100,5),v=trend.years,col="white")
+lines(x=trend.years,y=o3.trend.dvs.8hr[1,as.character(trend.years)],lty=2,lwd=2,col="steelblue")
+lines(x=trend.years,y=o3.trend.dvs.8hr[2,as.character(trend.years)],lty=1,lwd=2,col="steelblue")
+lines(x=trend.years,y=o3.trend.dvs.8hr[3,as.character(trend.years)],lty=2,lwd=2,col="steelblue")
+abline(h=70,lty=2,lwd=2,col="black"); box();
+legend("topright",legend=c("10th/90th Percentile 8-hour DV","Median 8-hour DV","O3 8-hour NAAQS Level"),
+  lty=c(2,1,2),col=c(rep("steelblue",2),"black"),cex=0.75,bty='n',lwd=2)
+```
+**Figure 10:** National trend in O~3~ design values in ppb, 2000 to `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+
+## Additional Resources
+
+- [Ground-level Ozone Pollution](https://www.epa.gov/ground-level-ozone-pollution)
+
+- [Reviewing National Ambient Air Quality Standards (NAAQS): Scientific and Technical Information](https://www.epa.gov/naaqs)
+
+- [Air Emissions Inventories](https://www.epa.gov/air-emissions-inventories)
+
+- [Ambient Monitoring Technology Information Center (AMTIC)](https://www.epa.gov/amtic)
+
+- [Air Quality Design Values](https://www.epa.gov/air-trends/air-quality-design-values)
+
+- [National Air Quality: Status and Trends of Key Air Pollutants](https://www.epa.gov/air-trends)
+
+- [Air Data: Air Quality Data Collected at Outdoor Monitors Across the U.S.](https://www.epa.gov/outdoor-air-quality-data)
+
+[^1]: O~3~ also occurs in the stratosphere, where it serves the beneficial role of absorbing the sun’s harmful ultraviolet radiation and preventing the majority of this radiation from reaching the Earth’s surface.
+[^2]: The only other appreciable source of O~3~ to the troposphere is transport from the stratosphere.
+[^3]: It should be noted that the definition of VOCs used in this section does not include CH4 because it is excluded from the EPA’s regulatory definition of VOCs in [40 CFR 51.100(s) ](https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-51/subpart-F#p-51.100(s)).
+[^4]: A design value is a statistic that summarizes the air quality data for a given area in terms of the indicator, averaging time, and form of the standard. Design values can be compared to the level of the standard and are typically used to designate areas as meeting or not meeting the standard and assess progress towards meeting the NAAQS.
+[^5]: The SLAMS minimum monitoring requirements to meet the O~3~ design criteria are specified in [Appendix D to 40 CFR Part 58](https://www.ecfr.gov/current/title-40/part-58/appendix-Appendix%20D%20to%20Part%2058).
+[^6]: The probe and monitoring path siting criteria for ambient air quality monitoring are specified in [Appendix E to 40 CFR Part 58](https://www.ecfr.gov/current/title-40/part-58/appendix-Appendix%20E%20to%20Part%2058).
+[^7]: The required O~3~ monitoring seasons for each state are listed in Table D-3 of [Appendix D to 40 CFR Part 58](https://www.ecfr.gov/current/title-40/part-58/appendix-Appendix%20D%20to%20Part%2058).
+[^8]: The current FRM for O~3~ (established in 2015) is a chemiluminescence method, which is fully described in [Appendix D to 40 CFR Part 50 ](https://www.ecfr.gov/current/title-40/part-50/appendix-Appendix%20D%20to%20Part%2050).
+[^9]: Quality assurance requirements for monitors used in evaluations of the NAAQS are provided in [Appendix A to 40 CFR Part 58](https://www.ecfr.gov/current/title-40/part-58/appendix-Appendix%20A%20to%20Part%2058).
+[^10]: Annual summary reports of precision and bias can be obtained for each monitoring site at the EPA's [Air Data website](https://www.epa.gov/outdoor-air-quality-data/single-point-precision-and-bias-report).
+[^11]: The requirements for PAMS, which were most recently updated in 2015, is fully described in section 5 of [Appendix D to 40 CFR Part 58 ](https://www.ecfr.gov/current/title-40/part-58/appendix-Appendix%20D%20to%20Part%2058).
+[^12]: SPMs that use federal reference or equivalent methods, meet all applicable requirements in [40 CFR Part 58](https://www.ecfr.gov/current/title-40/part-58), and operate continuously for at least 3 years may be used to assess compliance with the NAAQS.
+[^13]: A variety of resources and guidance documents related to identification and consideration of exceptional events in design value calculations are available at [https://www.epa.gov/air-quality-analysis/final-2016-exceptional-events-rule-supporting-guidance-documents-updated-faqs].
+[^14]: Design values are reported in ppm to the third decimal place, with additional digits truncated. This truncation step also applies to the initially calculated 8-hour average concentrations.
+[^15]: For Table 2, monitoring sites in Alaska were assigned to the Northwest Region and monitoring sites in Hawaii were assigned to the West region.

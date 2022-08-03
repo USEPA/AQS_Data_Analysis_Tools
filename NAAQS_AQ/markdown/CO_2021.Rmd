@@ -1,0 +1,365 @@
+---
+title: "Overview of Carbon Monoxide (CO) Air Quality in the United States"
+date: "`r paste('Updated:',format(Sys.time(), '%B %d, %Y'))`"
+output: pdf_document
+geometry: left=0.5in,right=0.5in,top=0.5in,bottom=0.75in
+params:
+  curr.year: 2021
+  nei.year: 2017
+urlcolor: blue
+---
+
+```{r label="00-intro",echo=FALSE,message=FALSE,warning=FALSE}
+## Initialize R workspace
+knitr::opts_chunk$set(cache=TRUE,echo=FALSE,message=FALSE,warning=FALSE,fig.width=7.5)
+options(stringsAsFactors=FALSE,scipen=10,warn=-1)
+library(data.table); library(knitr); library(kableExtra); library(plyr); library(reshape2); library(trend);
+source("C:/Users/bwells01/Documents/R/piechart.r")
+source("C:/Users/bwells01/Documents/Census/shape2014/rmapfuns.r")
+pa <- list(projection='albers',parameters=c(33,45),orientation=c(90,0,-100))
+base.dir <- "C:/Users/bwells01/Documents/NAAQS_AQ/"
+```
+
+## 1. Introduction
+
+|     The overall purpose of this document is to maintain an up-to-date graphical summary of air quality information that supports the review of the National Ambient Air Quality Standards (NAAQS) for carbon monoxide (CO). In previous reviews of the CO NAAQS, this type of information has generally been included in atmospheric sections of the Integrated Science Assessment (ISA) and Policy Assessment (PA) for carbon monoxide. This stand-alone document will either replace or complement the air quality emissions and monitoring data in the atmospheric sections of future CO NAAQS documents, and will be updated at regular intervals as new data becomes available.
+
+|      The content of past NAAQS documents’ atmospheric sections has included major sections on emissions and concentration trends utilizing maps and data from the EPA’s National Emissions Inventory (NEI) and the EPA's Air Quality System (AQS) database. In past NAAQS reviews, this often involved adaptation of figures and tables prepared for other reports, or development of new figures and tables using data analysis and mapping software. Additionally, the release of updated emission inventories and ambient monitoring data may not coincide with the schedule for the development of NAAQS documents. As a result, data access and resources can limit the availability of the most recent information for inclusion in NAAQS documents. 
+
+|      This stand-alone document allows the content to be updated as soon as new data becomes available, rather than pulling from whatever is available at the time of publication. It also ensures that the public will have access to a consistent set of maps and figures for each NAAQS pollutant that are updated on a routine basis, rather than separated by several years following the disparate schedules of the various NAAQS reviews for each pollutant. Moreover, a stand-alone document can be expanded to include new air quality analyses as they are completed, rather than following the timeline for the public release of the NAAQS documents. Finally, this document takes advantage of a more flexible digital format for the routinely prepared maps and trends figures, with an end product that more strongly emphasizes visual presentation of data and reduces the amount text, while also creating a more interactive presentation of the information through the use of external links.
+
+|      This document follows an organization similar to the structure of the atmospheric sections of past CO NAAQS documents. The subsequent sections are as follows: 2. Atmospheric Chemistry; 3. Sources and Emissions of CO; 4. Ambient Air Monitoring Requirements and Monitoring Networks; 5. Data Handling Conventions and Computations for Determining Whether the Standards are Met; and 6. CO Concentrations Measured at Ambient Air Monitoring Sites Across the U.S. These sections are broad enough in scope to handle changes in what is known about CO atmospheric science as it advances but specific enough that NAAQS-relevant information will be able to be quickly retrieved by users of the document.
+
+## 2. Atmospheric Chemistry
+
+|      CO is formed primarily by incomplete combustion of carbon-containing fuels and photochemical reactions in the atmosphere. In general, any increase in fuel O~2~ content, burn temperature, or mixing time in the combustion zone will tend to decrease production of CO relative to CO~2~. CO emissions from large fossil-fueled power plants are typically very low since the boilers at these plants are tuned for highly efficient combustion with the lowest possible fuel consumption. In contrast, internal combustion engines used in many mobile sources have widely varying operating conditions. Therefore, higher and more varying CO formation results from the operation of these mobile sources.
+
+|      Oxidation of anthropogenic and biogenic volatile organic compounds (VOCs) constitute important secondary sources of CO. Secondary CO production occurs by photooxidation of methane (CH~4~) and other VOCs, including nonmethane hydrocarbons (NMHCs) in the atmosphere and organic molecules in surface waters and soils. Photolysis of formaldehyde (CH~2~O) proceeds by two pathways. The first produces molecular hydrogen (H~2~) and CO with a reaction yield of 55% in conditions of clear skies and low zenith angles; the second yields a hydrogen radical (H) and the formyl radical (HCO). HCO then reacts with O~2~ to form hydroperoxy radical (HO~2~; OH and HO~2~ together are termed HO~X~) and CO. Reaction of methyl peroxy radical (CH~3~O~2~) with HO~2~ radicals to form methyl hydroperoxide (CH~3~OOH) is also operative, especially in low oxides of nitrogen (NO~X~) conditions. Heterogeneous removal of the partially water-soluble intermediate products, such as CH~3~OOH and CH~2~O, will decrease CO yields from CH~4~ oxidation.
+
+|      While oxidation of CH~2~O nearly always produces CO and some small quantities of formic acid (CH~2~O~2~) in the reaction of CH~2~O with HO~2~, oxidation of acetaldehyde (CH~3~CHO) does not always yield two CO molecules. Reaction of CH~3~CHO with OH can yield acetyl radicals (CH~3~CO) which then will participate with O~2~ in a termolecular recombination reaction to form peroxyacyl radicals, which then can react with nitric oxide (NO) to form CH~3~ and CO~2~. The peroxyacyl radicals may also react with NO~2~ to form peroxyacetyl nitrate (PAN), CH~3~CO~3~NO~2~. In this way, one carbon atom is oxidized directly to CO~2~ without passing through CO. The yield of CO from these pathways depends on the OH concentration and the photolysis rate of CH~3~CHO, as well as on the abundance of NO, since peroxyacyl radicals also will react with other odd hydrogen radicals like HO~2~.
+
+|      Estimating the CO yield from oxidation of hydrocarbons (HCs) larger than CH~4~ requires computing the yields of CH~2~O, CH~3~CHO, CH~3~CO, and analogous radicals from oxidation of the parent molecules. Moreover, the extent of heterogeneous removal of soluble intermediate products also affects oxidation of more complex HCs. However, the detailed gas-phase kinetics for many HCs with more than a few carbons is still unknown. This is especially the case for several important classes of VOCs, including the aromatics, biogenic HCs including isoprene, and their intermediate oxidation products like epoxides, nitrates, and carbonyls. Mass-balance analyses performed on irradiated smog chamber mixtures of aromatic HCs indicate that only about one-half of the carbon is in the form of compounds that can be identified. In addition, reactions like the oxidation of terpenes that produce condensable products are also significant because these reactions produce secondary organic aerosols, thereby reducing the potential yield of CO.
+
+|      The major pathway for removal of CO from the atmosphere is reaction with OH to produce CO~2~ and H radicals that rapidly combine with O~2~ to form HO~2~ radicals. The mean tropospheric photochemical lifetime of CO in the northern hemisphere is estimated to be about 57 days. Owing to variation in atmospheric water vapor, OH concentration, and insolation, shorter photochemical lifetimes are found nearer the tropics and longer ones at higher latitudes. During winter at high latitudes, CO has nearly no photochemical reactivity on urban and regional scales. Because the CO lifetime is shorter than the roughly one year characteristic time scale for mixing between the hemispheres and because northern hemisphere CO emissions are higher due to anthropogenic activity, a large gradient in concentrations exists between the hemispheres. In addition, the CO lifetime at high latitudes is long enough to result in much smaller gradients between 30° latitude and the pole of either hemisphere. The typical residence time of CO in urban areas when assuming a diel-average OH concentration of 3×10^6^/cm^3^ in urban areas is about 16 days, so CO will not typically be destroyed in urban areas where it is emitted and will likely be mixed on continental and larger scales. OH concentrations are orders of magnitude lower in indoor environments, and so CO will generally not be affected by indoor air reactions.
+
+**Sources:** [Integrated Science Assessment for Carbon Monoxide, January 2010 (Chapter 3)](https://cfpub.epa.gov/ncea/risk/recordisplay.cfm?deid=218686&CFID=78776911&CFTOKEN=81884369)
+
+[Policy Assessment for the Review of the Carbon Monoxide NAAQS, October 2010 (Chapter 1)](https://www.epa.gov/sites/production/files/2020-07/documents/20101022copafinal.pdf)
+
+## 3. Sources and Emissions of CO
+
+```{r label="load-nei-data"}
+curr.year <- params$curr.year; nei.year <- params$nei.year;
+nei.file <- paste(base.dir,"data/",curr.year,"/NEI",nei.year,"_allpoll_bycounty_sector.Rdata",sep="")
+trends.file <- paste(base.dir,"data/",curr.year,"/emissions_trends_2002_",curr.year,".Rdata",sep="")
+load(nei.file); load(trends.file);
+trend.years <- c(2002:curr.year); ny <- length(trend.years);
+totals <- unlist(trends.data$CO[nrow(trends.data$CO),-1])
+pct.chg <- round(100*(totals[1]-totals[ny])/totals[1])
+pct.fires <- round(100*sum(subset(sector.data,grepl("Fires",sector))$CO)/sum(sector.data$CO,na.rm=TRUE))
+pct.mobile <- round(100*sum(subset(sector.data,grepl("Mobile",sector))$CO)/sum(sector.data$CO,na.rm=TRUE))
+```
+
+|     Mobile sources are the largest anthropogenic source of CO emissions in the U.S., comprising `r pct.mobile`% of total CO emissions in `r params$nei.year` (Figure 1). CO emissions from internal combustion engines vary substantially with ambient temperature and operating conditions. Substantial light-duty gasoline vehicle CO emissions occur during the cold start before the catalyst is warmed up. Lower ambient temperatures result in increased CO emissions because ignition engines are required to run richer air:fuel ratios for longer periods of time. Increased vehicle CO emissions can also occur under conditions such as high rates of acceleration, rapid speed fluctuations, heavy-vehicle load demands (such as occur while pulling a trailer or going up a steep hill), and use of air-conditioning. Moreover, the gasoline-powered spark ignition engines that predominate in light-duty on-road vehicles have higher uncontrolled CO emission rates than other combustion sources because they typically operate closer to the stoichiometric air-to-fuel ratio, have relatively short residence times at peak combustion temperatures, and have very rapid cooling of cylinder exhaust gases. By contrast, the diesel-powered engines that predominate in heavy-duty onroad vehicles and in off-road and non-road fixed combustion sources have much lower engine-out CO emissions than do the spark-ignition engines because the diesels typically operate at very high air-to-fuel ratios, which promote mixing oxygen and fuel, thus improving carbon burn.
+
+|      Another important source of CO emissions is fires, which consists of wildfires, agricultural field burning to control the growth of unwanted plants on crop and pasture land, and prescribed burns to manage forest resources. Although it is generally accepted that a large proportion of wildfires are anthropogenic in origin, wildfires are typically treated as natural emissions in emissions inventories, while agricultural and prescribed fires are treated as anthropogenic. Fires made up `r pct.fires`% of total U.S. CO emissions in `r params$nei.year`, though wildfires especially tend to exhibit large interannual variability mostly due to fluctuations in meteorological conditions. Other important sources of CO emissions include stationary fuel combustion, which includes emissions from coal-, gas-, and oil-fired power plants and industrial, commercial, and institutional sources, as well as residential heaters (e.g., wood-burning stoves) and boilers; industrial processes, which include chemical production, petroleum refining and metals production, and natural emissions from plants and soil (biogenics).
+
+|      The [National Emissions Inventory (NEI)](https://www.epa.gov/air-emissions-inventories) is a comprehensive and detailed estimate of air emissions of criteria pollutants, precursors to criteria pollutants, and hazardous air pollutants from air emissions sources. The NEI is released every three years based primarily upon data provided by State, Local, and Tribal air agencies for sources in their jurisdictions and supplemented by data developed by the US EPA. The NEI is built using the EPA’s Emissions Inventory System (EIS) first to collect the data from State, Local, and Tribal air agencies and then to blend that data with other data sources.
+
+|      Accuracy in an emissions inventory reflects the extent to which the inventory represents the actual emissions that occurred. Anthropogenic emissions of air pollutants result from a variety of sources such as power plants, industrial sources, motor vehicles and agriculture. The emissions from any individual source typically varies in both time and space. For the thousands of sources that make up the NEI, there is uncertainty in one or both of these factors. For some sources, such as power plants, direct emission measurements enable the emission factors derived from them to be more certain than sources without such direct measurements. However, it is not practically possible to directly monitor each of the emission sources individually and, therefore, emission inventories necessarily contain assumptions, interpolation and extrapolation from a limited set of sample data.
+
+```{r label="01-emissions-piechart",fig.height=3,fig.width=5,fig.align="center"}
+## CO emissions pie chart
+pie.colors <- c("lightgreen","lightpink","lightblue","wheat")
+df <- data.frame(sector=c("Biogenics","Wildfires","Other Fires","Fuel Comb","Industrial",
+  "Onroad","Non-Road","Other"),emis=NA)
+df$emis[1] <- sector.data$CO[grep("Biogenics",sector.data$sector)]
+df$emis[2] <- sector.data$CO[grep("Wildfires",sector.data$sector)]
+df$emis[3] <- sum(sector.data$CO[c(grep("Fires - Ag",sector.data$sector),
+  grep("Fires - Pre",sector.data$sector))])
+df$emis[4] <- sum(sector.data$CO[grep("Fuel Comb -",sector.data$sector)])
+df$emis[5] <- sum(sector.data$CO[grep("Industrial Processes -",sector.data$sector)])
+df$emis[6] <- sum(sector.data$CO[grep("Mobile - On-Road",sector.data$sector)])
+df$emis[7] <- sum(sector.data$CO[setdiff(grep("Mobile -",sector.data$sector),
+  grep("On-Road",sector.data$sector))])
+df$emis[8] <- sum(sector.data$CO,na.rm=TRUE)-sum(df$emis[1:7])
+df$pct <- 100*df$emis/sum(df$emis)
+pie.labels <- paste(c("Biogenics","Wildfires","Agricultural &\nPrescribed Fires",
+  "Stationary Fuel\n Combustion","Industrial\nProcesses","Highway Vehicles",
+  "Non-Road Mobile","Other")," ",round(df$pct),"%",sep="")
+pie.total <- format(round(sum(df$emis/1000)),big.mark=",")
+pie.title <- paste("CO Emissions (",pie.total," kTon/year)",sep="")
+par(mar=c(0,5,2,5),bg="gray95",cex=0.75)
+pie(x=df$emis,labels=pie.labels,main=pie.title,col=pie.colors,radius=0.9)
+```
+
+**Figure 1.** U.S. CO emissions by sector. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data).
+
+|      Figure 2 shows the national trend in U.S. anthropogenic CO emissions by sector from 2002 to `r params$curr.year`. Nationally, CO emissions have decreased by `r pct.chg`% since 2002, mostly due to reductions in mobile source emissions. Figure 3 shows the CO emissions density in tons/mi^2^/year for each U.S. county based on the `r params$nei.year` NEI. The majority of CO emissions tend to be located near urban areas, which tend to have the most vehicle traffic and industrial sources. However, there are also some counties in rural areas with higher CO emissions due to fires or the presence of large stationary sources such as power plants.
+
+```{r label="02-emissions-trends",fig.height=4,fig.width=6,fig.align="center"}
+## CO emissions trends figure
+trend.border <- c("chocolate","gray50","red","green4","blue")
+trend.colors <- c("wheat","gray90","lightpink","lightgreen","lightblue")
+source.cat <- c("HIGHWAY VEHICLES","OFF-HIGHWAY","Stationary fuel combustion",
+  "Industrial and other processes","Miscellaneous without wildfires")
+df <- trends.data$CO[match(source.cat,trends.data$CO$source),
+  c("source",as.character(2002:curr.year))]
+df2 <- apply(df[c(nrow(df):1),-1],2,cumsum)
+source.labels <- c("Highway Vehicles","Non-Road Mobile","Stationary Fuel Combustion",
+  "Industrial and Other Processes","Other Anthropogenic Sources")
+par(mar=c(4,4,1,1),mgp=c(3,0.75,0),las=2,cex.axis=0.75,cex.lab=0.75)
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xaxs='i',xlim=c(2002,curr.year),
+  xlab="Inventory Year",yaxs='i',ylim=c(0,90000),ylab="CO Emissions (kTons/year)")
+axis(side=1,at=seq(2002,curr.year,3),labels=seq(2002,curr.year,3))
+axis(side=2,at=seq(0,90000,10000),labels=seq(0,90000,10000))
+polygon(x=c(2002,rep(curr.year,2),2002),y=c(0,0,90000,90000),col="gray80")
+abline(h=seq(5000,85000,5000),v=trend.years,col="white")
+polygon(x=c(trend.years,rev(trend.years)),y=c(df2[1,],rep(0,ny)),
+  col=trend.colors[1],border=trend.colors[1])
+for (i in 2:nrow(df)) {
+  polygon(x=c(trend.years,rev(trend.years)),y=c(df2[i,],rev(df2[(i-1),])),
+    col=trend.colors[i],border=trend.colors[i])
+}
+for (i in 1:nrow(df)) { lines(x=trend.years,y=df2[i,],col=trend.border[i],lwd=2) }
+legend("topright",legend=source.labels,fill=rev(trend.colors),
+  border=rev(trend.border),cex=0.75,bty='n')
+box()
+```
+
+**Figure 2.**	U.S. anthropogenic NO~X~ emissions trend, 2002-`r params$curr.year`. **Source:** [EPA’s Air Pollutant Emissions Trends Data ](https://www.epa.gov/air-emissions-inventories/air-pollutant-emissions-trends-data)
+
+```{r label="03-emissions-map",fig.height=5}
+## CO county-level emissions density map
+breaks <- c(10,20,50,100)
+density <- county.data$CO/county.data$area_km*2.59
+map.colors <- c("#EFF3FF","#BDD7E7","#6BAED6","#3182BD","#08519C")
+county.data$color <- assign.colors(density,discrete=TRUE,breaks=breaks,palette=map.colors)
+N <- table(cut(density,breaks=c(0,breaks,Inf),include.lowest=TRUE))
+map.legend <- paste(c(0,breaks),"-",c((breaks-0.1),round(max(density)))," (",N,")",sep="")
+map.title <- "Carbon Monoxide Emissions Density in tons/year/mi^2 (# Counties)"
+layout(matrix(c(1,2),2,1),widths=1,heights=c(0.9,0.1))
+draw.map("state",proj.args=pa)
+for (i in 1:nrow(county.data)) {
+  draw.map("county",county.data$fips[i],add=TRUE,proj.args=pa,col=county.data$color[i],lwd=0.5)
+}
+draw.map("state",proj.args=pa,add=TRUE,lwd=1)
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("top",legend=map.legend,ncol=5,fill=map.colors,title=map.title,cex=0.75,bty='n')
+```
+**Figure 3.**	U.S. county-level CO emissions density estimates in tons/year/mi^2^. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data)
+
+## 4. Ambient Air Monitoring Requirements and Monitoring Networks
+
+```{r label="load-monitor-data"}
+load(paste(base.dir,"data/",curr.year,"/monitors_",curr.year-2,"_",curr.year,".Rdata",sep=""))
+co.sites <- subset(co.monitors,!duplicated(substr(id,1,9)))
+```
+
+|      Ambient CO concentrations are measured by monitoring networks that are operated by state and local monitoring agencies in the U.S., which are typically funded in part by the EPA. There were `r nrow(co.sites)` monitoring sites reporting hourly CO concentration data to the EPA during the `r params$curr.year-2`-`r params$curr.year` period. The locations of these monitoring sites are shown in Figure 4. The main network providing ambient data for use in comparison to the NAAQS is the State and Local Air Monitoring Stations (SLAMS) network, which consists of nearly 90% of all CO monitoring sites in the U.S. Currently there are no minimum monitoring requirements for the number of CO monitoring sites, except as part of the NCore and near-road networks as discussed below. However, continued operation of existing SLAMS sites is required unless discontinuation is approved by the EPA Regional Administrator. Further, in areas where SLAMS CO monitoring is ongoing, at least one site must be a maximum concentration site for the area.
+
+|      Two important subsets of SLAMS sites are the [National Core (NCore)](https://www.epa.gov/amtic/ncore-monitoring-network) multi-pollutant monitoring network and the [near-road network ](https://www.epa.gov/amtic/near-road-monitoring). The NCore network, designed to collect consistent measurements of criteria pollutants for trends and NAAQS compliance purposes, was fully implemented in 2011 and consists of approximately 60 urban monitoring stations and 20 rural monitoring stations. Each state is required to have at least one NCore station. The near-road monitoring network, which began operating in 2014, requires sites to operate near major roadways in each metropolitan statistical area (MSA) with a population of 1,000,000 or greater. There were `r length(which(co.sites$network == "NEAR ROAD"))`  near-road monitors collecting CO measurements during the `r params$curr.year-2`-`r params$curr.year` period.
+
+|      Finally, there are also a number of Special Purpose Monitors (SPMs), which are not required but are often operated by air agencies for short periods of time (i.e., less than 3 years) to collect data for human health and welfare studies, as well as other types of monitoring sites, including monitors operated by tribes and industrial sources. The SPMs are typically not used to assess compliance with the NAAQS.
+
+```{r label="04-monitor-map",fig.height=5}
+## CO monitor map
+co.monitors$site <- substr(co.monitors$id,1,9)
+co.monitors$class <- mapply(function(type,network) ifelse(network == "NEAR ROAD","NEAR ROAD",
+  ifelse(network == "NCORE","NCORE",ifelse(type == "SLAMS","SLAMS","SPM/OTHER"))),
+  co.monitors$monitor_type,co.monitors$network)
+t <- ddply(co.monitors,"site",summarize,latitude=latitude[1],
+  longitude=longitude[1],class=min(class))
+colors <- c("gray50","blue3","yellow3","red3")
+t$color <- sapply(substr(t$class,1,2),function(x) switch(x,
+  NE=colors[3],NC=colors[2],SL=colors[1],colors[4]))
+t <- t[order(t$class,t$site,decreasing=TRUE),]
+N <- table(t$class)[c(3,1,2,4)]
+legend.lab <- paste(names(N)," (",N,")",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,col="grey95")
+for (i in 1:nrow(t)) {
+  add.layer(type="points",x=t$longitude[i],y=t$latitude[i],
+    proj.args=pa,bg=t$color[i],pch=21)
+}
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab,pt.bg=colors,
+  pch=21,cex=0.75,pt.cex=1,bty='n',ncol=4)
+```
+
+**Figure 4:** Map of U.S. CO monitoring sites reporting data to the EPA during the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+|      EPA has established federal reference methods (FRMs) and methods designated as equivalent (federal equivalent methods, FEMs) for use in ambient air sample collection and analysis to promote uniform enforcement of the air quality standards set forth under the CAA. Measurements for determinations of NAAQS compliance must be made with FRMs or FEMs. Prior to 2006, CO monitoring instruments typically had a lower detection limit (LDL) of 0.5 ppm. This is sufficient for the purpose of determining compliance with the CO NAAQS, but with many areas routinely measuring CO levels below 1 ppm, a large percentage of the measurements from these monitors were below the LDL of these instruments, which contributed to greater measurement uncertainties. Since 2005, the older instruments have slowly been replaced with a new generation of 'trace-level' instruments, which have LDLs on the order of 0.02 to 0.04 ppm. As of `r params$curr.year`, about half of the CO monitoring network consists of measurements from these newer trace-level instruments.
+
+## 5. Data Handling Conventions and Computations for Determining Whether the Standards are Met
+
+|      To assess whether a monitoring site or geographic area (usually a county or urban area) meets or exceeds a NAAQS, the monitoring data are analyzed consistent with the established regulatory requirements for the handling of monitoring data for the purposes of deriving a design value. A design value summarizes ambient air concentrations for an area in terms of the indicator, averaging time and form for a given standard such that its comparison to the level of the standard indicates whether the area meets or exceeds the standard. There are currently two CO NAAQS in effect: the 1-hour NAAQS of 35 ppm and the 8-hour NAAQS of 9 ppm, neither to be exceeded more than once per year.[^1]
+
+|      Hourly CO measurement data collected at an ambient air monitoring site using Federal Reference or Equivalent Methods, meeting all applicable requirements in 40 CFR Part 58, and reported to AQS in parts per million (ppm) with decimal digits after the first decimal place truncated are used in design value calculations. The design value for the 1-hour and 8-hour CO NAAQS are evaluated for each monitor based on hourly concentration data collected over two consecutive calendar years. For the 1-hour CO NAAQS, the 2nd highest hourly concentration in each year is determined, and the design value is the higher of these two annual 2nd maximum values, rounded to the nearest ppm. The 1-hour NAAQS is met when the design value is less than or equal to 35 ppm.
+
+|      For the 8-hour NAAQS, rolling 8-hour averages are computed from the hourly concentration data for each 8-hour period over the 2 years. The 8-hour averages are stored in the last hour of each 8-hour period (e.g., for the 8-hour period from 8:00 AM to 3:59 PM, the 8-hour average is stored in the 3:00 PM hour). Each 8-hour average is considered valid if hourly concentrations are available for at least 6 of the 8 hours in the 8-hour period. For each of the 2 years, the 2nd highest non-overlapping 8-hour average concentration is determined, and the design value is the higher of these two annual 2nd maximum values, rounded to the nearest ppm. The 8-hour NAAQS is met when the design value is less than or equal to 9 ppm. Unlike the other pollutants, there are no minimum data completeness requirements for determining valid 1-hour and 8-hour CO design values.
+
+\newpage
+
+## 6. CO Concentrations Measured at Ambient Air Monitoring Sites Across the U.S.
+
+```{r label="load-conc-data"}
+load(paste(base.dir,"data/",curr.year,"/COdvs2000_",curr.year,".Rdata",sep=""))
+load(paste(base.dir,"data/",curr.year,"/COtrends2000_",curr.year,".Rdata",sep=""))
+years <- c(2000:curr.year); ny <- length(years);
+```
+
+|      Table 1 below presents summary statistics based on three daily CO metrics, the daily maximum 1-hour (MDA1) metric, the daily maximum 8-hour (MDA8) metric, and the daily 24-hour average (DA24) metric. These statistics are presented for year-round and each season (winter=Dec/Jan/Feb, spring=Mar/Apr/May, summer=Jun/Jul/Aug, autumn=Sep/Oct/Nov) for monitors that have complete data (defined as having at least 75% data completeness) in AQS for `r params$curr.year-2`-`r params$curr.year`.
+
+**Table 1.** National distribution of CO concentrations in ppm for `r params$curr.year-2`-`r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+```{r label="Table1"}
+load(paste(base.dir,"data/",curr.year,"/conctables",curr.year-2,"_",curr.year,".Rdata",sep=""))
+kbl(co.table1[,-2],booktabs=TRUE,format.args=list(big.mark=",")) %>% kable_styling(latex_options=c("hold_position","scale_down")) %>% row_spec(0,bold=TRUE)
+```
+N.sites = number of sites; N.obs = number of observations; SD = standard deviation; min = minimum; p1, p5, p10, p25, p50, p90, p95, p98, p99 = 1st, 5th, 10th, 25th, 50th, 90th, 95th, 98th, 99th percentiles; max = maximum; max.site = AQS ID number for the monitoring site corresponding to the observation in the max column.
+winter = December/January/February; spring = March/April/May; summer = June/July/August; autumn = September/October/November.
+
+\newpage
+
+|      Figure 5 below shows a map of the 8-hour CO design values and Figure 6 shows a map of the 1-hour CO design values at U.S. ambient air monitoring sites based on data from the `r params$curr.year-1`-`r params$curr.year` period. There were two sites in the Portland, OR area and one site in Puerto Rico with design values exceeding the 8-hour CO NAAQS, and the Puerto Rico site also exceeded the 1-hour CO NAAQS. The high values in Portland, OR were caused by smoke from wildfires in 2020, while it is unclear what caused the high concentrations in Puerto Rico. Nearly all other sites in the U.S. were well below the NAAQS, with design values generally below 3 ppm for the 8-hour CO NAAQS and below 5 ppm for the 1-hour CO NAAQS.
+
+```{r label="06-dv-map-8hr",fig.height=5}
+## 8-hour CO DV map
+dvs.co.8hr <- ddply(subset(co.dvs,year == curr.year & !is.na(dv_8hr)),c("site"),summarize,
+  latitude=latitude[1],longitude=longitude[1],year=year[1],dv_8hr=max(dv_8hr))
+vals <- dvs.co.8hr$dv_8hr; o <- order(vals);
+colors <- c("blue3","cyan3","yellow3","orange3","red3"); bins <- c(3.1,6.1,9.1,15.1); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(min(vals),bins); bin.max <- c(bins-0.1,max(vals));
+n.sites <- table(cut(vals,breaks=c(0,bins-0.1,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(sprintf("%4.1f",bin.min)," - ",bin.max," ppm (",n.sites," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=dvs.co.8hr$longitude[o],y=dvs.co.8hr$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,
+  pch=21,col="black",pt.bg=colors[keep],pt.cex=1,ncol=3)
+```
+**Figure 5:** 8-hour CO design values in ppm for the `r params$curr.year-1`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+```{r label="06-dv-map-1hr",fig.height=5}
+## 1-hour CO DV map
+dvs.co.1hr <- ddply(subset(co.dvs,year == curr.year & !is.na(dv_1hr)),c("site"),summarize,
+  latitude=latitude[1],longitude=longitude[1],year=year[1],dv_1hr=max(dv_1hr))
+vals <- dvs.co.1hr$dv_1hr; o <- order(vals);
+colors <- c("blue3","cyan3","yellow3","orange3","red3"); bins <- c(5.1,10.1,20.1,35.1); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(min(vals),bins); bin.max <- c(bins-0.1,max(vals));
+n.sites <- table(cut(vals,breaks=c(0,bins-0.1,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(sprintf("%4.1f",bin.min)," - ",bin.max," ppm (",n.sites," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=dvs.co.1hr$longitude[o],y=dvs.co.1hr$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,
+  pch=21,col="black",pt.bg=colors[keep],pt.cex=1,ncol=3)
+```
+**Figure 6:** 1-hour CO design values in ppm for the `r params$curr.year-1`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+\newpage
+
+|      Figure 7 below shows a map of the site-level trends in the 8-hour CO design values and Figure 8 shows a map of the site-level trends in the 1-hour CO design values at U.S. monitoring sites having valid design values in at least `r ceiling(0.75*ny)` years from 2000 through `r params$curr.year`. The trends were computed using the Thiel-Sen estimator, and tests for significance were computed using the Mann-Kendall test. From these figures it is apparent that CO concentrations have been decreasing at nearly all sites in the U.S. One site in Puerto Rico had an increasing trend in the 1-hour design values, but the same site had a decreasing trend in the 8-hour design values.
+
+```{r label="07-dv-trends-8hr",fig.height=5}
+## Map of site-level 8-hour CO DV trends
+txt <- c("Decreasing > 0.1 ppm/yr","Decreasing < 0.1 ppm/yr","No Significant Trend",
+  "Increasing < 0.1 ppm/yr","Increasing > 0.1 ppm/yr")
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 0.1,4,5),ifelse(slope > -0.1,2,1))),
+  pval=co.site.dvs.8hr$pval,slope=co.site.dvs.8hr$slope)
+pt.col <- c("#0000FFFF","#AAAAFFFF","#FFFFFFFF","#FFAAAAFF","#FF0000FF")
+pt.cex <- c(1.25,1,0.75,1,1.25); pt.pch <- c(25,25,21,24,24);
+ind <- as.integer(names(table(cat))); r <- order(abs(co.site.dvs.8hr$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=co.site.dvs.8hr$longitude[r],y=co.site.dvs.8hr$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',cex=0.75,col="black",
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+```
+**Figure 7:** Site-level trends in 8-hour CO design values based on data from 2000 through `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs), trends computed using R statistical software.
+
+```{r label="08-dv-trends-1hr",fig.height=5}
+## Map of site-level 1-hour CO DV trends
+txt <- c("Decreasing > 0.2 ppm/yr","Decreasing < 0.2 ppm/yr","No Significant Trend",
+  "Increasing < 0.2 ppm/yr","Increasing > 0.2 ppm/yr")
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 0.2,4,5),ifelse(slope > -0.2,2,1))),
+  pval=co.site.dvs.1hr$pval,slope=co.site.dvs.1hr$slope)
+pt.col <- c("#0000FFFF","#AAAAFFFF","#FFFFFFFF","#FFAAAAFF","#FF0000FF")
+pt.cex <- c(1.25,1,0.75,1,1.25); pt.pch <- c(25,25,21,24,24);
+ind <- as.integer(names(table(cat))); r <- order(abs(co.site.dvs.1hr$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=co.site.dvs.1hr$longitude[r],y=co.site.dvs.1hr$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',cex=0.75,col="black",
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+## Calculate statistics for the text in the next paragraph
+median.8hr.curr <- median(co.site.dvs.8hr[,as.character(curr.year)],na.rm=TRUE)
+median.8hr.past <- median(co.site.dvs.8hr[,c("2000")],na.rm=TRUE)
+pct.change.8hr <- round(100*(median.8hr.past-median.8hr.curr)/median.8hr.past)
+median.1hr.curr <- median(co.site.dvs.1hr[,as.character(curr.year)],na.rm=TRUE)
+median.1hr.past <- median(co.site.dvs.1hr[,c("2000")],na.rm=TRUE)
+pct.change.1hr <- round(100*(median.1hr.past-median.1hr.curr)/median.1hr.past)
+```
+**Figure 8:** Site-level trends in 1-hour CO design values based on data from 2000 through `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs), trends computed using R statistical software
+
+\newpage
+
+|      Figure 9 below shows the national trends in the 8-hour and 1-hour co design values based on the `r nrow(co.site.dvs.8hr)` sites shown in Figure 7 and Figure 8, respectively. The national median of the 8-hour design values has decreased by `r pct.change.8hr`% from about `r round(median.8hr.past,1)` ppm in 2000 to about `r round(median.8hr.curr,1)` ppm in `r params$curr.year`. The national median of the 1-hour design values has decreased by `r pct.change.1hr`% from `r round(median.1hr.past,1)` ppm in 2000 to `r round(median.1hr.curr)` ppm in `r params$curr.year`.
+
+```{r label="09-national-trend",fig.height=5}
+## National CO trends figure
+co.trend.dvs.1hr <- apply(co.site.dvs.1hr[,-c(1:3)],2,quantile,probs=c(0.1,0.5,0.9),na.rm=TRUE)
+co.trend.dvs.8hr <- apply(co.site.dvs.8hr[,-c(1:3)],2,quantile,probs=c(0.1,0.5,0.9),na.rm=TRUE)
+par(mar=c(4,4,1,1),mgp=c(2.5,1,0),cex.axis=0.75,cex.lab=0.75)
+plot(x=NULL,y=NULL,type='n',xaxs='i',xaxt='n',xlim=c(1999.5,curr.year+0.5),
+  xlab="",yaxs='i',ylim=c(0,15),ylab="CO Design Value (ppm)",main="")
+axis(side=1,at=years,labels=years,las=2)
+polygon(x=c(1999.5,rep(curr.year+0.5,2),1999.5),y=c(0,0,15,15),col="gray80")
+abline(h=seq(1,14,1),v=years,col="white")
+lines(x=years,y=co.trend.dvs.1hr[1,1:ny],lty=2,lwd=2,col="orange3")
+lines(x=years,y=co.trend.dvs.1hr[2,1:ny],lty=1,lwd=2,col="orange3")
+lines(x=years,y=co.trend.dvs.1hr[3,1:ny],lty=2,lwd=2,col="orange3")
+lines(x=years,y=co.trend.dvs.8hr[1,1:ny],lty=2,lwd=2,col="steelblue")
+lines(x=years,y=co.trend.dvs.8hr[2,1:ny],lty=1,lwd=2,col="steelblue")
+lines(x=years,y=co.trend.dvs.8hr[3,1:ny],lty=2,lwd=2,col="steelblue")
+abline(h=9,lty=2,lwd=2,col="black")
+legend("topright",legend=c("10th/90th Percentile 1-hour DV","Median 1-hour DV",
+  "10th/90th Percentile 8-hour DV","Median 8-hour DV","CO 8-hour NAAQS Level"),
+  lty=c(2,1,2,1,2),col=c(rep("orange3",2),rep("steelblue",2),"black"),bty='n',lwd=2,cex=0.75)
+```
+**Figure 9:** National trends in CO design values in ppm, 2000 to `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+
+## Additional Resources
+
+- [Carbon Monoxide (CO) Pollution](https://www.epa.gov/co-pollution)
+
+- [Reviewing National Ambient Air Quality Standards (NAAQS): Scientific and Technical Information](https://www.epa.gov/naaqs)
+
+- [Air Emissions Inventories](https://www.epa.gov/air-emissions-inventories)
+
+- [Ambient Monitoring Technology Information Center (AMTIC)](https://www.epa.gov/amtic)
+
+- [Air Quality Design Values](https://www.epa.gov/air-trends/air-quality-design-values)
+
+- [National Air Quality: Status and Trends of Key Air Pollutants](https://www.epa.gov/air-trends)
+
+- [Air Data: Air Quality Data Collected at Outdoor Monitors Across the U.S.](https://www.epa.gov/outdoor-air-quality-data)
+
+[^1]: The procedures for calculating design values for the CO NAAQS are documented in [40 CFR §50.8](https://www.ecfr.gov/current/title-40/section-50.8) and [(Laxton, 1990)](https://www.tceq.texas.gov/assets/public/implementation/air/sip/sipdocs/ELP2007/laxton_memo.pdf).  

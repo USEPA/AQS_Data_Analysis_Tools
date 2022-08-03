@@ -1,0 +1,381 @@
+---
+title: "Overview of Nitrogen Dioxide (NO~2~) Air Quality in the United States"
+date: "`r paste('Updated:',format(Sys.time(), '%B %d, %Y'))`"
+output: pdf_document
+geometry: left=0.5in,right=0.5in,top=0.5in,bottom=0.75in
+params:
+  curr.year: 2021
+  nei.year: 2017
+urlcolor: blue
+---
+
+```{r label="00-intro",echo=FALSE,message=FALSE,warning=FALSE}
+## Initialize R workspace
+knitr::opts_chunk$set(cache=TRUE,echo=FALSE,message=FALSE,warning=FALSE,fig.width=7.5)
+options(stringsAsFactors=FALSE,scipen=10,warn=-1)
+library(data.table); library(knitr); library(kableExtra); library(plyr); library(reshape2); library(trend);
+source("C:/Users/bwells01/Documents/R/piechart.r")
+source("C:/Users/bwells01/Documents/Census/shape2014/rmapfuns.r")
+pa <- list(projection='albers',parameters=c(33,45),orientation=c(90,0,-100))
+base.dir <- "C:/Users/bwells01/Documents/NAAQS_AQ/"
+```
+
+## 1. Introduction
+
+|     The overall purpose of this document is to maintain an up-to-date graphical summary of air quality information that supports the review of the National Ambient Air Quality Standards (NAAQS) for nitrogen dioxide (NO~2~). In previous reviews of the NO~2~ NAAQS, this type of information has generally been included in atmospheric sections of the Integrated Science Assessment (ISA) and Policy Assessment (PA) for Oxides of Nitrogen. This stand-alone document will either replace or complement the air quality emissions and monitoring data in the atmospheric sections of future NO~2~ NAAQS documents, and will be updated at regular intervals as new data becomes available.
+
+|      The content of past NAAQS documents’ atmospheric sections has included major sections on emissions and concentration trends utilizing maps and data from the EPA’s National Emissions Inventory (NEI) and the EPA's Air Quality System (AQS) database. In past NAAQS reviews, this often involved adaptation of figures and tables prepared for other reports, or development of new figures and tables using data analysis and mapping software. Additionally, the release of updated emission inventories and ambient monitoring data may not coincide with the schedule for the development of NAAQS documents. As a result, data access and resources can limit the availability of the most recent information for inclusion in NAAQS documents. 
+
+|      This stand-alone document allows the content to be updated as soon as new data becomes available, rather than pulling from whatever is available at the time of publication. It also ensures that the public will have access to a consistent set of maps and figures for each NAAQS pollutant that are updated on a routine basis, rather than separated by several years following the disparate schedules of the various NAAQS reviews for each pollutant. Moreover, a stand-alone document can be expanded to include new air quality analyses as they are completed, rather than following the timeline for the public release of the NAAQS documents. Finally, this document takes advantage of a more flexible digital format for the routinely prepared maps and trends figures, with an end product that more strongly emphasizes visual presentation of data and reduces the amount text, while also creating a more interactive presentation of the information through the use of external links.
+
+|      This document follows an organization similar to the structure of the atmospheric sections of past NO~2~ NAAQS documents. The subsequent sections are as follows: 2. Atmospheric Chemistry; 3. Sources and Emissions of NO~X~; 4. Ambient Air Monitoring Requirements and Monitoring Networks; 5. Data Handling Conventions and Computations for Determining Whether the Standards are Met; and 6. NO~2~ Concentrations Measured at Ambient Air Monitoring Sites Across the U.S. These sections are broad enough in scope to handle changes in what is known about NO~2~ atmospheric science as it advances but specific enough that NAAQS-relevant information will be able to be quickly retrieved by users of the document.
+
+## 2. Atmospheric Chemistry
+
+|      Ambient concentrations of NO~2~ are influenced by both direct NO~2~ emissions and by emissions of nitric oxide (NO), with the subsequent conversion of NO to NO~2~ primarily though reaction with ozone (O~3~). The initial reaction between NO and O~3~ to form NO~2~ occurs fairly quickly during the daytime, with reaction times on the order of minutes. However, NO~2~ can also be photolyzed to reform NO, creating new O~3~ in the process. A large number of oxidized nitrogen species in the atmosphere are formed from the oxidation of NO and NO~2~. These include nitrate radicals (NO~3~), nitrous acid (HONO), nitric acid (HNO~3~), dinitrogen pentoxide (N~2~O~5~), nitryl chloride (ClNO~2~), peroxynitric acid (HNO~4~), peroxyacetyl nitrate and its homologues (PANs), other organic nitrates, such as alkyl nitrates (including isoprene nitrates), and pNO~3~. The sum of these reactive oxidation products (collectively referred to as NO~Z~) and NO plus NO~2~ (collectively referred to as NO~X~) comprise NO~Y~.
+
+|      Due to the close relationship between NO and NO~2~, and their ready interconversion, these species are often grouped together and referred to as NO~X~. The majority of NO~X~ emissions are in the form of NO. For example, 90% or more of tail-pipe NO~X~ emissions are in the form of NO, with only about 2 to 10% emitted as NO~2~. As noted above, NO~X~ emissions require time and sufficient O~3~ concentrations for the conversion of NO to NO~2~. Higher temperatures and concentrations of reactants result in shorter conversion times (e.g., less than one minute under some conditions), while dispersion and depletion of reactants results in longer conversion times. The time required to transport emissions away from a roadway can vary from less than one minute (e.g., under open conditions) to about one hour (e.g., for certain urban street canyons). These factors can affect the locations where the highest NO~2~ concentrations occur. In particular, while ambient NO~2~ concentrations are often elevated near important sources of NO~X~ emissions, such as major roadways, the highest measured ambient concentrations in a given urban area may not always occur immediately adjacent to those sources. Ambient NO~2~ concentrations around stationary sources of NO~X~ emissions are similarly impacted by the availability of O~3~ and by meteorological conditions, although surface-level NO~2~ concentrations can be less impacted in cases where stationary source NO~X~ emissions are emitted from locations elevated substantially above ground level.
+
+|      The near-road environment provides a clear example of the interplay between NO~X~ emissions, meteorology, and the atmospheric chemistry that impacts ambient NO~2~ concentrations. Vehicular emissions tend to peak during the morning and afternoon commutes, while peak O~3~ concentrations generally occur in the late morning to early evenings. In addition, atmospheric mixing tends to be the strongest during the daytime, rapidly diluting roadway emissions. Given the relative timing of O~3~ availability and peak atmospheric mixing conditions, the highest near-road NO~2~ concentrations often occur during the early morning hours (i.e., before atmospheric mixing can rapidly dilute emissions). The conversion of NO~X~ into the species that make up NO~Z~ typically takes place on a much longer time scale than do interconversions between NO and NO~2~. NO~X~ emitted during morning rush hour by vehicles can be converted almost completely into these products by late afternoon during warm, sunny conditions.
+
+|      Oxidized nitrogen compounds are ultimately lost from the atmosphere by wet and dry deposition to the Earth’s surface. Soluble species are taken up by aqueous aerosols and cloud droplets and are removed by wet deposition by rainout (i.e., incorporation into cloud droplets that eventually coagulate into falling rain drops). Both soluble and insoluble species are removed by washout (i.e., impaction with falling rain drops, another component of wet deposition), and by dry deposition (i.e., impaction with the surface and gas exchange with plants). NO and NO~2~ are not very soluble, and therefore wet deposition is not a major removal process for them. However, a major NO~X~ reservoir species, HNO~3~, is extremely soluble, and its deposition (both wet and dry) represents a major sink for NO~Y~.
+
+**Sources:** [Integrated Science Assessment for Oxides of Nitrogen, January 2016 (Chapter 2)](https://ordspub.epa.gov/ords/eims/eimscomm.getfile?p_download_id=526855)
+
+[Policy Assessment for the Review of the Primary NAAQS for Oxides of Nitrogen, April 2017 (Chapter 2) ](https://www.epa.gov/naaqs/policy-assessment-review-primary-national-ambient-air-quality-standards-oxides-nitrogen)
+
+## 3. Sources and Emissions of NO~X~
+
+```{r label="load-nei-data"}
+curr.year <- params$curr.year; nei.year <- params$nei.year;
+nei.file <- paste(base.dir,"data/",curr.year,"/NEI",nei.year,"_allpoll_bycounty_sector.Rdata",sep="")
+trends.file <- paste(base.dir,"data/",curr.year,"/emissions_trends_2002_",curr.year,".Rdata",sep="")
+load(nei.file); load(trends.file);
+trend.years <- c(2002:curr.year); ny <- length(trend.years);
+totals <- unlist(trends.data$NOx[nrow(trends.data$NOx),-1])
+pct.chg <- round(100*(totals[1]-totals[ny])/totals[1])
+highway <- unlist(trends.data$NOx[which(trends.data$NOx$source == "HIGHWAY VEHICLES"),-1])
+pct.hwy <- round(100*(highway[1]-highway[ny])/highway[1])
+nonroad <- unlist(trends.data$NOx[which(trends.data$NOx$source == "OFF-HIGHWAY"),-1])
+pct.nrd <- round(100*(nonroad[1]-nonroad[ny])/nonroad[1])
+fuel.comb <- unlist(trends.data$NOx[which(trends.data$NOx$source == "Stationary fuel combustion"),-1])
+pct.sfc <- round(100*(fuel.comb[1]-fuel.comb[ny])/fuel.comb[1])
+```
+
+|      Anthropogenic sources account for a large majority of NO~X~ emissions in the U.S., with highway vehicles, off-highway vehicles, and stationary fuel combustion identified as the largest contributors (Figure 1). More specifically, highway vehicles include all on-road vehicles, including light duty as well as heavy duty vehicles, both gasoline- and diesel-powered. Non-road mobile sources include aircraft, commercial marine vessels, locomotives, and non-road equipment. Fuel combustion includes electric generating units (EGUs), which generate electricity from fossil fuels, primarily coal, as well as commercial/institutional, industrial, and residential combustion of biomass, coal, natural gas, oil, and other fuels. Other anthropogenic NO~X~ sources include agricultural field burning, prescribed fires, and various industrial processes such as cement manufacturing and oil and gas production. Natural sources of NO~X~ include emissions from plants and soil (biogenics) and wildfires.
+
+|      Nationwide estimates indicate a `r pct.chg`% decrease in anthropogenic NO~X~ emissions from 2002 to `r params$curr.year` (Figure 2) as a result of multiple regulatory programs implemented over the past two decades, including the NO~X~ SIP Call, the Cross-State Air Pollution Rule (CSAPR), and the Tier 3 Light-duty Vehicle Emissions and Fuel Standards. The overall decrease in NO~X~ emissions has been driven primarily by decreases from the three largest emissions sectors. Specifically, compared to the 2002 NEI, estimates for `r params$curr.year` indicate a `r pct.hwy`% reduction in NO~X~ emissions from highway vehicles, a `r pct.nrd`% reduction in NO~X~ emissions from non-road mobile sources, and a `r pct.sfc`% reduction in NO~X~ emissions from stationary fuel combustion.
+
+|      The [National Emissions Inventory (NEI)](https://www.epa.gov/air-emissions-inventories) is a comprehensive and detailed estimate of air emissions of criteria pollutants, precursors to criteria pollutants, and hazardous air pollutants from air emissions sources. The NEI is released every three years based primarily upon data provided by State, Local, and Tribal air agencies for sources in their jurisdictions and supplemented by data developed by the US EPA. The NEI is built using the EPA’s Emissions Inventory System (EIS) first to collect the data from State, Local, and Tribal air agencies and then to blend that data with other data sources.
+
+|      Accuracy in an emissions inventory reflects the extent to which the inventory represents the actual emissions that occurred. Anthropogenic emissions of air pollutants result from a variety of sources such as power plants, industrial sources, motor vehicles and agriculture. The emissions from any individual source typically varies in both time and space. For the thousands of sources that make up the NEI, there is uncertainty in one or both of these factors. For some sources, such as power plants, direct emission measurements enable the emission factors derived from them to be more certain than sources without such direct measurements. However, it is not practically possible to directly monitor each of the emission sources individually and, therefore, emission inventories necessarily contain assumptions, interpolation and extrapolation from a limited set of sample data.
+
+```{r label="01-emissions-piechart",fig.height=3,fig.width=5,fig.align="center"}
+## NOx emissions pie chart
+pie.colors <- c("lightgreen","lightpink","lightblue","wheat")
+df <- data.frame(sector=c("Biogenics","Fires","Fuel Comb","Industrial",
+  "Onroad","Non-Road","Other"),emis=NA)
+df$emis[1] <- sector.data$NOx[grep("Biogenics -",sector.data$sector)]
+df$emis[2] <- sum(sector.data$NOx[grep("Fires -",sector.data$sector)])
+df$emis[3] <- sum(sector.data$NOx[grep("Fuel Comb",sector.data$sector)])
+df$emis[4] <- sum(sector.data$NOx[grep("Industrial Processes -",sector.data$sector)])
+df$emis[5] <- sum(sector.data$NOx[grep("Mobile - On-Road",sector.data$sector)])
+df$emis[6] <- sum(sector.data$NOx[setdiff(grep("Mobile -",sector.data$sector),
+  grep("On-Road",sector.data$sector))])
+df$emis[7] <- sum(sector.data$NOx,na.rm=TRUE)-sum(df$emis[1:6])
+df$pct <- 100*df$emis/sum(df$emis)
+pie.labels <- paste(c("Biogenics","All Fires","Stationary Fuel Combustion","Industrial\nProcesses",
+  "Highway Vehicles","Non-Road Mobile","Other")," ",round(df$pct),"%",sep="")
+pie.total <- format(round(sum(df$emis/1000)),big.mark=",")
+pie.title <- paste("NOx Emissions (",pie.total," kTon/year)",sep="")
+par(mar=c(0,5,2,5),bg="gray95",cex=0.75)
+pie(x=df$emis,labels=pie.labels,main=pie.title,col=pie.colors,radius=0.9)
+```
+
+**Figure 1.** U.S. NO~X~ emissions by sector. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data).
+
+```{r label="02-emissions-trends",fig.height=4,fig.width=6,fig.align="center"}
+## NOx emissions trends figure
+trend.border <- c("chocolate","gray50","red","green4","blue")
+trend.colors <- c("wheat","gray90","lightpink","lightgreen","lightblue")
+source.cat <- c("HIGHWAY VEHICLES","OFF-HIGHWAY","Stationary fuel combustion",
+  "Industrial and other processes","Miscellaneous without wildfires")
+df <- trends.data$NOx[match(source.cat,trends.data$NOx$source),
+  c("source",as.character(2002:curr.year))]
+df2 <- apply(df[c(nrow(df):1),-1],2,cumsum)
+source.labels <- c("Highway Vehicles","Non-Road Mobile","Stationary Fuel Combustion",
+  "Industrial and Other Processes","Other Anthropogenic Sources")
+par(mar=c(4,4,1,1),mgp=c(3,0.75,0),las=2,cex.axis=0.75,cex.lab=0.75)
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xaxs='i',xlim=c(2002,curr.year),
+  xlab="Inventory Year",yaxs='i',ylim=c(0,24000),ylab="NOx Emissions (kTons/year)")
+axis(side=1,at=seq(2002,curr.year,3),labels=seq(2002,curr.year,3))
+axis(side=2,at=seq(0,24000,4000),labels=seq(0,24000,4000))
+polygon(x=c(2002,rep(curr.year,2),2002),y=c(0,0,24000,24000),col="gray80")
+abline(h=seq(2000,22000,2000),v=trend.years,col="white")
+polygon(x=c(trend.years,rev(trend.years)),y=c(df2[1,],rep(0,ny)),
+  col=trend.colors[1],border=trend.colors[1])
+for (i in 2:nrow(df)) {
+  polygon(x=c(trend.years,rev(trend.years)),y=c(df2[i,],rev(df2[(i-1),])),
+    col=trend.colors[i],border=trend.colors[i],lwd=2)
+}
+for (i in 1:nrow(df)) { lines(x=trend.years,y=df2[i,],col=trend.border[i]) }
+legend("topright",legend=source.labels,fill=rev(trend.colors),
+  border=rev(trend.border),cex=0.75,bty='n')
+box()
+```
+
+**Figure 2.**	U.S. anthropogenic NO~X~ emissions trend, 2002-`r params$curr.year`. **Source:** [EPA’s Air Pollutant Emissions Trends Data ](https://www.epa.gov/air-emissions-inventories/air-pollutant-emissions-trends-data)
+
+\newpage
+
+|      Figure 3 below shows the NO~X~ emissions density in tons/mi^2^/year for each U.S. county based on the `r params$nei.year` NEI. The majority of NO~X~ emissions tend to be located near urban areas, which tend to have the most vehicle traffic and industrial sources. However, there are also some counties in rural areas with higher NO~X~ emissions due to the presence of large stationary sources such as EGUs or oil and gas extraction.
+
+```{r label="03-emissions-map",fig.height=5}
+## NOx county-level emissions density map
+breaks <- c(2,5,10,20)
+map.colors <- c("#EFF3FF","#BDD7E7","#6BAED6","#3182BD","#08519C")
+density <- county.data$NOx/county.data$area_km*2.59
+county.data$color <- assign.colors(density,discrete=TRUE,breaks=breaks,palette=map.colors)
+N <- table(cut(density,breaks=c(0,breaks,Inf),include.lowest=TRUE))
+map.legend <- paste(c(0,breaks),"-",c((breaks-0.1),round(max(density)))," (",N,")",sep="")
+map.title <- "Nitrogen Oxides Emissions Density in tons/year/mi^2 (# Counties)"
+layout(matrix(c(1,2),2,1),widths=1,heights=c(1,0.1))
+draw.map("state",proj.args=pa)
+for (i in 1:nrow(county.data)) {
+  draw.map("county",county.data$fips[i],add=TRUE,proj.args=pa,col=county.data$color[i],lwd=0.5)
+}
+draw.map("state",proj.args=pa,add=TRUE)
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("top",legend=map.legend,ncol=5,fill=map.colors,title=map.title,bty='n',cex=0.75)
+```
+**Figure 3.**	U.S. county-level NO~X~ emissions density estimates in tons/year/mi^2^. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data)
+
+## 4. Ambient Air Monitoring Requirements and Monitoring Networks
+
+```{r label="load-monitor-data"}
+load(paste(base.dir,"data/",curr.year,"/monitors_",curr.year-2,"_",curr.year,".Rdata",sep=""))
+no2.sites <- subset(no2.monitors,!duplicated(substr(id,1,9)))
+```
+
+|      Ambient NO~2~ concentrations are measured by monitoring networks operated by state, local, and tribal air agencies, which are typically funded in part by the EPA. There were `r nrow(no2.sites)` monitoring sites reporting hourly NO~2~ concentration data to the EPA during the `r params$curr.year-2`-`r params$curr.year` period. The locations of these monitoring sites are shown in Figure 4. The main network of monitors providing ambient data for use in implementation activities related to the NAAQS is the State and Local Air Monitoring Stations (SLAMS) network, which comprises over 80% of all NO~2~ monitoring sites. This network relies on a chemiluminescent Federal Reference Method (FRM) and on Federal Equivalent Methods (FEM) that use either chemiluminescence or direct measurement methods of NO~2~. Data produced by chemiluminescent analyzers include NO, NO~2~, and NO~X~ measurements, which are all routinely reported by state and local air monitoring agencies.
+
+|      Two important subsets of SLAMS sites separately make up the [National Core (NCore)](https://www.epa.gov/amtic/ncore-monitoring-network) multi-pollutant monitoring network and the [Photochemical Assessment Monitoring Stations (PAMS)](https://www.epa.gov/amtic/photochemical-assessment-monitoring-stations-pams) network. The NCore network consists of approximately 60 urban monitoring stations and 20 rural monitoring stations, and each state is required to have at least one NCore station. At each NCore site located in a MSA with a population of 1 million or more (based on the most recent census), a PAMS network site is required.[^1] Monitoring sites in the PAMS network are required to measure NO, NO~2~, NO~Y~, and other O~3~ precursors during the months of June, July and August, although some precursor monitoring may be required for longer periods of time.
+
+|      Another important subset of SLAMS sites is the [near-road monitoring network](https://www.epa.gov/amtic/near-road-monitoring), which was required as part of the 2010 NO~2~ NAAQS review and began operating in 2014. Near-road sites are required in each metropolitan statistical area (MSA) with a population of 1,000,000 or greater, and an additional near-road site is required in each MSA with a population of 2,500,000 or greater or with one or more roadway segments that have an average daily traffic volume of 250,000 or more vehicles per day. There were `r length(which(no2.sites$network == "NEAR ROAD"))` monitors in operation during the `r params$curr.year-2`-`r params$curr.year` period.
+
+|      Finally, there are also a number of Special Purpose Monitors (SPMs), which are not required but are often operated by air agencies for short periods of time (i.e., less than 3 years) to collect data for human health and welfare studies, as well as other types of monitoring sites, including monitors operated by tribes and industrial sources. The SPMs are typically not used to assess compliance with the NAAQS.
+
+```{r label="04-monitor-map",fig.height=5}
+## NO2 monitor map
+no2.monitors$site <- substr(no2.monitors$id,1,9)
+no2.monitors$class <- mapply(function(type,network) ifelse(network == "NEAR ROAD","NEAR ROAD",
+  ifelse(network %in% c("NCORE","PAMS","UNOFFICIAL PAMS"),"NCORE/PAMS",
+  ifelse(type == "SLAMS","SLAMS","SPM/OTHER"))),no2.monitors$monitor_type,no2.monitors$network)
+t <- ddply(no2.monitors,"site",summarize,latitude=latitude[1],
+  longitude=longitude[1],class=min(class))
+colors <- c("gray50","blue3","yellow3","red3")
+t$color <- sapply(substr(t$class,1,2),function(x) switch(x,
+  NE=colors[3],NC=colors[2],SL=colors[1],colors[4]))
+t <- t[order(t$class,t$site,decreasing=TRUE),]
+N <- table(t$class)[c(3,1,2,4)]
+legend.lab <- paste(names(N)," (",N,")",sep="")
+
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,col="grey95")
+for (i in 1:nrow(t)) {
+  add.layer(type="points",x=t$longitude[i],y=t$latitude[i],
+    proj.args=pa,bg=t$color[i],pch=21)
+}
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab,pt.bg=colors,pch=21,bty='n',ncol=4,
+  title="NO2 Monitoring Networks (# sites)",cex=0.75,pt.cex=1)
+```
+**Figure 4:** Map of U.S. NO~2~ monitoring sites reporting data to the EPA during the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+|      The traditional chemiluminescence FRM is subject to potential measurement biases resulting from interference by NO~Z~ species. However, within metropolitan areas, where a majority of the NO~2~ monitoring network is located, NO~2~ concentrations tend to be most heavily influenced by strong local NO~X~ sources, thus the potential for NO~Z~ related measurement bias is relatively small. There have been recent advances in methods that provide measurements of NO~2~ with less potential for interference. These newer methods include photolytic-chemiluminescent methods that rely on photodissociation of NO~2~ using specific wavelengths of light, and direct measurements of NO~2~, including cavity attenuated phase shift spectrometry and cavity ring-down spectroscopy. It should be noted that the direct NO~2~ measurement methods do not provide NO or NO~X~ measurements. These newer methods are expected to gradually replace the older FRMs as the older monitors age.
+
+## 5. Data Handling Conventions and Computations for Determining Whether the Standards are Met
+
+|      To assess whether a monitoring site or geographic area (usually a county or urban area) meets or exceeds a NAAQS, the monitoring data are analyzed consistent with the established regulatory requirements for the handling of monitoring data for the purposes of deriving a design value. A design value summarizes ambient air concentrations for an area in terms of the indicator, averaging time and form for a given standard such that its comparison to the level of the standard indicates whether the area meets or exceeds the standard. There are currently two NO~2~ NAAQS in effect: the annual NAAQS (established in 1971) and the 1-hour NAAQS (established in 2010). The procedures for calculating design values for both NO~2~ NAAQS are detailed in [Appendix S to 40 CFR Part 50](https://www.ecfr.gov/current/title-40/part-50/appendix-Appendix%20S%20to%20Part%2050) and are summarized below.
+
+|      Hourly NO~2~ measurement data collected at an ambient air monitoring site using Federal Reference or Equivalent Methods, meeting all applicable requirements in [40 CFR Part 58 ](https://www.ecfr.gov/current/title-40/part-58), and reported to AQS in parts per billion (ppb) with decimal digits after the first decimal place truncated are used in design value calculations. If multiple monitors collect measurements at the same site, one monitor is designated as the primary monitor. Measurement data collected with the primary monitor are used to calculate the design value, and may be supplemented with data from collocated monitors only if (a) the primary monitor did not collect sufficient data to determine a valid design value, or (b) the primary monitor has been discontinued and replaced by another monitor.
+
+|      The design value for the annual NO~2~ NAAQS is simply the mean of all hourly concentration values reported for a single year, rounded to the nearest integer in ppb. The annual design value is considered valid when hourly concentrations are reported for at least 75% of the hours in the year, or if the design value is greater than 53 ppb, the level of the NAAQS.
+
+|      For the 1-hour NO~2~ NAAQS, the maximum hourly concentration is determined for each day (i.e., the "daily maximum value") in a given 3-year period. For each year, the 98th percentile of the daily maximum values is determined, and the design value is the average of the three annual 98th percentile values, rounded to the nearest integer in ppb. The 1-hour NO~2~ NAAQS are met when the design value is less than or equal to 100 ppb, the level of the NAAQS. 
+
+|      In addition, the 1-hour design value must meet data completeness requirements in order to be considered valid. Specifically, a sample day is considered complete when at least 18 hourly measurements are reported. For each calendar quarter (i.e., Jan-Mar, Apr-Jun, Jul-Sep, Oct-Dec), the quarter is considered complete if at least 75% of the days in the quarter have complete data. The 1-hour NO~2~ design value is considered complete when all 12 calendar quarters in the 3-year period have complete data. In addition, there are two data substitution tests specified in Appendix S to 40 CFR Part 50 which may be used to yield a valid design value above or below the NAAQS, respectively, in the event that a site falls short of the minimum data completeness requirement.
+
+## 6. NO~2~ Concentrations Measured at Ambient Air Monitoring Sites Across the U.S.
+
+```{r label="load-conc-data"}
+load(paste(base.dir,"data/",curr.year,"/NO2dvs2000_",curr.year,".Rdata",sep=""))
+load(paste(base.dir,"data/",curr.year,"/NO2trends2000_",curr.year,".Rdata",sep=""))
+years <- c(2000:curr.year); ny <- length(years);
+```
+
+|      Table 1 below presents summary statistics based on the two daily NO~2~ NAAQS metrics, the daily maximum 1-hour (MDA1) metric, and the daily 24-hour average (DA24) metric. These statistics are presented for year-round and each season (winter=Dec/Jan/Feb, spring=Mar/Apr/May, summer=Jun/Jul/Aug, autumn=Sep/Oct/Nov) based on data reported to AQS for `r params$curr.year-2`-`r params$curr.year`. Table 2 presents the same summary statistics for the MDA1 and DA24 metrics for each [NOAA Climate Region ](https://www.ncei.noaa.gov/monitoring-references/maps/us-climate-regions)[^2].
+
+**Table 1.** National distribution of NO~2~ concentrations in ppb by season for `r params$curr.year-2`-`r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+```{r label="Table1"}
+load(paste(base.dir,"data/",curr.year,"/conctables",curr.year-2,"_",curr.year,".Rdata",sep=""))
+kbl(no2.table1[,-2],booktabs=TRUE,format.args=list(big.mark=",")) %>% kable_styling(latex_options=c("hold_position","scale_down")) %>% row_spec(0,bold=TRUE)
+```
+N.sites = number of sites; N.obs = number of observations; SD = standard deviation; min = minimum; p1, p5, p10, p25, p50, p90, p95, p98, p99 = 1st, 5th, 10th, 25th, 50th, 90th, 95th, 98th, 99th percentiles; max = maximum; max.site = AQS ID number for the monitoring site corresponding to the observation in the max column.
+winter = December/January/February; spring = March/April/May; summer = June/July/August; autumn = September/October/November.
+
+\newpage
+
+**Table 2.** National distribution of NO~2~ concentrations in ppb by climate region for `r params$curr.year-2`-`r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+```{r label="Table2"}
+load(paste(base.dir,"data/",curr.year,"/conctables",curr.year-2,"_",curr.year,".Rdata",sep=""))
+kbl(no2.table2[,-3],booktabs=TRUE,format.args=list(big.mark=",")) %>% kable_styling(latex_options=c("hold_position","scale_down")) %>% row_spec(0,bold=TRUE)
+```
+N.sites = number of sites; N.obs = number of observations; SD = standard deviation; min = minimum; p1, p5, p10, p25, p50, p90, p95, p98, p99 = 1st, 5th, 10th, 25th, 50th, 90th, 95th, 98th, 99th percentiles; max = maximum; max.site = AQS ID number for the monitoring site corresponding to the observation in the max column.
+Central = Illinois, Indiana, Kentucky, Missouri, Ohio, Tennessee, West Virginia; East North Central = Iowa, Minnesota, Michigan, Wisconsin; Northeast = Connecticut, Delaware, Maine, Maryland, Massachusetts, New Hampshire, New Jersey, New York, Pennsylvania, Rhode Island, Vermont; Northwest = Alaska, Idaho, Oregon, Washington; South = Arkansas, Kansas, Louisiana, Mississippi, Oklahoma, Texas; Southeast = Alabama, Florida, Georgia, North Carolina, South Carolina, Virginia; Southwest = Arizona, Colorado, New Mexico, Utah; West = California, Hawaii, Nevada; West North Central = Montana, Nebraska, North Dakota, South Dakota, Wyoming.
+
+\newpage
+
+|      Figure 5 below shows a map of the annual NO~2~ design values at U.S. ambient air monitoring sites based on data from `r params$curr.year` and Figure 6 shows a map of the 1-hour NO~2~ design values based on data from the `r params$curr.year-2`-`r params$curr.year` period. There were no sites with design values exceeding either NAAQS. The maximum annual design value was `r round(max(subset(no2.dvs,year == curr.year & valid_ann == "Y")$dv_ann,na.rm=TRUE))` ppb, while the maximum 1-hour design value was `r round(max(subset(no2.dvs,year == curr.year & valid_1hr == "Y")$dv_1hr,na.rm=TRUE))` ppb. Both of these maximum design values occurred at near-road sites in the Los Angeles, CA metropolitan area.
+
+```{r label="05-dv-map-annual",fig.height=5}
+## Annual NO2 DV map
+dvs.no2.ann <- subset(no2.dvs,year == curr.year & !is.na(dv_ann) & valid_ann == "Y",
+  c("site","latitude","longitude","year","dv_ann"))
+vals <- round(dvs.no2.ann$dv_ann); o <- order(vals);
+colors <- c("blue3","cyan3","yellow3","orange3","red3"); bins <- c(11,21,31,54); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(min(vals),bins); bin.max <- c(bins-1,max(vals));
+n.sites <- table(cut(vals,breaks=c(0,bins-1,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(bin.min," - ",bin.max," ppb (",n.sites," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=dvs.no2.ann$longitude[o],y=dvs.no2.ann$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,
+  pch=21,col="black",pt.bg=colors[keep],pt.cex=1,ncol=3)
+```
+**Figure 5:** Annual NO~2~ design values in ppb based on data from `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+
+```{r label="06-dv-map-1hour",fig.height=5}
+## 1-hour NO2 DV map
+dvs.no2.1hr <- subset(no2.dvs,year == curr.year & valid_1hr == "Y",
+  c("site","latitude","longitude","year","dv_1hr"))
+vals <- dvs.no2.1hr$dv_1hr; o <- order(vals);
+colors <- c("blue3","cyan3","yellow3","orange3","red3"); bins <- c(26,51,76,101); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(min(vals),bins); bin.max <- c(bins-1,max(vals));
+n.sites <- table(cut(vals,breaks=c(0,bins-1,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(bin.min," - ",bin.max," ppb (",n.sites," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=dvs.no2.1hr$longitude[o],y=dvs.no2.1hr$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,
+  pch=21,col="black",pt.bg=colors[keep],pt.cex=1,ncol=4)
+```
+**Figure 6:** 1-hour NO~2~ design values in ppb for the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+\newpage
+
+|      Figure 7 below shows a map of the site-level trends in the annual NO~2~ design values at U.S. monitoring sites having valid design values in at least `r ceiling(0.75*ny)` years from 2000 through `r params$curr.year`. Figure 8 shows a map of the site-level trends in the 1-hour NO~2~ design values at U.S. monitoring sites having valid design values in at least `r ceiling(0.75*(ny-2))` of the `r (ny-2)` 3-year periods from 2000 through `r params$curr.year`. The trends were computed using the Thiel-Sen estimator, and tests for significance were computed using the Mann-Kendall test. From these figures it is apparent that NO~2~ concentrations have been decreasing at nearly all sites in the U.S. Two sites in North Dakota showed an increasing trend in the annual design value (one of these sites also had an increasing trend in the 1-hour design value), which is likely due to an increase in NO~X~ emissions from oil and gas extraction activity in the region.
+
+```{r label="07-dv-trends-annual",fig.height=5}
+## Map of site-level annual NO2 DV trends
+txt <- c("Decreasing > 0.5 ppb/yr","Decreasing < 0.5 ppb/yr","No Significant Trend",
+  "Increasing < 0.5 ppb/yr","Increasing > 0.5 ppb/yr")
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 0.5,4,5),ifelse(slope > -0.5,2,1))),
+  pval=no2.site.dvs.ann$pval,slope=no2.site.dvs.ann$slope)
+pt.col <- c("#0000FFFF","#AAAAFFFF","#FFFFFFFF","#FFAAAAFF","#FF0000FF")
+pt.cex <- c(1.25,1,0.75,1,1.25); pt.pch <- c(25,25,21,24,24);
+ind <- as.integer(names(table(cat))); r <- order(abs(no2.site.dvs.ann$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=no2.site.dvs.ann$longitude[r],y=no2.site.dvs.ann$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',col="black",cex=0.75,
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+```
+**Figure 7:** Site-level trends in annual NO~2~ design values based on data from 2000 through `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs), trends computed using R statistical software.
+
+```{r label="08-dv-trends-1hour",fig.height=5}
+## Map of site-level 1-hour NO2 DV trends
+txt <- c("Decreasing > 1 ppb/yr","Decreasing < 1 ppb/yr","No Significant Trend",
+  "Increasing < 1 ppb/yr","Increasing > 1 ppb/yr")
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 1,4,5),ifelse(slope > -1,2,1))),
+  pval=no2.site.dvs.1hr$pval,slope=no2.site.dvs.1hr$slope)
+pt.col <- c("#0000FFFF","#AAAAFFFF","#FFFFFFFF","#FFAAAAFF","#FF0000FF")
+pt.cex <- c(1.25,1,0.75,1,1.25); pt.pch <- c(25,25,21,24,24);
+ind <- as.integer(names(table(cat))); r <- order(abs(no2.site.dvs.1hr$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=no2.site.dvs.1hr$longitude[r],y=no2.site.dvs.1hr$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',col="black",cex=0.75,
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+## Calculate statistics for the text in the next paragraph
+median.ann.curr <- median(no2.site.dvs.ann[,as.character(curr.year)],na.rm=TRUE)
+median.ann.past <- median(no2.site.dvs.ann[,c("2000")],na.rm=TRUE)
+pct.change.ann <- round(100*(median.ann.past-median.ann.curr)/median.ann.past)
+median.1hr.curr <- median(no2.site.dvs.1hr[,as.character(curr.year)],na.rm=TRUE)
+median.1hr.past <- median(no2.site.dvs.1hr[,c("2000")],na.rm=TRUE)
+pct.change.1hr <- round(100*(median.1hr.past-median.1hr.curr)/median.1hr.past)
+```
+**Figure 8:** Site-level trends in 1-hour NO~2~ design values based on data from 2000 through `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs), trends computed using R statistical software.
+
+\newpage
+
+|      Figure 9 below shows the national trends in the annual and 1-hour NO~2~ design values based on the `r nrow(no2.site.dvs.ann)` sites shown in Figure 7 and the `r nrow(no2.site.dvs.1hr)` sites shown in Figure 8, respectively. The national median of the annual design values has decreased by `r pct.change.ann`% from about `r round(median.ann.past,1)` ppb in 2000 to about `r round(median.ann.curr,1)` ppb in `r params$curr.year`. The national median of the 1-hour design values has decreased by `r pct.change.1hr`% from `r round(median.1hr.past)` ppb in 2000 to `r round(median.1hr.curr)` ppb in `r params$curr.year`.
+
+```{r label="09-national-trend",fig.height=5}
+## National NO2 trends figure
+no2.trend.dvs.1hr <- apply(no2.site.dvs.1hr[,-c(1:3)],2,quantile,probs=c(0.1,0.5,0.9),na.rm=TRUE)
+no2.trend.dvs.ann <- apply(no2.site.dvs.ann[,-c(1:3)],2,quantile,probs=c(0.1,0.5,0.9),na.rm=TRUE)
+par(mar=c(3,3,1,1),mgp=c(2,0.75,0),cex.axis=0.75,cex.lab=0.75)
+plot(x=NULL,y=NULL,type='n',xaxs='i',xaxt='n',xlim=c(1999.5,curr.year+0.5),
+  xlab="",yaxs='i',ylim=c(0,100),ylab="NO2 Design Value (ppb)",main="")
+axis(side=1,at=years,labels=years,las=2)
+polygon(x=c(1999.5,rep(curr.year+0.5,2),1999.5),y=c(0,0,100,100),col="gray80")
+abline(h=seq(10,90,10),v=years,col="white")
+lines(x=years,y=no2.trend.dvs.1hr[1,1:ny],lty=2,lwd=2,col="orange3")
+lines(x=years,y=no2.trend.dvs.1hr[2,1:ny],lty=1,lwd=2,col="orange3")
+lines(x=years,y=no2.trend.dvs.1hr[3,1:ny],lty=2,lwd=2,col="orange3")
+lines(x=years,y=no2.trend.dvs.ann[1,1:ny],lty=2,lwd=2,col="steelblue")
+lines(x=years,y=no2.trend.dvs.ann[2,1:ny],lty=1,lwd=2,col="steelblue")
+lines(x=years,y=no2.trend.dvs.ann[3,1:ny],lty=2,lwd=2,col="steelblue")
+abline(h=53,lty=2,lwd=2,col="black"); box();
+legend("topright",legend=c("10th/90th Percentile 1-hour DV","Median 1-hour DV",
+  "10th/90th Percentile Annual DV","Median Annual DV","NO2 Annual NAAQS Level"),
+  lty=c(2,1,2,1,2),lwd=2,col=c(rep("orange3",2),rep("steelblue",2),"black"),cex=0.75,bty='n')
+```
+**Figure 9:** National trends in NO~2~ design values in ppb, 2000 to `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+
+## Additional Resources
+
+- [Nitrogen Dioxide (NO~2~) Pollution](https://www.epa.gov/no2-pollution)
+
+- [Reviewing National Ambient Air Quality Standards (NAAQS): Scientific and Technical Information](https://www.epa.gov/naaqs)
+
+- [Air Emissions Inventories](https://www.epa.gov/air-emissions-inventories)
+
+- [Ambient Monitoring Technology Information Center (AMTIC)](https://www.epa.gov/amtic)
+
+- [Air Quality Design Values](https://www.epa.gov/air-trends/air-quality-design-values)
+
+- [National Air Quality: Status and Trends of Key Air Pollutants](https://www.epa.gov/air-trends)
+
+- [Air Data: Air Quality Data Collected at Outdoor Monitors Across the U.S.](https://www.epa.gov/outdoor-air-quality-data)
+
+[^1]: The requirements for PAMS, which were most recently updated in 2015, is fully described in section 5 of [Appendix D to 40 CFR Part 58 ](https://www.ecfr.gov/current/title-40/part-58/appendix-Appendix%20D%20to%20Part%2058).
+[^2]: For Table 2, monitoring sites in Alaska were assigned to the Northwest Region, monitoring sites in Hawaii were assigned to the West region, and monitoring sites in Puerto Rico were assigned to the Southeast region.

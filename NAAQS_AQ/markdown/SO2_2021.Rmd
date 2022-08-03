@@ -1,0 +1,322 @@
+---
+title: "Overview of Sulfur Dioxide (SO~2~) Air Quality in the United States"
+date: "`r paste('Updated:',format(Sys.time(), '%B %d, %Y'))`"
+output: pdf_document
+geometry: left=0.5in,right=0.5in,top=0.5in,bottom=0.75in
+params:
+  curr.year: 2021
+  nei.year: 2017
+urlcolor: blue
+---
+
+```{r label="00-intro",echo=FALSE,message=FALSE,warning=FALSE}
+## Initialize R workspace
+knitr::opts_chunk$set(cache=TRUE,echo=FALSE,message=FALSE,warning=FALSE,fig.width=7.5)
+options(stringsAsFactors=FALSE,scipen=10,warn=-1)
+library(data.table); library(knitr); library(kableExtra); library(plyr); library(reshape2); library(trend);
+source("C:/Users/bwells01/Documents/R/piechart.r")
+source("C:/Users/bwells01/Documents/Census/shape2014/rmapfuns.r")
+pa <- list(projection='albers',parameters=c(33,45),orientation=c(90,0,-100))
+base.dir <- "C:/Users/bwells01/Documents/NAAQS_AQ/"
+```
+
+## 1. Introduction
+
+|     The overall purpose of this document is to maintain an up-to-date graphical summary of air quality information that supports the review of the National Ambient Air Quality Standards (NAAQS) for sulfur dioxide (SO~2~). In previous reviews of the SO~2~ NAAQS, this type of information has generally been included in atmospheric sections of the Integrated Science Assessment (ISA) and Policy Assessment (PA) for Sulfur Oxides. This stand-alone document will either replace or complement the air quality emissions and monitoring data in the atmospheric sections of future SO~2~ NAAQS documents, and will be updated at regular intervals as new data becomes available.
+
+|      The content of past NAAQS documents' atmospheric sections has included major sections on emissions and concentration trends utilizing maps and data from the EPA's National Emissions Inventory (NEI) and the EPA's Air Quality System (AQS) database. In past NAAQS reviews, this often involved adaptation of figures and tables prepared for other reports, or development of new figures and tables using data analysis and mapping software. Additionally, the release of updated emission inventories and ambient monitoring data may not coincide with the schedule for the development of NAAQS documents. As a result, data access and resources can limit the availability of the most recent information for inclusion in NAAQS documents. 
+
+|      This stand-alone document allows the content to be updated as soon as new data becomes available, rather than pulling from whatever is available at the time of publication. It also ensures that the public will have access to a consistent set of maps and figures for each NAAQS pollutant that are updated on a routine basis, rather than separated by several years following the disparate schedules of the various NAAQS reviews for each pollutant. Moreover, a stand-alone document can be expanded to include new air quality analyses as they are completed, rather than following the timeline for the public release of the NAAQS documents. Finally, this document takes advantage of a more flexible digital format for the routinely prepared maps and trends figures, with an end product that more strongly emphasizes visual presentation of data and reduces the amount text, while also creating a more interactive presentation of the information through the use of external links.
+
+|      This document follows an organization similar to the structure of the atmospheric sections of past SO~2~ NAAQS documents. The subsequent sections are as follows: 2. Atmospheric Chemistry; 3. Sources and Emissions of SO~2~; 4. Ambient Air Monitoring Requirements and Monitoring Networks; 5. Data Handling Conventions and Computations for Determining Whether the Standards are Met; and 6. SO~2~ Concentrations Measured at Ambient Air Monitoring Sites Across the U.S. These sections are broad enough in scope to handle changes in what is known about SO~2~ atmospheric science as it advances but specific enough that NAAQS-relevant information will be able to be quickly retrieved by users of the document.
+
+## 2. Atmospheric Chemistry
+
+|      Sulfur oxides are a group of closely related sulfur-containing gas-phase compounds [e.g., sulfur dioxide (SO~2~), sulfur monoxide (SO), disulfur monoxide (S~2~O), and sulfur trioxide (SO~3~)]. Sulfur oxides also appear in the particle phase, as components of particulate matter (PM). The NAAQS for sulfur oxides are currently set using SO~2~ as the indicator, because of the sulfur oxides, SO~2~ is the most abundant in the atmosphere, the most important in atmospheric chemistry, and the one most clearly linked to human health effects. Sulfur dioxide is both a primary gas-phase pollutant (when formed during fuel combustion) and a secondary pollutant (when formed as the product of atmospheric gas- or aqueous-phase oxidation of reduced sulfur compounds, called sulfides).
+
+|      The important gas-phase sulfur oxides in the troposphere are SO~2~ and H~2~SO~4~. SO~3~ is known to be present in the emissions of coal-fired power plants, factories, and refineries, but it reacts with water vapor in the stacks or immediately after release into the atmosphere within seconds to form H~2~SO~4~, which makes it difficult to detect in the ambient atmosphere. Gas-phase H~2~SO~4~, the product of both SO~2~ and SO~3~ oxidation, quickly condenses onto existing atmospheric particles or participates in new particle formation. Of these species, only SO~2~ is present at concentrations in the gas phase that are relevant for chemistry in the atmospheric boundary layer and troposphere, and for human exposures. Other sulfur oxides, including both S(IV) and S(VI) compounds, appear in the atmosphere due to direct emissions and as the products of the oxidation of more reduced forms of sulfur. Gas-phase precursors to SO~2~ include sulfides and partially oxidized sulfur-containing organic compounds. 
+
+|      The global atmospheric lifetime of SO~2~ with respect to reactions with the OH radical in the troposphere is 7.2 days. The rate constant for the reaction between SO~2~ and NO~3~ radical is too small to be important in lowering SO~2~ concentrations at urban or regional scales. The same is true for the reaction between SO~2~ and the hydroperoxyl (HO~2~) radical. In the stepwise oxidation of SO~2~ by OH, SO~2~ is oxidized to form SO~3~, taking the sulfur atom from the S(IV) to S(VI) oxidation state, producing the bisulfite radical (HSO~3~): SO~2~ + OH + M -> HSO~3~ + M, where M is an unreactive gas molecule that absorbs excess destabilizing energy from the SO~2~-OH transition state. This reaction is followed by HSO~3~ + O~2~ -> SO~3~ + HO~2~. An alternative route involves a stabilized Criegee intermediate (sCI): SO~2~ + sCI -> SO~3~ + products. The SO~3~ that is generated by either oxidation mechanism (i.e., reaction with OH or via the Criegee reaction) is highly reactive. Water vapor is sufficiently abundant in the troposphere to ensure that SO~3~ is quickly converted to gas-phase sulfuric acid: SO~3~ + H~2~O + M -> H~2~SO~4~ + M. Because H~2~SO~4~ is extremely water soluble, gaseous H~2~SO~4~ will rapidly dissolve into the aqueous phase of aerosol particles and cloud droplets. Conversion from SO~2~ to H~2~SO~4~ increases with increasing relative humidity and O~3~ levels.
+
+|      The basic mechanism of the aqueous-phase oxidation of SO~2~ involves dissolution of SO~2~ followed by the formation and dissociation of sulfurous acid (H~2~SO~3~). Additionally, in environments where ambient ammonia (NH~3~) is abundant, SO~2~ is subject to fast removal by cloud and fog droplets and ultimately forms ammonium sulfate [(NH~4~)~2~SO~4~]. In the same way that it is removed from the gas phase by dissolving into cloud droplets, SO~2~ can be removed by dry deposition onto wet surfaces. Scavenging by rain (wet deposition) serves as another removal route. Modeling studies have shown that slightly more than half of SO~2~ is lost by gas- and aqueous-phase oxidation, with the remainder of SO~2~ loss accounted for by wet and dry deposition.
+
+|      Sulfur dioxide is also known to adhere to and then react on dust particles. For some mineral compositions, SO~2~ uptake on dust particles is sensitive to relative humidity, the mineral composition of the particle, and the availability of H~2~O~2~, the relevant oxidant. Once SO~2~ is oxidized to H~2~SO~4~ on the particle surface, glyoxal, one of the most prevalent organic compounds in the atmosphere, will adhere to the surface and react to form oligomers and organosulfate compounds. This process is enhanced under high humidity conditions.
+
+**Sources:** [Integrated Science Assessment for Sulfur Oxides - Health Criteria, December 2017 (Chapter 2)](https://cfpub.epa.gov/ncea/isa/recordisplay.cfm?deid=338596)
+
+[Policy Assessment for the Review of the Primary NAAQS for Sulfur Oxides, May 2018 (Chapter 2) ](https://www.epa.gov/sites/default/files/2018-05/documents/primary_so2_naaqs_-_final_pa_-_may_2018.pdf)
+
+## 3. Sources and Emissions of SO~2~
+
+```{r label="load-nei-data"}
+curr.year <- params$curr.year; nei.year <- params$nei.year;
+nei.file <- paste(base.dir,"data/",curr.year,"/NEI",nei.year,"_allpoll_bycounty_sector.Rdata",sep="")
+trends.file <- paste(base.dir,"data/",curr.year,"/emissions_trends_2002_",curr.year,".Rdata",sep="")
+load(nei.file); load(trends.file);
+trend.years <- c(2002:curr.year); ny <- length(trend.years);
+totals <- unlist(trends.data$SO2[nrow(trends.data$SO2),-1])
+pct.chg <- round(100*(totals[1]-totals[ny])/totals[1])
+egus <- unlist(trends.data$SO2[which(trends.data$SO2$source == "FUEL COMB. ELEC. UTIL."),-1])
+pct.egu <- round(100*(egus[1]-egus[ny])/egus[1])
+mobile <- unlist(trends.data$SO2[which(trends.data$SO2$source == "Transportation"),-1])
+pct.mob <- round(100*(mobile[1]-mobile[ny])/mobile[1])
+```
+
+|      Sulfur is present to some degree in all fossil fuels, especially coal, and occurs as reduced organosulfur compounds. Coal also contains sulfur in mineral form (pyrite or other metallo-sulfur minerals) and in elemental form. Of the most common types of coal (anthracite, bituminous, subbituminous, and lignite), sulfur content varies between 0.4 and 4% by mass. Sulfur in fossil fuels is almost entirely converted to SO~2~ during combustion, making accurate estimates of SO~2~ combustion emissions possible based on fuel composition and combustion rates. 
+
+|      Fossil fuel combustion is the main anthropogenic source of primary SO~2~, while volcanoes and wildfires are the main natural sources of primary SO~2~. Anthropogenic SO~2~ emissions originate primarily from point sources, including coal-fired electricity generating units (EGUs) and other industrial facilities. Industrial chemical and pulp and paper production, smelter and steel mill operations, natural biological activity (plants, fungi, and prokaryotes), and volcanoes are among many sources of reduced sulfur compounds that contribute, through various oxidation reactions in the atmosphere, to the formation of secondary SO~2~. In addition to volcanic and other geologic SO~2~ emissions, naturally occurring SO~2~ is derived from the oxidation of sulfides emitted by low flux "area" sources, such as the oceans and moist soils. The mass of sulfur released into the environment by anthropogenic sources is comparable to natural sources.
+
+|      Other anthropogenic sources of SO~2~ emissions include industrial fuel combustion, other industrial processes, commercial marine vessels, and agricultural and prescribed fires (Figure 1). While electricity generation is the dominant industry sector contributing to SO~2~ emissions on a national scale, other sectors can also have a significant influence on local air quality. Large emissions facilities other than EGUs that may substantially impact local air quality include copper smelters, pulp and paper mills, cement plants, iron and steel mills, petroleum refineries, and chemical processing plants.
+
+|      Figure 2 illustrates the national SO~2~ emissions trends from 2002 to `r params$curr.year`. Declines in SO~2~ emissions are likely related to the implementation of national control programs developed under the Clean Air Act Amendments of 1990, including Phase I and II of the Acid Rain Program, the Clean Air Interstate Rule, the Cross-State Air Pollution Rule, and the adoption of low sulfur diesel fuel standards. An additional factor is changes in market conditions, such as the reduction of the use of coal in energy generation. These changes have resulted in a `r pct.chg`% decrease in SO~2~ emissions from 2002 to `r params$curr.year`, including reductions of `r pct.egu`% in emissions from EGUs and `r pct.mob`% in emissions from mobile sources.
+
+|      The [National Emissions Inventory (NEI)](https://www.epa.gov/air-emissions-inventories) is a comprehensive and detailed estimate of air emissions of criteria pollutants, precursors to criteria pollutants, and hazardous air pollutants from air emissions sources. The NEI is released every three years based primarily upon data provided by State, Local, and Tribal air agencies for sources in their jurisdictions and supplemented by data developed by the US EPA. The NEI is built using the EPA's Emissions Inventory System (EIS) first to collect the data from State, Local, and Tribal air agencies and then to blend that data with other data sources.
+
+|      Accuracy in an emissions inventory reflects the extent to which the inventory represents the actual emissions that occurred. Anthropogenic emissions of air pollutants result from a variety of sources such as power plants, industrial sources, motor vehicles and agriculture. The emissions from any individual source typically varies in both time and space. For the thousands of sources that make up the NEI, there is uncertainty in one or both of these factors. For some sources, such as power plants, direct emission measurements enable the emission factors derived from them to be more certain than sources without such direct measurements. However, it is not practically possible to directly monitor each of the emission sources individually and, therefore, emission inventories necessarily contain assumptions, interpolation and extrapolation from a limited set of sample data.
+
+```{r label="01-emissions-piechart",fig.height=3,fig.width=5,fig.align="center"}
+## SO2 emissions pie chart
+pie.colors <- c("lightgreen","lightpink","lightblue","wheat")
+df <- data.frame(sector=c("Wildfires","Other Fires","Fuel Comb Coal","Fuel Comb Other",
+  "Industrial","Mobile","Other"),emis=NA)
+df$emis[1] <- sector.data$SO2[grep("Wildfires",sector.data$sector)]
+df$emis[2] <- sum(sector.data$SO2[c(grep("Fires - Ag",sector.data$sector),
+  grep("Fires - Pre",sector.data$sector))])
+df$emis[3] <- sum(sector.data$SO2[intersect(grep("Fuel Comb",sector.data$sector),
+  grep("Coal",sector.data$sector))])
+df$emis[4] <- sum(sector.data$SO2[setdiff(grep("Fuel Comb",sector.data$sector),
+  grep("Coal",sector.data$sector))])
+df$emis[5] <- sum(sector.data$SO2[grep("Industrial Processes -",sector.data$sector)])
+df$emis[6] <- sum(sector.data$SO2[grep("Mobile -",sector.data$sector)])
+df$emis[7] <- sum(sector.data$SO2,na.rm=TRUE)-sum(df$emis[1:6])
+df$pct <- 100*df$emis/sum(df$emis)
+pie.labels <- paste(c("Wildfires","Agricultural &\nPrescribed Fires",
+  "Stationary Fuel\nCombustion: Coal","Stationary Fuel \nCombustion: Other",
+  "Industrial Processes","Mobile Sources","Other")," ",round(df$pct),"%",sep="")
+pie.total <- format(round(sum(df$emis/1000)),big.mark=",")
+pie.title <- paste("SO2 Emissions (",pie.total," kTon/year)",sep="")
+par(mar=c(0,5,2,5),bg="gray95",cex=0.75)
+pie(x=df$emis,labels=pie.labels,main=pie.title,col=pie.colors,radius=0.9)
+```
+
+**Figure 1.** U.S. SO~2~ emissions by sector. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data).
+
+```{r label="02-emissions-trends",fig.height=4,fig.width=6,fig.align="center"}
+## SO2 emissions trends figure
+trend.border <- c("chocolate","gray50","red","green4","blue")
+trend.colors <- c("wheat","gray90","lightpink","lightgreen","lightblue")
+source.cat <- c("Stationary fuel combustion","Industrial and other processes",
+  "Transportation","Miscellaneous without wildfires")
+df <- trends.data$SO2[match(source.cat,trends.data$SO2$source),
+  c("source",as.character(2002:curr.year))]
+df2 <- apply(df[c(nrow(df):1),-1],2,cumsum)
+source.labels <- c("Stationary Fuel Combustion","Industrial and Other Processes",
+  "Transportation","Other Anthropogenic Sources")
+par(mar=c(4,4,1,1),mgp=c(2.5,0.75,0),las=2,cex.axis=0.75,cex.lab=0.75)
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xaxs='i',xlim=c(2002,curr.year),
+  xlab="Inventory Year",yaxs='i',ylim=c(0,16000),ylab="SO2 Emissions (kTons/year)")
+axis(side=1,at=seq(2002,curr.year,3),labels=seq(2002,curr.year,3))
+axis(side=2,at=seq(0,16000,3000),labels=seq(0,16000,3000))
+polygon(x=c(2002,rep(curr.year,2),2002),y=c(0,0,16000,16000),col="gray80")
+abline(h=seq(1500,16000,1500),v=trend.years,col="white")
+polygon(x=c(trend.years,rev(trend.years)),y=c(df2[1,],rep(0,ny)),
+  col=trend.colors[2],border=trend.colors[2])
+for (i in 2:nrow(df)) {
+  polygon(x=c(trend.years,rev(trend.years)),y=c(df2[i,],rev(df2[(i-1),])),
+    col=trend.colors[i+1],border=trend.colors[i+1])
+}
+for (i in 1:nrow(df)) { lines(x=trend.years,y=df2[i,],col=trend.border[i+1]) }
+legend("topright",legend=source.labels,fill=rev(trend.colors[2:5]),
+  border=rev(trend.border[2:5]),cex=0.75,bty='n')
+```
+
+**Figure 2.**	U.S. anthropogenic SO~2~ emissions trend, 2002-`r params$curr.year`. **Source:** [EPA's Air Pollutant Emissions Trends Data ](https://www.epa.gov/air-emissions-inventories/air-pollutant-emissions-trends-data)
+
+\newpage
+
+|      Figure 3 below shows the SO~2~ emissions density in tons/mi^2^/year for each U.S. county based on the `r params$nei.year` NEI. The majority of SO~2~ emissions tend to be located near large point sources such as coal-fired EGUs or large industrial facilities. Counties near urban areas also tend to have higher SO~2~ emissions due to the higher concentration of industrial facilities. Counties in rural areas may also have higher emissions due to oil and gas extraction or fires.
+
+```{r label="03-emissions-map",fig.height=5}
+## SO2 county-level emissions density map
+breaks <- c(0.05,0.2,1,5)
+density <- county.data$SO2/county.data$area_km*2.59
+map.colors <- c("#EFF3FF","#BDD7E7","#6BAED6","#3182BD","#08519C")
+county.data$color <- assign.colors(density,discrete=TRUE,breaks=breaks,palette=map.colors)
+N <- table(cut(density,breaks=c(0,breaks,Inf),include.lowest=TRUE))
+map.legend <- paste(c(0,breaks),"-",c((breaks-0.01),round(max(density)))," (",N,")",sep="")
+map.title <- "Sulfur Dioxide Emissions Density in tons/year/mi^2 (# Counties)"
+layout(matrix(c(1,2),2,1),widths=1,heights=c(0.9,0.1))
+draw.map("state",proj.args=pa)
+for (i in 1:nrow(county.data)) {
+  draw.map("county",county.data$fips[i],add=TRUE,proj.args=pa,col=county.data$color[i],lwd=0.5)
+}
+draw.map("state",proj.args=pa,add=TRUE)
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("top",legend=map.legend,ncol=5,fill=map.colors,title=map.title,cex=0.75,bty='n')
+```
+**Figure 3.**	U.S. county-level SO~2~ emissions density estimates in tons/year/mi^2^. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data)
+
+## 4. Ambient Air Monitoring Requirements and Monitoring Networks
+
+```{r label="load-monitor-data"}
+load(paste(base.dir,"data/",curr.year,"/monitors_",curr.year-2,"_",curr.year,".Rdata",sep=""))
+so2.sites <- subset(so2.monitors,!duplicated(substr(id,1,9)))
+```
+
+|      Ambient SO~2~ concentrations are measured by monitoring networks operated by state, local, and tribal air agencies, which are typically funded in part by the EPA. Measurements are made using ultraviolet fluorescence (UVF) instruments, which are designated as federal reference methods (FRMs) or federal equivalent methods (FEMs) and the data are reported to EPA as hourly concentrations and either the maximum 5-minute concentration for each hour or twelve 5-minute average concentrations for each hour. There were `r nrow(so2.sites)` monitoring sites reporting hourly SO~2~ concentration data to the EPA during the `r params$curr.year-2`-`r params$curr.year` period. The locations of these monitoring sites are shown in Figure 4. 
+
+|      The main network of monitors providing ambient data for use in implementation activities related to the NAAQS is the State and Local Air Monitoring Stations (SLAMS) network, which comprises over 75% of all SO~2~ monitoring sites. An important subset of SLAMS sites is the [NCore multipollutant monitoring network](https://www.epa.gov/amtic/ncore-monitoring-network), which was designed to collect consistent measurements of criteria pollutants for trends and NAAQS compliance purposes. The NCore was fully operational as of 2011 and consists of approximately 60 urban monitoring stations and 20 rural monitoring stations. Each state is required to have at least one NCore station.
+
+|      In 2015, the EPA finalized the [Data Requirements Rule (DRR)](https://www.epa.gov/so2-pollution/final-data-requirements-rule-2010-1-hour-sulfur-dioxide-so2-primary-national-ambient), which required states to monitor or model ambient SO~2~ levels in areas with stationary sources of SO~2~ emissions of over 2,000 tons per year. The EPA identified over 300 sources meeting these criteria, and the states chose to set up ambient monitoring sites to assess compliance with the SO~2~ NAAQS near 71 of these sources. These monitors were required to begin operating by January 1, 2017 and collect data through the end of 2019 to show compliance with the SO~2~ NAAQS. Some of these monitors are operated by the states as SLAMS monitors, while others are operated by the industrial sources, which are shown as yellow dots on the map in Figure 4.
+
+|      Finally, there are also a number of Special Purpose Monitoring Stations (SPMs), which are not required but are often operated by air agencies for short periods of time (i.e., less than 3 years) to collect data for human health and welfare studies, as well as other types of monitoring sites, including monitors operated by federal agencies and tribal governments. The SPMs are typically not used to assess compliance with the NAAQS.
+
+
+```{r label="04-monitor-map",fig.height=5}
+## SO2 monitor map
+so2.monitors$site <- substr(so2.monitors$id,1,9)
+so2.monitors$class <- mapply(function(type,network) ifelse(type == "INDUSTRIAL","INDUSTRIAL",
+  ifelse(network == "NCORE","NCORE",ifelse(type == "SLAMS","SLAMS","SPM/OTHER"))),
+  so2.monitors$monitor_type,so2.monitors$network)
+t <- ddply(so2.monitors,"site",summarize,latitude=latitude[1],
+  longitude=longitude[1],class=min(class))
+colors <- c("gray50","blue3","yellow3","red3")
+t$color <- sapply(substr(t$class,1,2),function(x) switch(x,
+  IN=colors[3],NC=colors[2],SL=colors[1],colors[4]))
+t <- t[order(t$class,t$site,decreasing=TRUE),]
+N <- table(t$class)[c(3,2,1,4)]
+legend.lab <- paste(names(N)," (",N,")",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,col="grey95")
+for (i in 1:nrow(t)) {
+  add.layer(type="points",x=t$longitude[i],y=t$latitude[i],
+    proj.args=pa,bg=t$color[i],pch=21)
+}
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab,pt.bg=colors,
+  pch=21,cex=0.75,pt.cex=1,bty='n',ncol=4)
+
+```
+**Figure 4:** Map of U.S. SO~2~ monitoring sites reporting data to the EPA during the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+## 5. Data Handling Conventions and Computations for Determining Whether the Standards are Met
+
+|      To assess whether a monitoring site or geographic area (usually a county or urban area) meets or exceeds a NAAQS, the monitoring data are analyzed consistent with the established regulatory requirements for the handling of monitoring data for the purposes of deriving a design value. A design value summarizes ambient air concentrations for an area in terms of the indicator, averaging time and form for a given standard such that its comparison to the level of the standard indicates whether the area meets or exceeds the standard. The primary SO~2~ NAAQS is the 1-hour NAAQS, which was established in 2010. The procedures for calculating design values for the primary SO~2~ NAAQS are detailed in [Appendix T to 40 CFR Part 50](https://www.ecfr.gov/current/title-40/part-50/appendix-Appendix%20T%20to%20Part%2050) and are summarized below.
+
+|      Hourly SO~2~ measurement data collected at an ambient air monitoring site using Federal Reference or Equivalent Methods, meeting all applicable requirements in 40 CFR Part 58, and reported to AQS in parts per billion (ppb) with decimal digits after the first decimal place truncated are used in design value calculations. If multiple monitors collect measurements at the same site, one monitor is designated as the primary monitor. Measurement data collected with the primary monitor are used to calculate the design value, and may be supplemented with data from collocated monitors whenever data is not available for the primary monitor.
+
+|      First, the maximum hourly concentration is determined for each day (i.e., the "daily maximum value") in a given 3-year period. For each year, the 99th percentile of the daily maximum values is determined, and the design value is the average of the three annual 99th percentile values, rounded to the nearest integer in ppb. The primary SO~2~ NAAQS are met when the design value is less than or equal to 75 ppb, the level of the NAAQS. 
+
+|      In addition, the design value must meet data completeness requirements in order to be considered valid. Specifically, a sample day is considered complete when at least 18 hourly measurements are reported. For each calendar quarter (i.e., Jan-Mar, Apr-Jun, Jul-Sep, Oct-Dec), the quarter is considered complete if at least 75% of the days in the quarter have complete data. The primary SO~2~ design value is considered complete when all 12 calendar quarters in the 3-year period have complete data. In addition, there are two data substitution tests specified in Appendix T to 40 CFR Part 50 which may be used to yield a valid design value above or below the NAAQS, respectively, in the event that a site falls short of the minimum data completeness requirement.
+
+## 6. SO~2~ Concentrations Measured at Ambient Air Monitoring Sites Across the U.S.
+
+```{r label="load-conc-data"}
+load(paste(base.dir,"data/",curr.year,"/SO2dvs2000_",curr.year,".Rdata",sep=""))
+load(paste(base.dir,"data/",curr.year,"/SO2trends2000_",curr.year,".Rdata",sep=""))
+years <- c(2000:curr.year); ny <- length(years);
+```
+
+|      Table 1 below presents summary statistics based on two daily SO~2~ metrics, the daily maximum 1-hour (MDA1) metric, and the daily 24-hour average (DA24) metric. These statistics are presented for year-round and each season (winter=Dec/Jan/Feb, spring=Mar/Apr/May, summer=Jun/Jul/Aug, autumn=Sep/Oct/Nov) based on data reported to AQS for `r params$curr.year-2`-`r params$curr.year`.
+
+**Table 1.** National distribution of SO~2~ concentrations in ppb by season for `r params$curr.year-2`-`r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+```{r label="Table1"}
+load(paste(base.dir,"data/",curr.year,"/conctables",curr.year-2,"_",curr.year,".Rdata",sep=""))
+kbl(so2.table1[,-2],booktabs=TRUE,format.args=list(big.mark=",")) %>% kable_styling(latex_options=c("hold_position","scale_down")) %>% row_spec(0,bold=TRUE)
+```
+N.sites = number of sites; N.obs = number of observations; SD = standard deviation; min = minimum; p1, p5, p10, p25, p50, p90, p95, p98, p99 = 1st, 5th, 10th, 25th, 50th, 90th, 95th, 98th, 99th percentiles; max = maximum; max.site = AQS ID number for the monitoring site corresponding to the observation in the max column.
+winter = December/January/February; spring = March/April/May; summer = June/July/August; autumn = September/October/November.
+
+\newpage
+
+|      Figure 5 below shows a map of the 1-hour SO~2~ design values at U.S. ambient air monitoring sites based on data the `r params$curr.year-2`-`r params$curr.year` period. There were only `r sum(subset(so2.dvs,year == curr.year & dv_valid == "Y")$dv > 75)` sites with design values exceeding the NAAQS. The maximum design value was `r max(subset(so2.dvs,year == curr.year & dv_valid == "Y")$dv)` ppb at a monitoring site near a power plant in Missouri. The sites with design values exceeding the NAAQS in Hawaii are due to recurring eruptions from the Kilauea volcano.
+
+```{r label="05-design-value-map",fig.height=5}
+## SO2 design value map
+dvs.so2.1hr <- subset(so2.dvs,year == curr.year & dv_valid == "Y",
+  c("site","latitude","longitude","year","dv"))
+vals <- dvs.so2.1hr$dv; o <- order(vals);
+colors <- c("blue3","cyan3","yellow3","orange3","red3","purple3"); bins <- c(26,51,76,101,251); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(min(vals),bins); bin.max <- c(bins-1,max(vals));
+n.sites <- table(cut(vals,breaks=c(0,bins-1,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(bin.min," - ",bin.max," ppb (",n.sites," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=dvs.so2.1hr$longitude[o],y=dvs.so2.1hr$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,pt.cex=1,
+  pch=21,col="black",pt.bg=colors[keep],ncol=3)
+```
+**Figure 5:** SO~2~ design values in ppb for the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+\newpage
+
+|      Figure 6 below shows a map of the site-level trends in the 1-hour SO~2~ design values at U.S. monitoring sites having valid design value in at least `r ceiling(0.75*(ny-2))` of the `r (ny-2)` 3-year periods from 2000 through `r params$curr.year`. The trends were computed using the Thiel-Sen estimator, and tests for significance were computed using the Mann-Kendall test. From these figures it is apparent that SO~2~ concentrations have been decreasing at nearly all sites in the U.S, and there were no sites with significant increasing trends.
+
+```{r label="06-dv-trends-1hour",fig.height=5}
+## Map of site-level 1-hour SO2 DV trends
+txt <- c("Decreasing > 3 ppb/yr","Decreasing < 3 ppb/yr","No Significant Trend",
+  "Increasing < 3 ppb/yr","Increasing > 3 ppb/yr")
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 3,4,5),ifelse(slope > -3,2,1))),
+  pval=so2.site.dvs.1hr$pval,slope=so2.site.dvs.1hr$slope)
+pt.col <- c("#0000FFFF","#AAAAFFFF","#FFFFFFFF","#FFAAAAFF","#FF0000FF")
+pt.cex <- c(1.25,1,0.75,1,1.25); pt.pch <- c(25,25,21,24,24);
+ind <- as.integer(names(table(cat))); r <- order(abs(so2.site.dvs.1hr$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=so2.site.dvs.1hr$longitude[r],y=so2.site.dvs.1hr$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',cex=0.75,col="black",
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+## Calculate statistics for the text in the next paragraph
+median.1hr.curr <- median(so2.site.dvs.1hr[,as.character(curr.year)],na.rm=TRUE)
+median.1hr.past <- median(so2.site.dvs.1hr[,c("2000")],na.rm=TRUE)
+pct.change.1hr <- round(100*(median.1hr.past-median.1hr.curr)/median.1hr.past)
+```
+**Figure 6:** Site-level trends in 1-hour SO~2~ design values based on data from 2000 through `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs), trends computed using R statistical software.
+
+\newpage
+
+|      Figure 7 below shows the national trends in the 1-hour SO~2~ design values based on the `r nrow(so2.site.dvs.1hr)` sites shown in Figure 6. The national median of the design values has decreased by `r pct.change.1hr`% from about `r round(median.1hr.past,1)` ppb in 2000 to about `r round(median.1hr.curr,1)` ppb in `r params$curr.year`.
+
+```{r label="07-national-trend",fig.height=5}
+## National SO2 trends figure
+so2.trend.dvs.1hr <- apply(so2.site.dvs.1hr[,-c(1:3)],2,quantile,probs=c(0.1,0.5,0.9),na.rm=TRUE)
+par(mar=c(3,3,1,1),mgp=c(2,0.75,0),cex.axis=0.75,cex.lab=0.75)
+plot(x=NULL,y=NULL,type='n',xaxs='i',xaxt='n',xlim=c(1999.5,curr.year+0.5),
+  xlab="",yaxs='i',ylim=c(0,200),ylab="SO2 Design Value (ppb)",main="")
+axis(side=1,at=years,labels=years,las=2)
+polygon(x=c(1999.5,rep(curr.year+0.5,2),1999.5),y=c(0,0,200,200),col="gray80")
+abline(h=seq(20,180,20),v=years,col="white")
+lines(x=years,y=so2.trend.dvs.1hr[1,1:ny],lty=2,lwd=2,col="steelblue")
+lines(x=years,y=so2.trend.dvs.1hr[2,1:ny],lty=1,lwd=2,col="steelblue")
+lines(x=years,y=so2.trend.dvs.1hr[3,1:ny],lty=2,lwd=2,col="steelblue")
+abline(h=75,lty=2,lwd=2,col="black"); box();
+legend("topright",legend=c("10th/90th Percentile DV","Median DV","SO2 NAAQS Level"),
+  lty=c(2,1,2),col=c(rep("steelblue",2),"black"),bty='n',lwd=2,cex=0.75)
+```
+
+**Figure 7:** National trends in SO~2~ design values in ppb, 2000 to `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+
+## Additional Resources
+
+- [Sulfur Dioxide (SO~2~) Pollution](https://www.epa.gov/so2-pollution)
+
+- [Reviewing National Ambient Air Quality Standards (NAAQS): Scientific and Technical Information](https://www.epa.gov/naaqs)
+
+- [Air Emissions Inventories](https://www.epa.gov/air-emissions-inventories)
+
+- [Ambient Monitoring Technology Information Center (AMTIC)](https://www.epa.gov/amtic)
+
+- [Air Quality Design Values](https://www.epa.gov/air-trends/air-quality-design-values)
+
+- [National Air Quality: Status and Trends of Key Air Pollutants](https://www.epa.gov/air-trends)
+
+- [Air Data: Air Quality Data Collected at Outdoor Monitors Across the U.S.](https://www.epa.gov/outdoor-air-quality-data)

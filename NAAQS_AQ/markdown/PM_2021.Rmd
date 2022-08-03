@@ -1,0 +1,1035 @@
+---
+title: "Overview of Particulate Matter (PM) Air Quality in the United States"
+date: "`r paste('Updated:',format(Sys.time(), '%B %d, %Y'))`"
+output: pdf_document
+geometry: left=0.5in,right=0.5in,top=0.5in,bottom=0.75in
+header-includes:
+- \usepackage{pdflscape}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
+params:
+  curr.year: 2021
+  nei.year: 2017
+urlcolor: blue
+---
+
+```{r label="00-intro",echo=FALSE,message=FALSE,warning=FALSE}
+## Initialize R workspace
+knitr::opts_chunk$set(cache=TRUE,echo=FALSE,message=FALSE,warning=FALSE,fig.width=7.5)
+options(stringsAsFactors=FALSE,scipen=10,warn=-1)
+library(data.table); library(fields); library(knitr); library(kableExtra); library(plyr); library(reshape2); library(trend);
+source("C:/Users/bwells01/Documents/R/piechart.r")
+source("C:/Users/bwells01/Documents/Census/shape2014/rmapfuns.r")
+max.na <- function(x) { return(ifelse(all(is.na(x)),NA,max(x,na.rm=TRUE))) }
+pa <- list(projection='albers',parameters=c(33,45),orientation=c(90,0,-100))
+base.dir <- "C:/Users/bwells01/Documents/NAAQS_AQ/"
+```
+
+## 1. Introduction
+
+|      The overall purpose of this document is to maintain an up-to-date graphical summary of air quality information that supports the review of the National Ambient Air Quality Standards (NAAQS) for particulate matter (PM). In previous reviews of the PM NAAQS, this type of information has generally been included in atmospheric sections of the Integrated Science Assessment (ISA) and Policy Assessment (PA) for PM. This stand-alone document will either replace or complement the air quality emissions and monitoring data in the atmospheric sections of future PM NAAQS documents, and will be updated at regular intervals as new data becomes available.
+
+|      The content of past NAAQS documents' atmospheric sections has included major sections on emissions and concentration trends utilizing maps and data from the EPA's National Emissions Inventory (NEI) and the EPA's Air Quality System (AQS) database. In past NAAQS reviews, this often involved adaptation of figures and tables prepared for other reports, or development of new figures and tables using data analysis and mapping software. Additionally, the release of updated emission inventories and ambient monitoring data may not coincide with the schedule for the development of NAAQS documents. As a result, data access and resources can limit the availability of the most recent information for inclusion in NAAQS documents. 
+
+|      This stand-alone document allows the content to be updated as soon as new data becomes available, rather than pulling from whatever is available at the time of publication. It also ensures that the public will have access to a consistent set of maps and figures for each NAAQS pollutant that are updated on a routine basis, rather than separated by several years following the disparate schedules of the various NAAQS reviews for each pollutant. Moreover, a stand-alone document can be expanded to include new air quality analyses as they are completed, rather than following the timeline for the public release of the NAAQS documents. Finally, this document takes advantage of a more flexible digital format for the routinely prepared maps and trends figures, with an end product that more strongly emphasizes visual presentation of data and reduces the amount text, while also creating a more interactive presentation of the information through the use of external links.
+
+|      This document follows an organization similar to the structure of the atmospheric sections of past PM NAAQS documents. The subsequent sections are as follows: 2. Atmospheric Chemistry; 3. Sources and Emissions of PM in Ambient Air; 4. Ambient Air Monitoring Requirements and Monitoring Networks; 5. Data Handling Conventions and Computations for Determining Whether the Standards are Met; and 6. PM Concentrations Measured at Ambient Air Monitoring Sites Across the U.S. These sections are broad enough in scope to handle changes in what is known about PM atmospheric science as it advances but specific enough that NAAQS-relevant information will be able to be quickly retrieved by users of the document.
+
+## 2. Atmospheric Chemistry
+
+|      In ambient air, PM is a mixture of substances suspended as small liquid and/or solid particles. Particle size is an important consideration for PM, as distinct health and welfare effects have been linked with exposures to particles of different sizes. Particles in the atmosphere range in size from less than 0.01 to more than 10 micrometers ($\mu$m) in diameter. When describing PM, subscripts are used to denote the aerodynamic diameter[^1] of the particle size range in micrometers ($\mu$m) of 50% cut points of sampling devices. The EPA defines PM~2.5~, also referred to as fine particles, as particles with aerodynamic diameters generally less than or equal to 2.5 $\mu$m. The size range for PM~10-2.5~, also referred to as coarse particles, includes those particles with aerodynamic diameters generally greater than 2.5 $\mu$m and less than or equal to 10 $\mu$m. PM~10~, which is comprised of both fine and coarse fractions, includes those particles with aerodynamic diameters generally less than or equal to 10 $\mu$m. Figure 1 provides perspective on these particle size fractions. In addition, ultrafine particles (UFP) are often defined as particles with a diameter of less than 0.1 $\mu$m.
+
+![Particle Sizes](`r paste(base.dir,"docs/particle-sizes.png",sep="")`)  
+**Figure 1.** Comparisons of PM~2.5~ and PM~10~ diameters to human hair and beach sand. Reproduced from Figure 2-1 of the [2020 PM PA](https://www.epa.gov/system/files/documents/2021-10/final-policy-assessment-for-the-review-of-the-pm-naaqs-01-2020.pdf).
+
+|      Atmospheric distributions of particle size generally exhibit three distinct modes ("nucleation mode", "accumulation mode", and "coarse mode") that roughly align with the PM size fractions defined above. Figure 2 below shows an example of the particle size distribution for each of these three modes. The nucleation mode is made up of freshly generated particles, formed either during combustion or by atmospheric reactions of precursor gases. The nucleation mode is especially prominent near sources like heavy traffic, industrial emissions, biomass burning, or cooking. While nucleation mode particles are only a minor contributor to overall ambient PM mass and surface area, they are the main contributors to ambient particle number. By number, most nucleation mode particles fall into the UFP size range, though some fraction of the nucleation mode number distribution can extend above 0.1 $\mu$m in diameter. Nucleation mode particles can grow rapidly through coagulation or uptake of gases by particle surfaces, giving rise to the accumulation mode. The accumulation mode is typically the predominant contributor to PM~2.5~ mass and surface area, though only a minor contributor to particle number. PM~2.5~ sampling methods measure most of the accumulation mode mass, although a small fraction of particles that make up the accumulation mode are greater than 2.5 $\mu$m in diameter. Coarse mode particles are formed by mechanical generation, and through processes like dust resuspension and sea spray formation. Most coarse mode mass is captured by PM~10-2.5~ sampling, but small fractions of coarse mode mass can be smaller than 2.5 $\mu$m or greater than 10 $\mu$m in diameter.
+
+![Particle Size Distribution](`r paste(base.dir,"docs/PM-size-distribution.png",sep="")`)  
+**Figure 2.** Comparison of particle size distribution by particle number, surface area, and mass. C~total~ = total particle concentration; D~p~ = particle diameter. Reproduced from Figure 2-1 of the [2019 PM ISA](https://cfpub.epa.gov/ncea/isa/recordisplay.cfm?deid=347534).
+
+|      Most particles are found in the lower troposphere, where they can have residence times ranging from a few hours to weeks. Particles are removed from the atmosphere by wet deposition, such as when they are carried by rain or snow, or by dry deposition, such as gravitational settling or surface collision. Atmospheric lifetimes are generally longest for PM~2.5~, which often remains in the atmosphere for days to weeks before being removed by wet or dry deposition. In contrast, atmospheric lifetimes for UFP and PM~10-2.5~ are shorter. Within hours, UFP can undergo coagulation and condensation that lead to formation of larger particles in the accumulation mode, or can be removed from the atmosphere by evaporation, deposition, or reactions with other atmospheric components. PM~10-2.5~ are also generally removed from the atmosphere within hours, through wet or dry deposition.
+
+|      Secondary PM~2.5~, which is derived from both natural and anthropogenic sources, accounts for a substantial fraction of the PM~2.5~ mass. Secondary PM~2.5~ forms through atmospheric photochemical oxidation reactions of both inorganic and organic gas-phase precursors, primarily sulfur dioxide (SO~2~), nitrogen oxides (NO~X~), and ammonia (NH~3~). Reactions leading to sulfate (SO~4~^2-^) production from SO~2~, nitrate (NO~3~^-^) production from NO~X~, and the gas-to-particle equilibrium between ammonia (NH~3~) and ammonium (NH~4~^+^) are relatively well understood, while formation of secondary organic PM, often referred to as secondary organic aerosols (SOA), is less well resolved. In contrast, PM~10-2.5~ is mainly primary in origin, as it is produced by the abrasion of surfaces or by the suspension of biological material.
+
+**Sources:** [Integrated Science Assessment for Particulate Matter, May 2019](https://cfpub.epa.gov/ncea/isa/recordisplay.cfm?deid=347534)
+
+[Policy Assessment for the Review of the PM NAAQS, January 2020](https://www.epa.gov/system/files/documents/2021-10/final-policy-assessment-for-the-review-of-the-pm-naaqs-01-2020.pdf)
+
+## 3. Sources and Emissions of PM
+
+|      PM is composed of both primary (directly emitted particles) and secondary chemical components. Primary PM is derived from direct particle emissions from specific PM sources while secondary PM originates from gas-phase chemical compounds present in the atmosphere that have participated in new particle formation or condensed onto existing particles. Primary particles, and gas-phase compounds contributing to secondary formation PM, are emitted from both anthropogenic and natural sources.
+
+|      Anthropogenic sources of PM include both stationary and mobile sources. Stationary sources include fuel combustion for electricity production and other purposes, industrial processes, agricultural activities, and road and building construction and demolition. Mobile sources of PM include diesel- and gasoline-powered highway vehicles and other engine-driven sources (e.g., ships, aircraft, and construction and agricultural equipment). Both stationary and mobile sources directly emit primary PM to ambient air, along with secondary PM precursors (e.g., SO~2~, NO~X~) that contribute to the secondary formation of PM in the atmosphere.
+
+|      Natural sources of PM include dust from the wind erosion of natural surfaces, sea salt, wildfires, primary biological aerosol particles (PBAP) such as bacteria and pollen, oxidation of biogenic hydrocarbons such as isoprene and terpenes to produce SOA, and geogenic sources such as sulfate formed from volcanic production of SO~2~. Contributions of natural emission sources to PM~2.5~ concentrations can be interconnected with anthropogenic emissions through atmospheric chemistry, such as the modulation of biogenic SOA production by anthropogenic NO~X~ and SO~2~ emissions.
+
+|      Generally, the sources of PM for different size fractions vary. While PM~2.5~ in ambient air is largely emitted directly by sources such as those described above or through secondary PM formation in the atmosphere, PM~10-2.5~ is almost entirely from primary sources (i.e., directly emitted) and is produced by surface abrasion or by suspension of sea spray or biological materials such as microorganisms, pollen, and plant and insect debris.
+
+|      The major components of PM~2.5~ mass include sulfate, nitrate, elemental or black carbon (EC or BC), organic carbon (OC), crustal materials, and sea salt. Some of these PM components are emitted directly to the air (e.g., EC/BC) while others are formed secondarily through reactions by gaseous precursors (e.g., sulfate, nitrate). Anthropogenic SO~2~ and NO~X~ are the predominant precursor gases in the formation of secondary PM~2.5~ sulfate and nitrate, and ammonia is the gas-phase precursor for PM~2.5~ ammonium. Atmospheric oxidation of volatile organic compounds (VOCs), both anthropogenic and biogenic, is an important source of SOA, particularly in summer.
+
+|      The [National Emissions Inventory (NEI)](https://www.epa.gov/air-emissions-inventories) is a comprehensive and detailed estimate of air emissions of criteria pollutants, precursors to criteria pollutants, and hazardous air pollutants from air emissions sources. The NEI is released every three years based primarily upon data provided by State, Local, and Tribal air agencies for sources in their jurisdictions and supplemented by data developed by the US EPA. The NEI is built using the EPA's Emissions Inventory System (EIS) first to collect the data from State, Local, and Tribal air agencies and then to blend that data with other data sources.
+
+|      Accuracy in an emissions inventory reflects the extent to which the inventory represents the actual emissions that occurred. Anthropogenic emissions of air pollutants result from a variety of sources such as power plants, industrial sources, motor vehicles and agriculture. The emissions from any individual source typically varies in both time and space. For the thousands of sources that make up the NEI, there is uncertainty in one or both of these factors. For some sources, such as power plants, direct emission measurements enable the emission factors derived from them to be more certain than sources without such direct measurements. However, it is not practically possible to directly monitor each of the emission sources individually and, therefore, emission inventories necessarily contain assumptions, interpolation and extrapolation from a limited set of sample data.
+
+```{r label="load-nei-data"}
+curr.year <- params$curr.year; nei.year <- params$nei.year;
+nei.file <- paste(base.dir,"data/",curr.year,"/NEI",nei.year,"_allpoll_bycounty_sector.Rdata",sep="")
+trends.file <- paste(base.dir,"data/",curr.year,"/emissions_trends_2002_",curr.year,".Rdata",sep="")
+load(nei.file); load(trends.file);
+trend.years <- c(2002:curr.year); ny <- length(trend.years);
+source.cat <- c("Stationary fuel combustion","Industrial and other processes","Transportation","Miscellaneous without wildfires")
+
+## PM2.5 emissions source categories
+pm25.df <- data.frame(sector=c("Wildfires","Other Fires","Unpaved Roads","Paved Roads","Construction",
+  "Agriculture","Fuel Comb","Industrial","Mobile","Waste Disposal","Other"),emis=NA)
+pm25.df$emis[1] <- sector.data$PM25[grep("Wildfires",sector.data$sector)]
+pm25.df$emis[2] <- sum(sector.data$PM25[c(grep("Fires - Ag",sector.data$sector),
+  grep("Fires - Pre",sector.data$sector))])
+pm25.df$emis[3] <- sector.data$PM25[grep("Unpaved Road Dust",sector.data$sector)]
+pm25.df$emis[4] <- sector.data$PM25[grep("Paved Road Dust",sector.data$sector)]
+pm25.df$emis[5] <- sector.data$PM25[grep("Construction Dust",sector.data$sector)]
+pm25.df$emis[6] <- sector.data$PM25[grep("Agriculture - Crops",sector.data$sector)]
+pm25.df$emis[7] <- sum(sector.data$PM25[grep("Fuel Comb -",sector.data$sector)])
+pm25.df$emis[8] <- sum(sector.data$PM25[grep("Industrial Processes -",sector.data$sector)])
+pm25.df$emis[9] <- sum(sector.data$PM25[grep("Mobile -",sector.data$sector)])
+pm25.df$emis[10] <- sector.data$PM25[grep("Waste Disposal",sector.data$sector)]
+pm25.df$emis[11] <- sum(sector.data$PM25,na.rm=TRUE)-sum(pm25.df$emis[1:10])
+pm25.df$pct <- 100*pm25.df$emis/sum(pm25.df$emis)
+
+## PM10 emissions source categories
+pm10.df <- data.frame(sector=c("Wildfires","Other Fires","Unpaved Roads","Paved Roads","Construction",
+  "Agriculture","Industrial","Fuel Comb","Mobile","Other"),emis=NA)
+pm10.df$emis[1] <- sector.data$PM10[grep("Wildfires",sector.data$sector)]
+pm10.df$emis[2] <- sum(sector.data$PM10[c(grep("Fires - Ag",sector.data$sector),
+  grep("Fires - Pre",sector.data$sector))])
+pm10.df$emis[3] <- sector.data$PM10[grep("Unpaved Road Dust",sector.data$sector)]
+pm10.df$emis[4] <- sector.data$PM10[grep("Paved Road Dust",sector.data$sector)]
+pm10.df$emis[5] <- sector.data$PM10[grep("Construction Dust",sector.data$sector)]
+pm10.df$emis[6] <- sector.data$PM10[grep("Agriculture - Crops",sector.data$sector)]
+pm10.df$emis[7] <- sum(sector.data$PM10[grep("Industrial Processes -",sector.data$sector)])
+pm10.df$emis[8] <- sum(sector.data$PM10[grep("Fuel Comb -",sector.data$sector)])
+pm10.df$emis[9] <- sum(sector.data$PM10[grep("Mobile -",sector.data$sector)])
+pm10.df$emis[10] <- sum(sector.data$PM10,na.rm=TRUE)-sum(pm10.df$emis[1:9])
+pm10.df$pct <- 100*pm10.df$emis/sum(pm10.df$emis)
+
+## SO2 emissions source categories
+so2.df <- data.frame(sector=c("Wildfires","Other Fires","Fuel Comb Coal","Fuel Comb Other",
+  "Industrial","Mobile","Other"),emis=NA)
+so2.df$emis[1] <- sector.data$SO2[grep("Wildfires",sector.data$sector)]
+so2.df$emis[2] <- sum(sector.data$SO2[c(grep("Fires - Ag",sector.data$sector),
+  grep("Fires - Pre",sector.data$sector))])
+so2.df$emis[3] <- sum(sector.data$SO2[intersect(grep("Fuel Comb",sector.data$sector),
+  grep("Coal",sector.data$sector))])
+so2.df$emis[4] <- sum(sector.data$SO2[setdiff(grep("Fuel Comb",sector.data$sector),
+  grep("Coal",sector.data$sector))])
+so2.df$emis[5] <- sum(sector.data$SO2[grep("Industrial Processes -",sector.data$sector)])
+so2.df$emis[6] <- sum(sector.data$SO2[grep("Mobile -",sector.data$sector)])
+so2.df$emis[7] <- sum(sector.data$SO2,na.rm=TRUE)-sum(so2.df$emis[1:6])
+so2.df$pct <- 100*so2.df$emis/sum(so2.df$emis)
+
+## NOx emissions source categories
+nox.df <- data.frame(sector=c("Biogenics","Fires","Fuel Comb","Industrial",
+  "Onroad","Non-Road","Other"),emis=NA)
+nox.df$emis[1] <- sector.data$NOx[grep("Biogenics -",sector.data$sector)]
+nox.df$emis[2] <- sum(sector.data$NOx[grep("Fires -",sector.data$sector)])
+nox.df$emis[3] <- sum(sector.data$NOx[grep("Fuel Comb",sector.data$sector)])
+nox.df$emis[4] <- sum(sector.data$NOx[grep("Industrial Processes -",sector.data$sector)])
+nox.df$emis[5] <- sum(sector.data$NOx[grep("Mobile - On-Road",sector.data$sector)])
+nox.df$emis[6] <- sum(sector.data$NOx[setdiff(grep("Mobile -",sector.data$sector),
+  grep("On-Road",sector.data$sector))])
+nox.df$emis[7] <- sum(sector.data$NOx,na.rm=TRUE)-sum(nox.df$emis[1:6])
+nox.df$pct <- 100*nox.df$emis/sum(nox.df$emis)
+
+## PM2.5 trends
+t <- trends.data$PM25
+t <- rbind(t,c(NA,apply(t[1:3,-1],2,sum)),c(NA,apply(t[4:10,-1],2,sum)),
+  c(NA,apply(t[11:12,-1],2,sum)))
+t$source[20:22] <- c("Stationary fuel combustion","Industrial and other processes",
+  "Transportation")
+source.cat <- c("Stationary fuel combustion","Industrial and other processes",
+  "Transportation","Miscellaneous without wildfires")
+df <- t[match(source.cat,t$source),c("source",as.character(2002:curr.year))]
+pm25.trends <- apply(df[c(nrow(df):1),-1],2,cumsum)
+
+## PM10 trends
+t <- trends.data$PM10
+t <- rbind(t,c(NA,apply(t[1:3,-1],2,sum)),c(NA,apply(t[4:10,-1],2,sum)),
+  c(NA,apply(t[11:12,-1],2,sum)))
+t$source[20:22] <- c("Stationary fuel combustion","Industrial and other processes",
+  "Transportation")
+source.cat <- c("Stationary fuel combustion","Industrial and other processes",
+  "Transportation","Miscellaneous without wildfires")
+df <- t[match(source.cat,t$source),c("source",as.character(2002:curr.year))]
+pm10.trends <- apply(df[c(nrow(df):1),-1],2,cumsum)
+
+## SO2 trends
+df <- trends.data$SO2[match(source.cat,trends.data$SO2$source),
+  c("source",as.character(2002:curr.year))]
+so2.trends <- apply(df[c(nrow(df):1),-1],2,cumsum)
+
+## NOx trends
+df <- trends.data$NOx[match(source.cat,trends.data$NOx$source),
+  c("source",as.character(2002:curr.year))]
+nox.trends <- apply(df[c(nrow(df):1),-1],2,cumsum)
+```
+
+|      Figure 3 shows the main sources contributing to primary PM~2.5~, primary PM~10~, SO~2~, and NO~X~ emissions in the U.S. Fires, which include wildfires, prescribed fires, and agricultural fires, contributed about `r round(sum(pm25.df$pct[1:2]))`% of primary PM~2.5~ emissions and `r round(sum(pm10.df$pct[1:2]))`% of primary PM~10~ emissions in 2017. Dust particles from roads, agriculture, and construction contributed `r round(sum(pm25.df$pct[3:6]))`% of primary PM~2.5~ emissions and `r round(sum(pm10.df$pct[3:6]))`% of primary PM~10~ emissions, while most of the remaining primary PM emissions came from stationary fuel combustion (e.g., coal combustion for electricity), industrial and mobile sources. Regarding precursors to secondary PM formation, the main sources of SO~2~ and NO~X~ are stationary fuel combustion (`r round(sum(so2.df$pct[3:4]))`% of total SO~2~ emissions; `r round(nox.df$pct[3])`% of total NO~X~ emissions), industrial processes (`r round(so2.df$pct[5])`% of total SO~2~ emissions; `r round(nox.df$pct[4])`% of total NO~X~ emissions) and mobile sources (`r round(so2.df$pct[6])`% of total SO~2~ emissions; `r round(sum(nox.df$pct[5:6]))`% of total NO~X~ emissions).
+
+```{r label="01-emissions-piecharts",fig.height=7.5}
+## Primary PM2.5 emissions (panel A)
+pie.colors <- c("lightgreen","lightpink","lightblue","wheat")
+pm25.labels <- paste(c("Wildfires","Agricultural &\n Prescribed Fires","Unpaved\nRoad\nDust",
+  "Paved Road\nDust","Construction\nDust","Crops & Livestock\nDust","Stationary Fuel Combustion",
+  "Industrial\nProcesses","Mobile\nSources","Waste\nDisposal","Other")," ",round(pm25.df$pct),"%",sep="")
+pm25.total <- format(round(sum(pm25.df$emis/1000)),big.mark=",")
+pm25.title <- paste("A) Primary PM2.5 Emissions (",pm25.total," kTon/year)",sep="")
+## Primary PM10 emissions (panel B)
+pm10.labels <- paste(c("Wildfires","Agricultural &\nPrescribed Fires","Unpaved Road Dust",
+  "Paved Road\nDust","Construction\nDust","Crops & Livestock Dust","Industrial\nProcesses",
+  "Stationary Fuel\nCombustion","Mobile\nSources","Other")," ",round(pm10.df$pct),"%",sep="")
+pm10.total <- format(round(sum(pm10.df$emis/1000)),big.mark=",")
+pm10.title <- paste("B) Primary PM10 Emissions (",pm10.total," kTon/year)",sep="")
+## SO2 emissions (panel C)
+so2.labels <- paste(c("Wildfires","Agricultural &\nPrescribed\nFires",
+  "Stationary Fuel\nCombustion: Coal","Stationary Fuel\nCombustion: Other",
+  "Industrial Processes","Mobile\nSources","Other")," ",round(so2.df$pct),"%",sep="")
+so2.total <- format(round(sum(so2.df$emis/1000)),big.mark=",")
+so2.title <- paste("SO2 Emissions (",so2.total," kTon/year)",sep="")
+## NOx emissions (panel D)
+nox.labels <- paste(c("Biogenics","All Fires","Stationary Fuel Combustion","Industrial\nProcesses",
+  "Highway\nVehicles","Non-Road\nMobile","Other")," ",round(nox.df$pct),"%",sep="")
+nox.total <- format(round(sum(nox.df$emis/1000)),big.mark=",")
+nox.title <- paste("NOx Emissions (",nox.total," kTon/year)",sep="")
+## Genearate 4-panel pie charts
+par(mar=c(0,0,0,0),bg="gray95")
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xaxs='i',xlim=c(-2,2),yaxs='i',ylim=c(-2,2))
+pie.chart(x=pm25.df$emis,labels=pm25.labels,col=pie.colors,radius=0.6,add=TRUE,x.ctr=-1,y.ctr=1,cex=0.6)
+text(x=-1,y=2,labels=pm25.title,pos=1)
+pie.chart(x=pm10.df$emis,labels=pm10.labels,col=pie.colors,radius=0.6,add=TRUE,x.ctr=1,y.ctr=1,cex=0.6)
+text(x=1,y=2,labels=pm10.title,pos=1)
+pie.chart(x=so2.df$emis,labels=so2.labels,col=pie.colors,radius=0.6,add=TRUE,x.ctr=-1,y.ctr=-1,cex=0.6)
+text(x=-1,y=0,labels=so2.title,pos=1)
+pie.chart(x=nox.df$emis,labels=nox.labels,col=pie.colors,radius=0.6,add=TRUE,x.ctr=1,y.ctr=-1,cex=0.6)
+text(x=1,y=0,labels=nox.title,pos=1)
+abline(h=0,v=0); box();
+```
+**Figure 3:** U.S. emissions for A) Primary PM~2.5~; B) Primary PM~10~; C) SO~2~; and D) NO~X~ by sector. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data).
+
+|      Figure 4 shows the national trends in U.S. anthropogenic primary PM~2.5~, primary PM~10~, SO~2~, and NO~X~ emissions from 2002 to `r params$curr.year`.[^2] Primary PM~2.5~ emissions reached a maximum of 5.2 million tons per year in 2007 and have decreased by `r round(100*(pm25.trends[4,6]-pm25.trends[4,ny])/pm25.trends[4,6])`% to `r round(pm25.trends[4,ny]/1000,1)` million tons per year in `r params$curr.year`. Similarly, direct PM~10~ emissions reached a maximum of 20.7 million tons per year in 2007 and have decreased by `r round(100*(pm10.trends[4,6]-pm25.trends[4,ny])/pm25.trends[4,6])`% to approximately `r round(pm10.trends[4,ny]/1000,1)` million tons per year in `r params$curr.year`. SO~2~ emissions have decreased by `r round(100*(so2.trends[4,1]-so2.trends[4,ny])/so2.trends[4,1])`% since 2002, while NO~X~ emissions have decreased by `r round(100*(nox.trends[4,1]-nox.trends[4,ny])/nox.trends[4,1])`% since 2002. The large reductions in NO~X~ and SO~2~ emissions are largely due to reductions in the electricity generation and transportation sectors resulting from EPA programs such as the Clean Air Interstate Rule and the Cross-State Air Pollution Rule for electric generating units, as well as the adoption of more stringent fuel economy standards and low sulfur diesel fuel standards for mobile sources.
+
+```{r label="02-emissions-trends",fig.height=7.5}
+source.labels <- c("Stationary Fuel Combustion","Industrial and Other Processes","Transportation","Other Anthropogenic Sources")
+trend.border <- c("chocolate","gray50","red","green4","blue")
+trend.colors <- c("wheat","gray90","lightpink","lightgreen","lightblue")
+
+## Create four panel trends figure with bottom legend panel
+layout(mat=matrix(c(1,3,5,2,4,5),nrow=3,ncol=2),widths=c(0.5,0.5),heights=c(0.45,0.45,0.1))
+par(mar=c(5,5,1,1),mgp=c(3.5,0.7,0),las=2)
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xaxs='i',xlim=c(2002,curr.year),
+  xlab="Inventory Year",yaxs='i',ylim=c(0,6000),ylab="Primary PM2.5 Emissions (kTons/year)")
+axis(side=1,at=seq(2002,curr.year,3),labels=seq(2002,curr.year,3))
+axis(side=2,at=seq(0,6000,1000),labels=seq(0,6000,1000))
+polygon(x=c(2002,rep(curr.year,2),2002),y=c(0,0,6000,6000),col="gray80")
+abline(h=seq(500,6000,500),v=trend.years,col="white")
+text(x=curr.year,y=5500,labels="A) Primary PM2.5",pos=2,cex=2)
+polygon(x=c(trend.years,rev(trend.years)),y=c(pm25.trends[1,],rep(0,ny)),
+  col=trend.colors[2],border=trend.colors[2])
+for (i in 2:nrow(pm25.trends)) {
+  polygon(x=c(trend.years,rev(trend.years)),y=c(pm25.trends[i,],rev(pm25.trends[(i-1),])),
+    col=trend.colors[i+1],border=trend.colors[i+1])
+}
+for (i in 1:nrow(pm25.trends)) { lines(x=trend.years,y=pm25.trends[i,],col=trend.border[i+1],lwd=2) }
+box(); par(mar=c(5,5,1,1),mgp=c(3.5,0.7,0),las=2);
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xaxs='i',xlim=c(2002,curr.year),
+  xlab="Inventory Year",yaxs='i',ylim=c(0,24000),ylab="Primary PM10 Emissions (kTons/year)")
+axis(side=1,at=seq(2002,curr.year,3),labels=seq(2002,curr.year,3))
+axis(side=2,at=seq(0,24000,4000),labels=seq(0,24000,4000))
+polygon(x=c(2002,rep(curr.year,2),2002),y=c(0,0,24000,24000),col="gray80")
+abline(h=seq(2000,22000,2000),v=trend.years,col="white")
+text(x=curr.year,y=22000,labels="B) Primary PM10",pos=2,cex=2)
+polygon(x=c(trend.years,rev(trend.years)),y=c(pm10.trends[1,],rep(0,ny)),
+  col=trend.colors[2],border=trend.colors[2])
+for (i in 2:nrow(pm10.trends)) {
+  polygon(x=c(trend.years,rev(trend.years)),y=c(pm10.trends[i,],rev(pm10.trends[(i-1),])),
+    col=trend.colors[i+1],border=trend.colors[i+1])
+}
+for (i in 1:nrow(pm10.trends)) { lines(x=trend.years,y=pm10.trends[i,],col=trend.border[i+1],lwd=2) }
+box(); par(mar=c(5,5,1,1),mgp=c(3.5,0.7,0),las=2);
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xaxs='i',xlim=c(2002,curr.year),
+  xlab="Inventory Year",yaxs='i',ylim=c(0,16000),ylab="SO2 Emissions (kTons/year)")
+axis(side=1,at=seq(2002,curr.year,3),labels=seq(2002,curr.year,3))
+axis(side=2,at=seq(0,16000,3000),labels=seq(0,16000,3000))
+polygon(x=c(2002,rep(curr.year,2),2002),y=c(0,0,16000,16000),col="gray80")
+abline(h=seq(1500,16000,1500),v=trend.years,col="white")
+text(x=curr.year,y=14500,labels="C) SO2",pos=2,cex=2)
+polygon(x=c(trend.years,rev(trend.years)),y=c(so2.trends[1,],rep(0,ny)),
+  col=trend.colors[2],border=trend.colors[2])
+for (i in 2:nrow(so2.trends)) {
+  polygon(x=c(trend.years,rev(trend.years)),y=c(so2.trends[i,],rev(so2.trends[(i-1),])),
+    col=trend.colors[i+1],border=trend.colors[i+1])
+}
+for (i in 1:nrow(so2.trends)) { lines(x=trend.years,y=so2.trends[i,],col=trend.border[i+1],lwd=2) }
+box(); par(mar=c(5,5,1,1),mgp=c(3.5,0.7,0),las=2,bg="gray95");
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xaxs='i',xlim=c(2002,curr.year),
+  xlab="Inventory Year",yaxs='i',ylim=c(0,24000),ylab="NOx Emissions (kTons/year)")
+axis(side=1,at=seq(2002,curr.year,3),labels=seq(2002,curr.year,3))
+axis(side=2,at=seq(0,24000,4000),labels=seq(0,24000,4000))
+polygon(x=c(2002,rep(curr.year,2),2002),y=c(0,0,24000,24000),col="gray80")
+abline(h=seq(2000,22000,2000),v=trend.years,col="white")
+text(x=curr.year,y=22000,labels="D) NOx",pos=2,cex=2)
+polygon(x=c(trend.years,rev(trend.years)),y=c(nox.trends[1,],rep(0,ny)),
+  col=trend.colors[1],border=trend.colors[1])
+for (i in 2:nrow(nox.trends)) {
+  polygon(x=c(trend.years,rev(trend.years)),y=c(nox.trends[i,],rev(nox.trends[(i-1),])),
+    col=trend.colors[i],border=trend.colors[i])
+}
+for (i in 1:nrow(nox.trends)) { lines(x=trend.years,y=nox.trends[i,],col=trend.border[i],lwd=2) }
+box(); par(mar=c(0,0,2,0));
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1),main="Legend")
+legend("top",legend=source.labels,fill=rev(trend.colors),border=rev(trend.border),bg="gray80",ncol=2)
+```
+**Figure 4.**	U.S. anthropogenic emissions trends for: A) Primary PM~2.5~; B) Primary PM~10~; C) SO~2~; and D) NO~X~.  **Source:** [EPA's Air Pollutant Emissions Trends Data ](https://www.epa.gov/air-emissions-inventories/air-pollutant-emissions-trends-data)
+
+|      Figure 5 through Figure 8 show county-level estimates of U.S. emissions densities (in tons/year/mi^2^) for primary PM~2.5~, primary PM~10~, SO~2~, and NO~X~ emissions, respectively based on the `r params$nei.year` NEI. Primary PM emissions tended to be highest near urban areas due to the larger number of industrial sources and vehicles, and near the center of the country due to dust from roads and agricultural sources. Parts of the northwest U.S. and California also experienced higher emissions due to wildfires in 2017. The highest SO~2~ emissions tend to be located near large point sources such as coal-fired power plants or large industrial facilities, while the highest NO~X~ emissions tend to be located near urban areas and large point sources.
+
+```{r label="03-emissions-map-PM25"}
+## PM2.5 county-level emissions density map
+breaks <- c(1,2,5,10)
+density <- county.data$PM25/county.data$area_km*2.59
+map.colors <- c("#EFF3FF","#BDD7E7","#6BAED6","#3182BD","#08519C")
+county.data$color <- assign.colors(density,discrete=TRUE,breaks=breaks,palette=map.colors)
+N <- table(cut(density,breaks=c(0,breaks,Inf),include.lowest=TRUE))
+map.legend <- paste(c(0,breaks),"-",c((breaks-0.1),round(max(density)))," (",N,")",sep="")
+map.title <- "Primary PM2.5 Emissions Density in tons/year/mi^2 (# Counties)"
+layout(matrix(c(1,2),2,1),widths=1,heights=c(0.9,0.1))
+par(bg="gray95"); draw.map("state",proj.args=pa);
+for (i in 1:nrow(county.data)) {
+  draw.map("county",county.data$fips[i],add=TRUE,proj.args=pa,col=county.data$color[i],lwd=0.5)
+}
+draw.map("state",proj.args=pa,add=TRUE)
+par(mar=c(0,0,0,0)); plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1));
+legend("top",legend=map.legend,ncol=5,fill=map.colors,title=map.title,cex=0.75,bty='n')
+```
+**Figure 5.**	U.S. county-level primary PM~2.5~ emissions density estimates in tons/year/mi^2^. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data)
+
+```{r label="04-emissions-map-PM10"}
+## PM10 county-level emissions density map
+breaks <- c(2,5,10,20)
+density <- county.data$PM10/county.data$area_km*2.59
+county.data$color <- assign.colors(density,discrete=TRUE,breaks=breaks,palette=map.colors)
+N <- table(cut(density,breaks=c(0,breaks,Inf),include.lowest=TRUE))
+map.legend <- paste(c(0,breaks),"-",c((breaks-0.1),round(max(density)))," (",N,")",sep="")
+map.title <- "Primary PM10 Emissions Density in tons/year/mi^2 (# Counties)"
+layout(matrix(c(1,2),2,1),widths=1,heights=c(0.9,0.1))
+par(bg="gray95"); draw.map("state",proj.args=pa);
+for (i in 1:nrow(county.data)) {
+  draw.map("county",county.data$fips[i],add=TRUE,proj.args=pa,col=county.data$color[i],lwd=0.5)
+}
+draw.map("state",proj.args=pa,add=TRUE)
+par(mar=c(0,0,0,0)); plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1));
+legend("top",legend=map.legend,ncol=5,fill=map.colors,title=map.title,cex=0.75,bty='n')
+```
+**Figure 6.**	U.S. county-level primary PM~10~ emissions density estimates in tons/year/mi^2^. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data)
+
+```{r label="05-emissions-map-SO2"}
+## SO2 county-level emissions density map
+breaks <- c(0.05,0.2,1,5)
+density <- county.data$SO2/county.data$area_km*2.59
+county.data$color <- assign.colors(density,discrete=TRUE,breaks=breaks,palette=map.colors)
+N <- table(cut(density,breaks=c(0,breaks,Inf),include.lowest=TRUE))
+map.legend <- paste(c(0,breaks),"-",c((breaks-0.01),round(max(density)))," (",N,")",sep="")
+map.title <- "Sulfur Dioxide Emissions Density in tons/year/mi^2 (# Counties)"
+layout(matrix(c(1,2),2,1),widths=1,heights=c(0.9,0.1))
+par(bg="gray95"); draw.map("state",proj.args=pa);
+for (i in 1:nrow(county.data)) {
+  draw.map("county",county.data$fips[i],add=TRUE,proj.args=pa,col=county.data$color[i],lwd=0.5)
+}
+draw.map("state",proj.args=pa,add=TRUE)
+par(mar=c(0,0,0,0)); plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1));
+legend("top",legend=map.legend,ncol=5,fill=map.colors,title=map.title,cex=0.75,bty='n')
+```
+**Figure 7.**	U.S. county-level SO~2~ emissions density estimates in tons/year/mi^2^. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data)
+
+```{r label="06-emissions-map-NOx"}
+## NOx county-level emissions density map
+breaks <- c(2,5,10,20)
+density <- county.data$NOx/county.data$area_km*2.59
+county.data$color <- assign.colors(density,discrete=TRUE,breaks=breaks,palette=map.colors)
+N <- table(cut(density,breaks=c(0,breaks,Inf),include.lowest=TRUE))
+map.legend <- paste(c(0,breaks),"-",c((breaks-0.1),round(max(density)))," (",N,")",sep="")
+map.title <- "Nitrogen Oxides Emissions Density in tons/year/mi^2 (# Counties)"
+layout(matrix(c(1,2),2,1),widths=1,heights=c(0.9,0.1))
+par(bg="gray95"); draw.map("state",proj.args=pa);
+for (i in 1:nrow(county.data)) {
+  draw.map("county",county.data$fips[i],add=TRUE,proj.args=pa,col=county.data$color[i],lwd=0.5)
+}
+draw.map("state",proj.args=pa,add=TRUE)
+par(mar=c(0,0,0,0)); plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1));
+legend("top",legend=map.legend,ncol=5,fill=map.colors,title=map.title,cex=0.75,bty='n')
+```
+**Figure 8.**	U.S. county-level NO~x~ emissions density estimates in tons/year/mi^2^. **Source:** [`r params$nei.year` NEI](https://www.epa.gov/air-emissions-inventories/`r params$nei.year`-national-emissions-inventory-nei-data)
+
+## 4. Ambient Air Monitoring Requirements and Monitoring Networks
+
+```{r label="load-monitor-data"}
+load(paste(base.dir,"data/",curr.year,"/monitors_",curr.year-2,"_",curr.year,".Rdata",sep=""))
+load(paste(base.dir,"data/",curr.year,"/nonreg_monitors_",curr.year-2,"_",curr.year,".Rdata",sep=""))
+pb.sites <- subset(pb.monitors,parameter == 14129 & !duplicated(substr(id,1,9)))
+pm10.sites <- subset(pm10.monitors,!duplicated(substr(id,1,9)))
+pm10.fems <- subset(pm10.sites,substr(frm_code,1,2) == "EQ")
+pm25.sites <- subset(pm25.monitors,!duplicated(substr(id,1,9)))
+pm25.fems <- subset(pm25.sites,substr(frm_code,1,2) == "EQ")
+pm10_25.sites <- subset(pm10_25.monitors,!duplicated(substr(id,1,9)))
+pm25.spec.sites <- subset(pm25.spec.monitors,!duplicated(substr(id,1,9)))
+```
+
+|      The EPA and its partners at state, local, and tribal monitoring agencies manage and operate the nation's ambient air monitoring networks. The EPA provides minimum monitoring requirements for PM and other pollutants in 40 CFR Part 58. Monitoring agencies carry out and perform ambient air monitoring in accordance with the EPA's requirements and guidance. Federal Reference Methods (FRMs) and Federal Equivalence Methods (FEMs) are monitoring methods that have been approved for use by states and other monitoring organizations to assess NAAQS compliance and implementation. The FRMs for measuring PM~10~, PM~2.5~, and PM~10-2.5~ are specified in CFR 40 Part 50, Appendices J, L, and O, respectively, while performance requirements for the approval of FRM and FEMs are in 40 CFR Part 53.
+
+|      The EPA and monitoring agencies manage and operate robust national monitoring networks for both PM~10~ and PM~2.5~, as these are the two measurement programs directly supporting the PM NAAQS. PM~10~ measurements are based on gravimetric mass, while PM~2.5~ measurements include gravimetric mass and chemical speciation. A smaller network of stations is operating and reporting data for PM~10-2.5~ gravimetric mass and a few monitors are operated to support special projects, including pilot studies, for continuous speciation and particle count data.
+
+|      The EPA first established NAAQS for PM in 1971 based on total suspended particulates, or TSP. The TSP NAAQS was replaced by the PM~10~ NAAQS in 1987. TSP sampling remains in operation at a limited number of locations primarily to provide measurements for the Lead (Pb) NAAQS as well as for instances where a state may continue to have state standards for TSP. The size of the TSP network peaked in the mid-1970s when over 4,300 TSP samplers were in operation. There were `r nrow(pb.sites)` monitoring sites reporting Pb TSP data to EPA during the `r params$curr.year-2`-`r params$curr.year` period.
+
+|      To support the 1987 PM~10~ NAAQS, the EPA and its state and local partners implemented the first size-selective PM monitoring network in 1990 with the establishment of a PM~10~ network consisting of mainly high-volume samplers. The PM~10~ monitoring network peaked in size in 1995 with 1,665 stations reporting data. There were `r nrow(pm10.sites)` monitoring sites reporting PM~10~ data to EPA during the `r params$curr.year-2`-`r params$curr.year` period. Figure 9 shows the locations of these monitoring sites. Approximately `r round(100*nrow(pm10.fems)/nrow(pm10.sites))`% of these monitoring sites operate FEMs which report continuous PM~10~ data while the remaining sites operate FRMs which typically collect samples every day, every 3rd day, or every 6th day.
+
+|      To support the 1997 PM NAAQS, the first PM NAAQS with PM~2.5~ as an indicator, the EPA and states implemented a PM~2.5~ monitoring network consisting of ambient air monitoring sites with PM~2.5~ mass and/or chemical speciation measurements. Network operation began in 1999 with nearly 1,000 monitoring stations operating FRMs to measure fine particle mass. The PM~2.5~ monitoring program remains one of the largest ambient air monitoring programs in the U.S. There were `r nrow(pm25.sites)` monitoring sites reporting PM~2.5~ data to EPA during the `r params$curr.year-2`-`r params$curr.year` period. Figure 10 shows the locations of these monitoring sites. Approximately  `r round(100*nrow(pm25.fems)/nrow(pm25.sites))`% of these monitoring sites operate FEMs which report continuous PM~2.5~ data while the remaining sites operate FRMs which typically collect samples every day, every 3rd day, or every 6th day.
+
+|      The main network of monitors providing ambient data for use in implementation activities related to the NAAQS is the State and Local Air Monitoring Stations (SLAMS) network, which comprises about `r round(100*length(which(pm25.sites$monitor_type == "SLAMS"))/nrow(pm25.sites))`% of PM~2.5~ and `r round(100*length(which(pm10.sites$monitor_type == "SLAMS"))/nrow(pm10.sites))`% of PM~10~ monitoring sites. Two important subset of SLAMS sites are the [National Core (NCore) multipollutant monitoring network](https://www.epa.gov/amtic/ncore-monitoring-network) and the [near-road monitoring network](https://www.epa.gov/amtic/near-road-monitoring). The NCore network was designed to collect consistent measurements of criteria pollutants for trends and NAAQS compliance purposes. NCore was fully operational as of 2011 and consists of approximately 60 urban monitoring stations and 20 rural monitoring stations. Each state is required to have at least one NCore station. PM~2.5~ monitoring was required for near-road network sites as part of the 2012 PM~2.5~ NAAQS review and these sites monitors were phased into the network between 2015 and 2017. Near-road sites are required in each metropolitan statistical area (MSA) with a population of 1,000,000 or greater. There were `r length(which(pm25.sites$network == "NEAR ROAD"))` sites reporting PM~2.5~ data to EPA during the `r params$curr.year-2`-`r params$curr.year` period.
+
+```{r label="07-monitor-map-PM10"}
+## Generate PM10 monitoring network map
+colors <- c("gray50","blue3","yellow3","red3")
+pm10.monitors$site <- substr(pm10.monitors$id,1,9)
+pm10.monitors$class <- mapply(function(type,network) ifelse(type == "INDUSTRIAL","INDUSTRIAL",
+  ifelse(network == "NCORE","NCORE",ifelse(type == "SLAMS","SLAMS","SPM/OTHER"))),
+  pm10.monitors$monitor_type,pm10.monitors$network)
+t <- ddply(pm10.monitors,"site",summarize,latitude=latitude[1],
+  longitude=longitude[1],class=min(class))
+t$color <- sapply(substr(t$class,1,2),function(x) switch(x,
+  IN=colors[3],NC=colors[2],SL=colors[1],colors[4]))
+t <- t[order(t$class,t$site,decreasing=TRUE),]
+N <- table(t$class)[c(3,2,1,4)]
+legend.lab <- paste(names(N)," (",N,")",sep="")
+
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,col="grey95")
+for (i in 1:nrow(t)) {
+  add.layer(type="points",x=t$longitude[i],y=t$latitude[i],
+    proj.args=pa,bg=t$color[i],pch=21)
+}
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab,pt.bg=colors,
+  pch=21,cex=0.75,pt.cex=1,bty='n',ncol=4)
+```
+**Figure 9:** Map of U.S. PM~10~ monitoring sites reporting data to the EPA during the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+```{r label="08-monitor-map-PM25"}
+## Generate PM2.5 monitoring network map
+colors <- c("gray50","blue3","yellow3","red3")
+pm25.monitors$site <- substr(pm25.monitors$id,1,9)
+pm25.monitors$class <- mapply(function(type,network) ifelse(network == "NEAR ROAD","NEAR ROAD",
+  ifelse(network == "NCORE","NCORE",ifelse(type == "SLAMS","SLAMS","SPM/OTHER"))),
+  pm25.monitors$monitor_type,pm25.monitors$network)
+t <- ddply(pm25.monitors,"site",summarize,latitude=latitude[1],
+  longitude=longitude[1],class=min(class))
+t$color <- sapply(substr(t$class,1,2),function(x) switch(x,
+  NE=colors[3],NC=colors[2],SL=colors[1],colors[4]))
+t <- t[order(t$class,t$site,decreasing=TRUE),]
+N <- table(t$class)[c(3,1,2,4)]
+legend.lab <- paste(names(N)," (",N,")",sep="")
+
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,col="grey95")
+for (i in 1:nrow(t)) {
+  add.layer(type="points",x=t$longitude[i],y=t$latitude[i],
+    proj.args=pa,bg=t$color[i],pch=21)
+}
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab,pt.bg=colors,
+  pch=21,cex=0.75,pt.cex=1,bty='n',ncol=4)
+```
+**Figure 10:** Map of U.S. PM~2.5~ monitoring sites reporting data to the EPA during the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+\newpage
+
+|      As a result of the 2006 PM NAAQS review, the EPA promulgated a new FRM for the measurement of PM~10-2.5~ mass in ambient air. Although the standard for coarse particles uses a PM~10~ indicator, a new FRM for PM~10-2.5~ mass was developed to provide a basis for approving FEMs and to promote the gathering of scientific data to support future reviews of the PM NAAQS. PM~10-2.5~ measurements are currently reported at NCore stations, IMPROVE monitoring stations, and at a few additional locations where state or local agencies choose to operate a PM~10-2.5~ method. There were `r nrow(pm10_25.sites)` monitoring sites reporting PM~10-2.5~ data to EPA during the `r params$curr.year-2`-`r params$curr.year` period. Figure 11 shows the locations of these monitoring sites. Additionally, some sites that operate both PM~10~ and PM~2.5~ monitors also report PM~10-2.5~ concentrations by taking the difference of the two measurements.
+
+|      Due to the complex nature of fine particles, the EPA and states implemented the [Chemical Speciation Network (CSN)](https://www.epa.gov/amtic/chemical-speciation-network-csn) to better understand the components of fine particle mass at selected locations across the country. The CSN was first piloted at 13 sites in 2000, and after the pilot phase, the program continued with deployment of the Speciation Trends Network (STN) later that year. The CSN ultimately grew to 54 trends sites and peaked in operation in 2005 with 252 stations: the 54 trends stations and nearly 200 supplemental stations. There were `r nrow(subset(pm25.spec.sites,grepl("CSN", network)))` CSN sites reporting data to EPA during the `r params$curr.year-2`-`r params$curr.year` period. The locations of these sites are shown in Figure 12. Additionally, PM~2.5~ speciation measurements are collected at NCore stations, which are also shown in Figure 12.
+
+|      Specific components of fine particles are also measured through the [Interagency Monitoring of Protected Visual Environments (IMPROVE)](http://vista.cira.colostate.edu/Improve/) monitoring program, which supports the regional haze program and tracks changes in visibility in Class I areas as well as many other rural and some urban areas. CSN and IMPROVE data can also be used to better understand visibility through calculation of light extinction using the IMPROVE algorithm[^3] to support reviews of the secondary PM NAAQS. There were `r nrow(subset(pm25.spec.sites,network == "IMPROVE"))` IMPROVE sites reporting data to EPA during the `r params$curr.year-2`-`r params$curr.year` period. The locations of these sites are shown in Figure 12.
+
+```{r label="09-monitor-map-PM10_25"}
+## Generate PM10-2.5 monitoring network map
+pm10_25.monitors$site <- substr(pm10_25.monitors$id,1,9)
+pm10_25.monitors$class <- mapply(function(type,network) ifelse(network == "IMPROVE","IMPROVE",
+  ifelse(grepl("NCORE",network),"NCORE",ifelse(type == "SLAMS","SLAMS","SPM/OTHER"))),
+  pm10_25.monitors$monitor_type,pm10_25.monitors$network)
+t <- ddply(pm10_25.monitors,"site",summarize,latitude=latitude[1],
+  longitude=longitude[1],class=min(class))
+t$color <- sapply(substr(t$class,1,2),function(x) switch(x,
+  SL=colors[3],IM=colors[1],NC=colors[2],colors[4]))
+t <- t[order(t$class,t$site,decreasing=TRUE),]
+N <- table(t$class)
+legend.lab <- paste(names(N)," (",N,")",sep="")
+
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,col="grey95")
+for (i in 1:nrow(t)) {
+  add.layer(type="points",x=t$longitude[i],y=t$latitude[i],
+    proj.args=pa,bg=t$color[i],pch=21)
+}
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab,pt.bg=colors,
+  pch=21,cex=0.75,pt.cex=1,bty='n',ncol=4)
+```
+**Figure 11:** Map of U.S. PM~10-2.5~ monitoring sites reporting data to the EPA during the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+```{r label="10-monitor-map-PM25spec"}
+## Generate PM2.5 speciation monitoring network map
+colors <- c("gray50","blue3","yellow3","red3")
+pm25.spec.monitors <- subset(pm25.spec.monitors,parameter == "88403")
+pm25.spec.monitors$site <- substr(pm25.spec.monitors$id,1,9)
+pm25.spec.monitors$class <- sapply(pm25.spec.monitors$network,function(x) ifelse(grepl("CSN",x),"CSN",
+  ifelse(grepl("IMPROVE",x),"IMPROVE",ifelse(grepl("NCORE",x),"NCORE","OTHER"))))
+t <- ddply(pm25.spec.monitors,"site",summarize,latitude=latitude[1],
+  longitude=longitude[1],class=min(class))
+t$color <- sapply(substr(t$class,1,1),function(x) switch(x,
+  C=colors[1],I=colors[2],N=colors[3],colors[4]))
+t <- t[order(t$class,t$site,decreasing=TRUE),]
+N <- table(t$class)
+legend.lab <- paste(names(N)," (",N,")",sep="")
+
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,col="grey95")
+for (i in 1:nrow(t)) {
+  add.layer(type="points",x=t$longitude[i],y=t$latitude[i],
+    proj.args=pa,bg=t$color[i],pch=21)
+}
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab,pt.bg=colors,
+  pch=21,cex=0.75,pt.cex=1,bty='n',ncol=4)
+```
+**Figure 12:** Map of U.S. PM~2.5~ speciation monitoring sites reporting data to the EPA during the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+## 5. Data Handling Conventions and Computations for Determining Whether the Standards are Met
+
+|      To assess whether a monitoring site or geographic area (usually a county or urban area) meets or exceeds a NAAQS, the monitoring data are analyzed consistent with the established regulatory requirements for the handling of monitoring data for the purposes of deriving a design value. A design value summarizes ambient air concentrations for an area in terms of the indicator, averaging time and form for a given standard such that its comparison to the level of the standard indicates whether the area meets or exceeds the standard. The procedures for calculating design values for the current PM NAAQS (established in 2012) are detailed in [Appendix K to 40 CFR Part 50](https://www.ecfr.gov/current/title-40/part-50/appendix-Appendix%20K%20to%20Part%2050) for PM~10~ and in [Appendix N to 40 CFR Part 50](https://www.ecfr.gov/current/title-40/part-50/appendix-Appendix%20N%20to%20Part%2050) for PM~2.5~.
+
+|      Daily 24-hour PM~10~ samples collected at an ambient air monitoring site using Federal Reference or Equivalent Methods, meeting all applicable requirements in 40 CFR Part 58, and reported to AQS in micrograms per meter cubed ($\mu$g/m^3^) with decimal digits truncated are used in design value calculations. If there are multiple monitors at a site, a separate design value is calculated for each monitor. First, the number of exceedances of the NAAQS is determined for each calendar quarter (i.e., Jan/Feb/Mar, Apr/May/Jun, Jul/Aug/Sep, Oct/Nov/Dec) over a 3-year period. The level of the PM~10~ NAAQS is 150 $\mu$g/m^3^, but monitored concentrations are rounded to the nearest 10 $\mu$g/m^3^ when compared to the NAAQS, so an exceedance occurs when measured concentrations are 155 $\mu$g/m^3^ or greater. 
+
+|      To correct for missing data, the observed number of exceedances in each calendar quarter is adjusted by dividing it by the data completeness rate during that quarter and rounded to the nearest hundredth, which is the expected number of exceedances for that quarter. This adjustment is performed regardless of sampling schedule, for example, a monitoring site that has an every 3rd day sampling schedule will have a minimum of 3 expected exceedances for each observed exceedance even if the data completeness rate is 100%. The annual number of expected exceedances is the sum of the expected exceedances over the four calendar quarters, and the design value is the average of the annual expected exceedances over three consecutive years, rounded to the nearest tenth. The PM~10~ NAAQS are met when the design value is less or equal to 1.0.
+
+|      A PM~10~ design value meeting the NAAQS must meet minimum data completeness requirements in order to be considered valid. Specifically, a monitor must have reported concentrations for a minimum of 75% of the scheduled sampled days in each calendar quarter of the 3-year period in order to be considered valid. A PM~10~ design value greater than the NAAQS is always considered valid. Appendix K to 40 CFR Part 50 has additional language describing situations where a valid design value may be derived for a monitor which does not meet these minimum data completeness criteria.
+
+|      Daily 24-hour PM~2.5~ samples collected at an ambient air monitoring site using Federal Reference or Equivalent Methods, meeting all applicable requirements in 40 CFR Part 58, and reported to AQS in ($\mu$g/m^3^) with decimal digits after the first decimal place truncated are used in design value calculations. If hourly samples are reported from a continuous PM~2.5~ monitor, 24-hour average concentrations will be calculated from the hourly data. A calculated 24-hour average concentration is considered valid if hourly concentrations are available for at least 18 of the 24 hours in a given calendar day, or, if after substituting zero for the missing hourly concentrations, the resulting average is greater than the level of the 24-hour PM~2.5~ NAAQS. If multiple monitors are operating at a site, one monitor is designated as the primary monitor. Daily values from collocated monitors are substituted on days where data is missing for the primary monitor to create a site-level data record.
+
+|      For the annual PM~2.5~ NAAQS, the 24-hour concentrations from the site-level data record are averaged over each calendar quarter for a consecutive 3-year period. The four quarterly averages are then averaged over each year to calculate an annual average, and finally the annual PM~2.5~ design value is the average of the three annual average values, rounded to the nearest tenth. The annual PM~2.5~ NAAQS are met when the design value is less than or equal to 12.0 $\mu$g/m^3^. Annual PM~2.5~ design values must have a minimum of 75% data completeness in each calendar quarter (according to the sampling schedule for the site) in order to be considered valid. In addition, for sites which fail to meet the 75% quarterly minimum data completeness, there are two data substitution tests in Appendix N to 40 CFR Part 50 by which an annual design value above or below the NAAQS, respectively, may be considered valid.
+
+|      For the 24-hour PM~2.5~ NAAQS, the 98th percentile of the 24-hour concentrations from the site-level data record is calculated for each of the three years. The 24-hour PM~2.5~ design value is the average of the three 98th percentile values, rounded to the nearest integer. The 24-hour PM~2.5~ NAAQS are met when the design value is less than or equal to 35 $\mu$g/m^3^. Similar to the annual design values, 24-hour design values must have a minimum of 75% data completeness in each calendar quarter to be considered valid. In addition, a site with a design value meeting the NAAQS may also be considered valid if it is able to pass the 24-hour NAAQS data substitution test in Appendix N to 40 CFR Part 50.
+
+## 6. PM Concentrations Measured at Ambient Air Monitoring Sites Across the U.S.
+
+|      Table 1 below presents summary statistics based on daily PM~10~, PM~2.5~, and PM~10-2.5~ monitoring data reported to AQS for `r params$curr.year-2` to `r params$curr.year` for the full year and for each calendar quarter. There are two daily metrics for PM~10~ and PM~2.5~: the daily 24-hour average (DA24) metric, which is available for both filter-based and continuous monitoring instruments, and the maximum daily 1-hour average (MDA1) metric, which is available only for continuous monitoring instruments. For PM~10-2.5~, only filter-based measurements are available, thus only the DA24 metric is shown. Table 2 presents summary statistics for the same daily metrics based on `r params$curr.year-2`-`r params$curr.year` PM~10~, PM~2.5~, and PM~10-2.5~ monitoring data for each [NOAA Climate Region](https://www.ncei.noaa.gov/monitoring-references/maps/us-climate-regions)[^4].
+
+|      Figure 13 and Figure 14 show maps of the annual and 24-hour PM~2.5~ design values, respectively, at U.S. ambient air monitoring sites based on monitoring data from the `r params$curr.year-2`-`r params$curr.year` period. All sites in the eastern U.S. were meeting both the 2012 Annual PM~2.5~ NAAQS of 12 $\mu$g/m^3^ and the 2006 24-hour PM~2.5~ NAAQS of 35 $\mu$g/m^3^ during this period. Many sites in the western U.S. were still violating the 24-hour NAAQS in `r params$curr.year-2`-`r params$curr.year`, while a smaller number of sites were also violating the annual NAAQS. Large areas of the Western U.S. were impacted by smoke from wildfires in 2020 and 2021. The highest annual design values are located in the San Joaquin Valley of California, while the highest 24-hour design values are located in Mono County, California, which was heavily impacted by wildfire smoke in 2020.
+
+|      The PM~10~ NAAQS is unique in that the form of the standard is expressed in terms of expressed in terms of expected exceedances rather than a concentration-based value. Alternatively, a "design concentration" can be used to show PM~10~ concentrations that would be expected at each site based on the averaging time and form of the NAAQS. The design concentration for PM~10~ is determined using a table lookup procedure[^5]. For example, for a PM~10~ monitor with 3 years of complete daily sampling data, the design concentration is the 4th highest 24-hour average concentration measured during the 3-year period. Figure 15 shows a map of the PM~10~ design concentrations based on monitoring data from the `r params$curr.year-2`-`r params$curr.year` period. The overall pattern appears similar to Figure 14, with generally low design concentrations in the eastern U.S. and higher concentrations in parts of the western U.S. One notable difference is the presence of several sites with high design concentrations in the central U.S., which is likely due to higher emissions of coarse particulates in those regions. This is corroborated by Figure 16, which shows the average of the PM~10-2.5~ concentrations measured at U.S. monitoring sites during the `r params$curr.year-2`-`r params$curr.year` period.
+
+\newpage
+\blandscape
+
+**Table 1.** National distribution of PM concentrations in $\mu$g/m^3^ by quarter based on monitoring data from `r params$curr.year-2` to `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+```{r label="Table1"}
+load(paste(base.dir,"data/",curr.year,"/conctables",curr.year-2,"_",curr.year,".Rdata",sep=""))
+kbl(pm.table1,booktabs=TRUE,format.args=list(big.mark=",")) %>% kable_styling(latex_options=c("hold_position","scale_down")) %>% row_spec(0,bold=TRUE)
+```
+N.sites = number of sites; N.obs = number of observations; SD = standard deviation; min = minimum; p1, p5, p10, p25, p50, p90, p95, p98, p99 = 1st, 5th, 10th, 25th, 50th, 90th, 95th, 98th, 99th percentiles; max = maximum; max.site = AQS ID number for the monitoring site corresponding to the observation in the max column.
+1st quarter = January/February/March; 2nd quarter = April/May/June; 3rd quarter = July/August/September; 4th quarter = October/November/December.
+
+**Table 2.** National distribution of PM concentrations in $\mu$g/m^3^ by climate region based on monitoring data from `r params$curr.year-2` to `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+N.sites = number of sites; N.obs = number of observations; SD = standard deviation; min = minimum; p1, p5, p10, p25, p50, p90, p95, p98, p99 = 1st, 5th, 10th, 25th, 50th, 90th, 95th, 98th, 99th percentiles; max = maximum; max.site = AQS ID number for the monitoring site corresponding to the observation in the max column.
+Central = Illinois, Indiana, Kentucky, Missouri, Ohio, Tennessee, West Virginia; East North Central = Iowa, Minnesota, Michigan, Wisconsin; Northeast = Connecticut, Delaware, Maine, Maryland, Massachusetts, New Hampshire, New Jersey, New York, Pennsylvania, Rhode Island, Vermont; Northwest = Alaska, Idaho, Oregon, Washington; South = Arkansas, Kansas, Louisiana, Mississippi, Oklahoma, Texas; Southeast = Alabama, Florida, Georgia, North Carolina, South Carolina, Virginia; Southwest = Arizona, Colorado, New Mexico, Utah; West = California, Hawaii, Nevada; West North Central = Montana, Nebraska, North Dakota, South Dakota, Wyoming.
+
+\newpage
+
+```{r label="Table2"}
+load(paste(base.dir,"data/",curr.year,"/conctables",curr.year-2,"_",curr.year,".Rdata",sep=""))
+kbl(pm.table2,booktabs=TRUE,format.args=list(big.mark=",")) %>% kable_styling(latex_options=c("hold_position","scale_down")) %>% row_spec(0,bold=TRUE)
+```
+
+\elandscape
+\newpage
+
+```{r label="11-design-value-map-PM25annual"}
+## Generate annual PM2.5 design value map for most recent 3-year period
+load(paste(base.dir,"data/",curr.year,"/PM25dvs2002_",curr.year,".Rdata",sep=""))
+load(paste(base.dir,"data/",curr.year,"/PM25trends2002_",curr.year,".Rdata",sep=""))
+dvs.pm25.ann <- subset(pm25.dvs,year == curr.year & dv_ann_valid == "Y",
+  c("site","latitude","longitude","year","dv_ann"))
+vals <- dvs.pm25.ann$dv_ann; o <- order(vals); ny1 <- length(unique(pm25.dvs$year));
+colors <- c("blue3","cyan3","yellow3","orange3","red3"); bins <- c(6.1,9.1,12.1,15.1); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(min(vals),bins); bin.max <- c(bins-0.1,max(vals));
+n.sites <- table(cut(vals,breaks=c(0,bins-0.1,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(bin.min," - ",sprintf("%4.1f",bin.max)," ug/m^3 (",n.sites," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=dvs.pm25.ann$longitude[o],y=dvs.pm25.ann$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,
+  pch=21,col="black",pt.bg=colors[keep],pt.cex=1,ncol=3)
+```
+**Figure 13:** Annual PM~2.5~ design values in $\mu$g/m^3^ for the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+```{r label="12-design-value-map-PM25daily"}
+## Generate daily PM2.5 design value map for most recent 3-year period
+load(paste(base.dir,"data/",curr.year,"/PM25dvs2002_",curr.year,".Rdata",sep=""))
+load(paste(base.dir,"data/",curr.year,"/PM25trends2002_",curr.year,".Rdata",sep=""))
+dvs.pm25.24hr <- subset(pm25.dvs,year == curr.year & dv_24h_valid == "Y",
+  c("site","latitude","longitude","year","dv_24h"))
+vals <- dvs.pm25.24hr$dv_24h; o <- order(vals);
+colors <- c("blue3","cyan3","yellow3","orange3","red3","purple3"); bins <- c(16,26,36,51,101); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(min(vals),bins); bin.max <- c(bins-1,max(vals));
+n.sites <- table(cut(vals,breaks=c(0,bins-1,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(bin.min," - ",bin.max," ug/m^3 (",n.sites," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=dvs.pm25.24hr$longitude[o],y=dvs.pm25.24hr$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,
+  pch=21,col="black",pt.bg=colors[keep],pt.cex=1,ncol=3)
+```
+**Figure 14:** 24-hour PM~2.5~ design values in $\mu$g/m^3^ for the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+```{r label="13-design-value-map-PM10"}
+## Generate PM10 design concentration map for most recent 3-year period
+load(paste(base.dir,"data/",curr.year,"/PM10dvs2000_",curr.year,".Rdata",sep=""))
+load(paste(base.dir,"data/",curr.year,"/PM10trends2000_",curr.year,".Rdata",sep=""))
+dvs.pm10.24hr <- subset(pm10.dvs,year == curr.year & dv_valid == "Y",
+  c("site","latitude","longitude","year","dv_conc"))
+vals <- dvs.pm10.24hr$dv_conc; o <- order(vals); ny2 <- length(unique(pm10.dvs$year));
+colors <- c("blue3","cyan3","yellow3","orange3","red3","purple3"); bins <- c(51,101,151,201,501); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(min(vals),bins); bin.max <- c(bins-1,max(vals));
+n.sites <- table(cut(vals,breaks=c(0,bins-1,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(bin.min," - ",bin.max," ug/m^3 (",n.sites," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=dvs.pm10.24hr$longitude[o],y=dvs.pm10.24hr$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,
+  pch=21,col="black",pt.bg=colors[keep],pt.cex=1,ncol=3)
+```
+**Figure 15:** PM~10~ design concentrations in $\mu$g/m^3^ for the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+```{r label="14-annual-value-map-PM10_25"}
+## Generate annual average coarse PM concentration map
+load(paste(base.dir,"data/",curr.year,"/PM10_25trends2005_",curr.year,".Rdata",sep=""))
+load(paste(base.dir,"data/",curr.year,"/PM25spec_annual2002_",curr.year,".Rdata",sep=""))
+load(paste(base.dir,"data/",curr.year,"/nonreg_monitors_",curr.year-2,"_",curr.year,".Rdata",sep=""))
+pm10_25.monitors$site <- substr(pm10_25.monitors$id,1,9)
+pm10_25.sites <- subset(pm10_25.monitors,!duplicated(site),c("site","latitude","longitude"))
+t <- subset(ddply(pm10_25,c("site","year"),summarize,pm10_25=max.na(pm10_25)),year >= curr.year-2)
+map.vals <- merge(pm10_25.sites,ddply(t,c("site"),summarize,pm10_25=mean(pm10_25)))
+vals <- map.vals$pm10_25; o <- order(vals); ny3 <- length(unique(pm10_25$year));
+colors <- c("blue3","cyan3","yellow3","orange3","red3"); bins <- c(2,4,6,10); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(0,bins); bin.max <- c(bins-0.1,round(max(vals)));
+n.sites <- table(cut(vals,breaks=c(0,bins,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(bin.min," - ",bin.max," ug/m^3 (",n.sites," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=map.vals$longitude[o],y=map.vals$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,
+  pch=21,col="black",pt.bg=colors[keep],ncol=3)
+```
+**Figure 16:** Average PM~10-2.5~ concentrations in $\mu$g/m^3^ for the `r params$curr.year-2`-`r params$curr.year` period. **Source:** [AQS](https://www.epa.gov/aqs).
+
+\newpage
+
+|      Figure 17 and Figure 18 show site-level trends in the annual and 24-hour PM~2.5~ design values, respectively, for sites having valid design values in at least `r ceiling(0.75*ny1)` of the `r ny1` 3-year periods from 2000-2002 through `r params$curr.year-2`- `r params$curr.year`. The trends were computed using the Thiel-Sen estimator, and tests for significance were computed using the Mann-Kendall test. From this figure it is apparent that most of the U.S. has experienced significant decreasing trends in both the annual and 24-hour PM~2.5~ design values over the past two decades, especially in the eastern U.S., where regional control programs such as the Clean Air Interstate Rule (CAIR) and the Cross-State Air Pollution Rule (CSAPR) have enabled large reductions in NO~X~ and SO~2~ emissions, which led to long-term reductions in secondary PM~2.5~ components. There has been less progress in the western U.S., where most controls to-date have focused on local reductions, and emissions from wildfires in recent years have caused increases in PM~2.5~ concentrations in some areas.
+
+|      Figure 19 shows site-level trends in PM~10~ design concentrations for sites having valid design values in at least `r ceiling(0.75*ny2)` of the `r ny2` 3-year periods from 1998-2000 through `r params$curr.year-2`-`r params$curr.year`, while Figure 20 shows site-level trends in annual average PM~10-2.5~ concentrations for sites having data for at least `r ceiling(0.75*ny3)` of the `r ny3` years from 2005 to `r params$curr.year`. The trends in PM~10~ design concentrations are much more variable than those for PM~2.5~. While trends in the eastern U.S. are decreasing in most locations, there is no clear pattern in the western U.S., with sites even in close proximity sometimes having trends in opposite directions. Nationally, over half of the sites had no significant trend. The reason for this is apparent from Figure 20, which shows no clear trend in coarse particulate concentrations at the vast majority of U.S. monitoring sites.
+
+|      Figure 21 shows the national trends in the annual and 24-hour PM~2.5~ design values based on the `r nrow(pm25.site.dvs.ann)` sites in Figure 17 and the `r nrow(pm25.site.dvs.24h)` sites in Figure 18. Both the annual and 24-hour design values exhibited steady decreases from 2002 to 2016. In recent years, the median annual design value has remained relatively constant at about 8 $\mu$g/m^3^ while the 10th and 90th percentile trends have also remained relatively flat at about 6 $\mu$g/m^3^ and 10 $\mu$g/m^3^, respectively. The 10th percentile and median of the 24-hour design values, which are based on the annual 98th percentile, have also remained relatively constant at about 15 $\mu$g/m^3^ and 20 $\mu$g/m^3^, respectively, since 2016. However, the 90th percentile of the 24-hour design values has increased substantially in the past `r params$curr.year-2016` years largely as a result of increased wildfire activity in the western U.S.
+
+|      Figure 22 shows the national trend in the PM~10~ design concentration based on the `r nrow(pm10.site.dvs.24h)` sites in Figure 19. The national median of the design concentrations has remained flat over the past two decades, though there has been an increase of about 20 $\mu$g/m^3^ since 2016. The 10th percentile design concentration has decreased slowly over the full trends period, while the 90th percentile has been highly variable, most likely as a result of year-to-year fluctuations in weather conditions and wildfire emissions.
+
+\newpage
+
+```{r label="15-dv-trends-PM25annual",fig.height=4.4}
+load(paste(base.dir,"data/",curr.year,"/PM25trends2002_",curr.year,".Rdata",sep=""))
+txt <- c("Decreasing > 0.5 ug/m^3/yr","Decreasing < 0.5 ug/m^3/yr",
+  "No Significant Trend","Increasing < 0.5 ug/m^3/yr","Increasing > 0.5 ug/m^3/yr")
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 0.5,4,5),ifelse(slope > -0.5,2,1))),
+  pval=pm25.site.dvs.ann$pval,slope=pm25.site.dvs.ann$slope)
+ind <- as.integer(names(table(cat))); r <- order(abs(pm25.site.dvs.ann$slope));
+pt.col <- c("#0000FFFF","#AAAAFFFF","#FFFFFFFF","#FFAAAAFF","#FF0000FF")
+pt.cex <- c(1.25,1,0.75,1,1.25); pt.pch <- c(25,25,21,24,24);
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.1))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=pm25.site.dvs.ann$longitude[r],y=pm25.site.dvs.ann$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',cex=0.75,col="black",
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+```
+**Figure 17:** Site-level trends in annual PM~2.5~ design values based on data from 2002 through `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs), trends computed using R statistical software.
+
+```{r label="16-dv-trends-PM25daily",fig.height=4.4}
+load(paste(base.dir,"data/",curr.year,"/PM25trends2002_",curr.year,".Rdata",sep=""))
+txt <- c("Decreasing > 1 ug/m^3/yr","Decreasing < 1 ug/m^3/yr",
+  "No Significant Trend","Increasing < 1 ug/m^3/yr","Increasing > 1 ug/m^3/yr")
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 1,4,5),ifelse(slope > -1,2,1))),
+  pval=pm25.site.dvs.24h$pval,slope=pm25.site.dvs.24h$slope)
+ind <- as.integer(names(table(cat))); r <- order(abs(pm25.site.dvs.24h$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.15))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=pm25.site.dvs.24h$longitude[r],y=pm25.site.dvs.24h$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',cex=0.75,col="black",
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+```
+**Figure 18:** Site-level trends in 24-hour PM~2.5~ design values based on data from 2002 through `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs), trends computed using R statistical software.
+
+```{r label="17-dv-trends-PM10",fig.height=4.4}
+load(paste(base.dir,"data/",curr.year,"/PM10trends2000_",curr.year,".Rdata",sep=""))
+txt <- c("Decreasing > 3 ug/m^3/yr","Decreasing < 3 ug/m^3/yr",
+  "No Significant Trend","Increasing < 3 ug/m^3/yr","Increasing > 3 ug/m^3/yr")
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 3,4,5),ifelse(slope > -3,2,1))),
+  pval=pm10.site.dvs.24h$pval,slope=pm10.site.dvs.24h$slope)
+ind <- as.integer(names(table(cat))); r <- order(abs(pm10.site.dvs.24h$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.15))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=pm10.site.dvs.24h$longitude[r],y=pm10.site.dvs.24h$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',cex=0.75,col="black",
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+```
+**Figure 19:** Site-level trends in PM~10~ design concentrations based on data from 2000 through `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs), trends computed using R statistical software.
+
+```{r label="18-site-trends-PM10_25",fig.height=4.4}
+load(paste(base.dir,"data/",curr.year,"/PM10_25trends2005_",curr.year,".Rdata",sep=""))
+txt <- c("Decreasing > 0.2 ug/m^3/yr","Decreasing < 0.2 ug/m^3/yr",
+  "No Significant Trend","Increasing < 0.2 ug/m^3/yr","Increasing > 0.2 ug/m^3/yr")
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 0.2,4,5),ifelse(slope > -0.2,2,1))),
+  pval=pm10_25.site.avg$pval,slope=pm10_25.site.avg$slope)
+ind <- as.integer(names(table(cat))); r <- order(abs(pm10_25.site.avg$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+layout(mat=matrix(c(1,2),2,1),width=1,height=c(1,0.15))
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=pm10_25.site.avg$longitude[r],y=pm10_25.site.avg$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',cex=0.75,col="black",
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+```
+**Figure 20:** Site-level trends in annual average PM~10-2.5~ concentrations based on data from 2005 through `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs), trends computed using R statistical software.
+
+```{r label="19-national-trends-PM25"}
+pm25.trend.dvs.ann <- apply(pm25.site.dvs.ann[,-c(1:3)],2,quantile,probs=c(0.1,0.5,0.9),na.rm=TRUE)
+pm25.trend.dvs.24h <- apply(pm25.site.dvs.24h[,-c(1:3)],2,quantile,probs=c(0.1,0.5,0.9),na.rm=TRUE)
+par(mar=c(3,3,0.5,0.5),mgp=c(2,0.75,0),cex.axis=0.75,cex.lab=0.75)
+plot(x=NULL,y=NULL,type='n',xaxs='i',xaxt='n',xlim=c(2001.5,curr.year+0.5),
+  xlab="",yaxs='i',ylim=c(0,50),ylab="PM2.5 Design Value (ug/m^3)",main="")
+axis(side=1,at=c(2002:curr.year),labels=c(2002:curr.year),las=2)
+polygon(x=c(2001.5,rep(curr.year+0.5,2),2001.5),y=c(0,0,50,50),col="gray80")
+abline(h=seq(5,45,5),v=c(2002:curr.year),col="white")
+lines(x=c(2002:curr.year),y=pm25.trend.dvs.ann[1,1:ny1],lty=2,lwd=2,col="orange3")
+lines(x=c(2002:curr.year),y=pm25.trend.dvs.ann[2,1:ny1],lty=1,lwd=2,col="orange3")
+lines(x=c(2002:curr.year),y=pm25.trend.dvs.ann[3,1:ny1],lty=2,lwd=2,col="orange3")
+lines(x=c(2002:curr.year),y=pm25.trend.dvs.24h[1,1:ny1],lty=2,lwd=2,col="steelblue")
+lines(x=c(2002:curr.year),y=pm25.trend.dvs.24h[2,1:ny1],lty=1,lwd=2,col="steelblue")
+lines(x=c(2002:curr.year),y=pm25.trend.dvs.24h[3,1:ny1],lty=2,lwd=2,col="steelblue")
+abline(h=c(12,35),lty=2,lwd=2,col="black")
+legend("topright",legend=c("10th/90th Percentile Annual DV","Median Annual DV",
+  "10th/90th Percentile 24-hour DV","Median 24-hour DV","PM2.5 NAAQS Levels"),
+  lty=c(2,1,2,1,2),col=c(rep("orange3",2),rep("steelblue",2),"black"),bty='n',lwd=2,cex=0.75)
+```
+**Figure 21:** National trend in PM~2.5~ design values in $\mu$g/m^3^, 2002 to `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+
+```{r label="20-national-trends-PM10"}
+pm10.trend.dvs.24h <- apply(pm10.site.dvs.24h[,-c(1:3)],2,quantile,probs=c(0.1,0.5,0.9),na.rm=TRUE)
+par(mar=c(3,3,0.5,0.5),mgp=c(2,0.75,0),cex.axis=0.75,cex.lab=0.75)
+plot(x=NULL,y=NULL,type='n',xaxs='i',xaxt='n',xlim=c(1999.5,curr.year+0.5),
+  xlab="",yaxs='i',ylim=c(0,250),ylab="PM10 Design Concentration (ug/m^3)",main="")
+axis(side=1,at=c(2000:curr.year),labels=c(2000:curr.year),las=2)
+polygon(x=c(1999.5,rep(curr.year+0.5,2),1999.5),y=c(0,0,250,250),col="gray80")
+abline(h=seq(20,240,20),v=c(2000:curr.year),col="white")
+lines(x=c(2000:curr.year),y=pm10.trend.dvs.24h[1,1:ny2],lty=2,lwd=2,col="steelblue")
+lines(x=c(2000:curr.year),y=pm10.trend.dvs.24h[2,1:ny2],lty=1,lwd=2,col="steelblue")
+lines(x=c(2000:curr.year),y=pm10.trend.dvs.24h[3,1:ny2],lty=2,lwd=2,col="steelblue")
+abline(h=150,lty=2,lwd=2,col="black")
+legend("topright",legend=c("10th/90th Percentile PM10 DC","Median PM10 DC","PM10 NAAQS Level"),
+  lty=c(2,1,2),col=c(rep("steelblue",2),"black"),bty='n',lwd=2,cex=0.75)
+```
+**Figure 22:** National trend in PM~10~ design concentrations in $\mu$g/m^3^, 2000 to `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs).
+
+\newpage
+
+|      Figure 23 has a map with pie charts showing the major PM~2.5~ species as a fraction of total mass as measured by selected NCore, CSN, and IMPROVE sites during the `r params$curr.year-2` to `r params$curr.year` period. The six species shown are sulfates (SO~4~), nitrates (NO~3~), elemental carbon (EC), organic carbon (OC), crustal material, and sea salt. The pie charts are located at each monitoring site on the map. This figure portrays several aspects of regional variability in PM~2.5~, for example, large portions of total PM~2.5~ can be attributed to sulfates in the Appalachian region, nitrates in the upper Midwest, OC in the Pacific Northwest, crustal material in the southwest, and sea salt in coastal areas.
+
+|      Figure 24 shows the average concentrations for four PM~2.5~ components (sulfates, nitrates, EC, and OC) based on data collected during the `r params$curr.year-2` to `r params$curr.year` period. From this figure it is apparent that sulfate concentrations are highest in the Ohio River valley and along the Gulf of Mexico, while nitrate concentrations are highest in the upper Midwest, along the mid-atlantic urban corridor, and in parts of California. EC and OC are spatially more variable, with the highest sites scattered across the country. EC concentrations tend to be higher near urban areas, especially those with large industrial sources, while OC tends to be more concentrated in rural areas, with impacts from prescribed burns, wildfires, and residential wood smoke.
+
+|      Figure 25 shows trends in annual average concentrations for sulfates, nitrates, EC, and OC based on sites that collected data for at least `r ceiling(0.75*(ny1-4))` out of `r ny1-4` years from 2006 to `r params$curr.year`[^6]. Broad national reductions in SO~2~ emissions have resulted in significant reductions in sulfate concentrations nationally and especially in the eastern U.S. Similarly, reductions in NO~X~ emissions have resulted in significant decreasing trends in nitrates in most of the U.S., especially in areas where nitrate concentrations were historically highest. EC and OC concentrations were more variable, with some sites showing significant decreases and the remaining sites having no clear trend.
+
+\newpage
+\blandscape
+
+```{r label="21-species-piecharts",fig.width=10,fig.height=5,fig.align="center"}
+## Load daily speciation data for most recent 3 years, calculate average percent values
+load(paste(base.dir,"data/",curr.year,"/nonreg_monitors_",curr.year-2,"_",curr.year,".Rdata",sep=""))
+load(paste(base.dir,"data/",curr.year,"/PM25spec_daily",curr.year-2,"_",curr.year,".Rdata",sep=""))
+daily <- na.omit(ddply(pm25.spec.daily,c("site","date"),summarize,no3=max.na(no3),oc=max.na(oc),
+  ec=max.na(ec),so4=max.na(so4),crustal=max.na(crustal),seasalt=max.na(seasalt)))
+daily$total <- apply(daily[-c(1:2)],1,sum)
+vals <- subset(ddply(daily,"site",summarize,obs=length(date),total=mean(total),no3=mean(no3),
+  oc=mean(oc),ec=mean(ec),so4=mean(so4),crustal=mean(crustal),seasalt=mean(seasalt)),obs >= 200)
+pcts <- data.frame(site=vals$site,t(apply(vals[,-c(1:3)],1,function(x) round(100*x/sum(x),1))))
+pm25.spec.monitors$site <- substr(pm25.spec.monitors$id,1,9)
+pm25.spec.monitors$type <- sapply(pm25.spec.monitors$network,function(x) ifelse(x == "NCORE","NCORE",
+  ifelse(grepl("CSN",x),"CSN",ifelse(x == "IMPROVE","IMPROVE","OTHER"))))
+pm25.spec.monitors$rank <- sapply(pm25.spec.monitors$type,switch,NCORE=1,CSN=2,IMPROVE=3,OTHER=4)
+pm25.spec.monitors <- pm25.spec.monitors[order(pm25.spec.monitors$site,pm25.spec.monitors$rank),]
+sites <- subset(pm25.spec.monitors,!duplicated(site),c("site","site_name","state_name","county_name",
+  "cbsa_name","type","latitude","longitude"))
+map.vals <- merge(sites,merge(vals[,c("site","total")],pcts,by="site"),by="site")
+pie.colors <- c("#FFFF00","#FF0000","#00FFFF","#000000","#A52A2A","#0000FF")
+
+## Add pie charts for CSN/NCore sites in urban areas (in a CBSA)
+urban <- subset(map.vals,type %in% c("CSN","NCORE") & cbsa_name != " ")
+keep <- ddply(urban,"cbsa_name",summarize,site=site[which.max(total)])
+urban <- subset(urban,site %in% keep$site)
+urban <- urban[order(urban$total),]
+draw.map("state",col="gray95")
+for (i in 1:nrow(urban)) {
+  if (urban$state_name[i] == "Alaska") {
+    urban$longitude[i] <- scale(urban$longitude[i],186,3)
+    urban$latitude[i] <- scale(urban$latitude[i],-21,3)
+  }
+  if (urban$state_name[i] == "Hawaii") {
+    urban$longitude[i] <- scale(urban$longitude[i],-65,1)
+    urban$latitude[i] <- scale(urban$latitude[i],-6,1)
+  }
+  pie.chart(x=unlist(urban[i,c("so4","no3","oc","ec","crustal","seasalt")]),labels="",
+    radius=0.5,add=TRUE,x.ctr=urban$longitude[i],y.ctr=urban$latitude[i],col=pie.colors)
+}
+
+## Add pie chart for IMPROVE sites based on distance from other sites to avoid overlap
+keep <- urban; rural <- subset(map.vals,type == "IMPROVE"); max.dist <- 100;
+while(max.dist > 1) {
+  dist <- rdist(rural[,c("longitude","latitude")],keep[,c("longitude","latitude")])
+  min.dist <- apply(dist,1,min); site.add <- which.max(min.dist);
+  keep <- rbind(keep,rural[site.add,]); rural <- rural[-c(site.add),];
+  max.dist <- max(min.dist);
+}
+keep <- keep[order(keep$total),]
+for (i in 1:nrow(keep)) {
+  if (keep$state_name[i] == "Alaska") {
+    keep$longitude[i] <- scale(keep$longitude[i],186,3)
+    keep$latitude[i] <- scale(keep$latitude[i],-21,3)
+  }
+  if (keep$state_name[i] == "Hawaii") {
+    keep$longitude[i] <- scale(keep$longitude[i],-65,1)
+    keep$latitude[i] <- scale(keep$latitude[i],-6,1)
+  }
+  pie.chart(x=unlist(keep[i,c("so4","no3","oc","ec","crustal","seasalt")]),labels="",
+    radius=0.5,add=TRUE,x.ctr=keep$longitude[i],y.ctr=keep$latitude[i],col=pie.colors)
+}
+## Add legend pie chart in bottom right corner
+pie.chart(x=rep(1,6),labels=c("Sulfates","Nitrates","OC","EC","Crustal","Sea Salt"),
+  radius=2,add=TRUE,x.ctr=-73,y.ctr=30,col=pie.colors,cex=0.75)
+```
+**Figure 23:** Map showing pie charts of PM~2.5~ component species at selected U.S. monitoring sites based on `r params$curr.year-2`-`r params$curr.year` data. **Source:** [AQS](https://www.epa.gov/aqs).
+
+```{r label="22-species-avgconc",fig.width=10,fig.height=7,fig.align="center"}
+load(paste(base.dir,"data/",curr.year,"/nonreg_monitors_",curr.year-2,"_",curr.year,".Rdata",sep=""))
+load(paste(base.dir,"data/",curr.year,"/PM25spec_annual2002_",curr.year,".Rdata",sep=""))
+pm25.spec.monitors$site <- substr(pm25.spec.monitors$id,1,9)
+pm25.spec.sites <- subset(pm25.spec.monitors,!duplicated(site),c("site","latitude","longitude"))
+layout(mat=matrix(c(1:8),4,2),width=c(1,1),height=c(1,0.1,1,0.1))
+
+## Sulfate average concentration map
+t <- subset(ddply(pm25.spec,c("site","year"),summarize,so4=max.na(so4)),year >= curr.year-2)
+map.vals <- na.omit(merge(pm25.spec.sites,ddply(t,c("site"),summarize,so4=mean(so4))))
+vals <- map.vals$so4; o <- order(vals);
+colors <- c("blue3","cyan3","yellow3","orange3","red3"); bins <- c(0.5,1,1.5,2); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(0,bins); bin.max <- c(bins-0.01,round(max(vals),2));
+n.sites <- table(cut(vals,breaks=c(0,bins,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(bin.min," - ",bin.max," ug/m^3 (",n.sites," sites)",sep="")
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=map.vals$longitude[o],y=map.vals$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+text(x=(par("usr")[2]+par("usr")[1])/2,y=par("usr")[4],labels="Sulfates",pos=1,cex=1.5)
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,
+  pch=21,col="black",pt.bg=colors[keep],ncol=3)
+
+## Nitrate average concentration map
+t <- subset(ddply(pm25.spec,c("site","year"),summarize,no3=max.na(no3)),year >= curr.year-2)
+map.vals <- na.omit(merge(pm25.spec.sites,ddply(t,c("site"),summarize,no3=mean(no3))))
+vals <- map.vals$no3; o <- order(vals);
+colors <- c("blue3","cyan3","yellow3","orange3","red3"); bins <- c(0.5,1,1.5,2); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(0,bins); bin.max <- c(bins-0.01,round(max(vals),2));
+n.sites <- table(cut(vals,breaks=c(0,bins,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(bin.min," - ",bin.max," ug/m^3 (",n.sites," sites)",sep="")
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=map.vals$longitude[o],y=map.vals$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+text(x=(par("usr")[2]+par("usr")[1])/2,y=par("usr")[4],labels="Nitrates",pos=1,cex=1.5)
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,
+  pch=21,col="black",pt.bg=colors[keep],ncol=3)
+
+## EC average concentration map
+t <- subset(ddply(pm25.spec,c("site","year"),summarize,ec=max.na(ec)),year >= curr.year-2)
+map.vals <- na.omit(merge(pm25.spec.sites,ddply(t,c("site"),summarize,ec=mean(ec))))
+vals <- map.vals$ec; o <- order(vals);
+colors <- c("blue3","cyan3","yellow3","orange3","red3"); bins <- c(0.25,0.5,0.75,1); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(0,bins); bin.max <- c(bins-0.01,round(max(vals),2));
+n.sites <- table(cut(vals,breaks=c(0,bins,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(bin.min," - ",bin.max," ug/m^3 (",n.sites," sites)",sep="")
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=map.vals$longitude[o],y=map.vals$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+text(x=(par("usr")[2]+par("usr")[1])/2,y=par("usr")[4],labels="EC",pos=1,cex=1.5)
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,
+  pch=21,col="black",pt.bg=colors[keep],ncol=3)
+
+## OC average concentration map
+t <- subset(ddply(pm25.spec,c("site","year"),summarize,oc=max.na(oc)),year >= curr.year-2)
+map.vals <- na.omit(merge(pm25.spec.sites,ddply(t,c("site"),summarize,oc=mean(oc))))
+vals <- map.vals$oc; o <- order(vals);
+colors <- c("blue3","cyan3","yellow3","orange3","red3"); bins <- c(1,2,3,4); 
+pt.col <- assign.colors(vals,discrete=TRUE,breaks=bins,palette=colors)
+bin.min <- c(0,bins); bin.max <- c(bins-0.01,round(max(vals),2));
+n.sites <- table(cut(vals,breaks=c(0,bins,Inf))); keep <- which(n.sites > 0);
+legend.lab <- paste(bin.min," - ",bin.max," ug/m^3 (",n.sites," sites)",sep="")
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=map.vals$longitude[o],y=map.vals$latitude[o],
+  proj.args=pa,pch=21,col="black",bg=pt.col[o])
+text(x=(par("usr")[2]+par("usr")[1])/2,y=par("usr")[4],labels="OC",pos=1,cex=1.5)
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.lab[keep],bty='n',cex=0.75,
+  pch=21,col="black",pt.bg=colors[keep],ncol=3)
+```
+**Figure 24:** Average concentrations for sulfates (top left), nitrates (bottom left), elemental carbon (top right), and organic carbon (bottom right) at U.S. monitoring sites based on `r params$curr.year-2`-`r params$curr.year` data. **Source:** [AQS](https://www.epa.gov/aqs).
+
+```{r label="23-species-trends",fig.width=10,fig.height=7,fig.align="center"}
+load(paste(base.dir,"data/",curr.year,"/nonreg_monitors_",curr.year-2,"_",curr.year,".Rdata",sep=""))
+load(paste(base.dir,"data/",curr.year,"/PM25spec_trends2006_",curr.year,".Rdata",sep=""))
+layout(mat=matrix(c(1:8),4,2),width=c(1,1),height=c(1,0.1,1,0.1))
+pt.col <- c("#0000FFFF","#AAAAFFFF","#FFFFFFFF","#FFAAAAFF","#FF0000FF")
+pt.cex <- c(1.25,1,0.75,1,1.25); pt.pch <- c(25,25,21,24,24);
+txt <- c("Decreasing > 0.1 ug/m^3/yr","Decreasing < 0.1 ug/m^3/yr",
+  "No Significant Trend","Increasing < 0.1 ug/m^3/yr","Increasing > 0.1 ug/m^3/yr")
+
+## Site-level trends in annual average sulfate concentrations
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 0.1,4,5),ifelse(slope > -0.1,2,1))),
+  pval=so4.site.avg$pval,slope=so4.site.avg$slope)
+ind <- as.integer(names(table(cat))); r <- order(abs(so4.site.avg$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=so4.site.avg$longitude[r],y=so4.site.avg$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+text(x=(par("usr")[2]+par("usr")[1])/2,y=par("usr")[4],labels="Sulfates",pos=1,cex=1.5)
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',cex=0.75,col="black",
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+
+## Site-level trends in annual average nitrate concentrations
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 0.1,4,5),ifelse(slope > -0.1,2,1))),
+  pval=no3.site.avg$pval,slope=no3.site.avg$slope)
+ind <- as.integer(names(table(cat))); r <- order(abs(no3.site.avg$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=no3.site.avg$longitude[r],y=no3.site.avg$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+text(x=(par("usr")[2]+par("usr")[1])/2,y=par("usr")[4],labels="Nitrates",pos=1,cex=1.5)
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',cex=0.75,col="black",
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+
+## Site-level trends in annual average EC concentrations
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 0.1,4,5),ifelse(slope > -0.1,2,1))),
+  pval=ec.site.avg$pval,slope=ec.site.avg$slope)
+ind <- as.integer(names(table(cat))); r <- order(abs(ec.site.avg$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=ec.site.avg$longitude[r],y=ec.site.avg$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+text(x=(par("usr")[2]+par("usr")[1])/2,y=par("usr")[4],labels="EC",pos=1,cex=1.5)
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',cex=0.75,col="black",
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+
+## Site-level trends in annual average OC concentrations
+cat <- mapply(function(pval,slope) ifelse(pval > 0.05,3,
+  ifelse(slope > 0,ifelse(slope < 0.1,4,5),ifelse(slope > -0.1,2,1))),
+  pval=oc.site.avg$pval,slope=oc.site.avg$slope)
+ind <- as.integer(names(table(cat))); r <- order(abs(oc.site.avg$slope));
+legend.txt <- paste(txt[ind]," (",table(cat)," sites)",sep="")
+draw.map("state",proj.args=pa,hires=TRUE,col="gray95")
+add.layer(type="points",x=oc.site.avg$longitude[r],y=oc.site.avg$latitude[r],
+  proj.args=pa,pch=pt.pch[cat][r],col="black",bg=pt.col[cat][r],cex=pt.cex[cat][r])
+text(x=(par("usr")[2]+par("usr")[1])/2,y=par("usr")[4],labels="OC",pos=1,cex=1.5)
+par(mar=c(0,0,0,0))
+plot(x=NULL,y=NULL,type='n',axes=FALSE,xlim=c(0,1),ylim=c(0,1))
+legend("bottom",legend=legend.txt,bty='n',cex=0.75,col="black",
+  pch=pt.pch[ind],pt.bg=pt.col[ind],pt.cex=pt.cex[ind],ncol=2)
+```
+**Figure 25:** Site-level trends in annual average concentrations for sulfates (top left), nitrates (bottom left), elemental carbon (top right), and organic carbon (bottom right)  based on data from 2006 through `r params$curr.year`. **Source:** [AQS](https://www.epa.gov/aqs), trends computed using R statistical software.
+
+\elandscape
+\newpage
+
+## Additional Resources
+
+- [Particulate Matter (PM) Pollution](https://www.epa.gov/pm-pollution)
+
+- [Reviewing National Ambient Air Quality Standards (NAAQS): Scientific and Technical Information](https://www.epa.gov/naaqs)
+
+- [Air Emissions Inventories](https://www.epa.gov/air-emissions-inventories)
+
+- [Ambient Monitoring Technology Information Center (AMTIC)](https://www.epa.gov/amtic)
+
+- [Air Quality Design Values](https://www.epa.gov/air-trends/air-quality-design-values)
+
+- [National Air Quality: Status and Trends of Key Air Pollutants](https://www.epa.gov/air-trends)
+
+- [Air Data: Air Quality Data Collected at Outdoor Monitors Across the U.S.](https://www.epa.gov/outdoor-air-quality-data)
+
+[^1]: Aerodynamic diameter is the size of a sphere of unit density (i.e., 1 g/cm^3^) that has the same terminal settling velocity as the particle of interest.
+[^2]: For the purposes of this document, wildfires are considered to be natural emissions and thus are not included in Figure 4.
+[^3]: The IMPROVE algorithm is an equation to estimate light extinction based on the measured concentration of several PM components and is used to track visibility progress in the Regional Haze Rule. More information about the IMPROVE algorithm is at available at the [IMPROVE website](http://vista.cira.colostate.edu/Improve/the-improve-algorithm).
+[^4]: For Table 2, monitoring sites in Alaska were assigned to the Northwest Region and monitoring sites in Hawaii were assigned to the West region.
+[^5]: The table lookup procedure is documented in Section 6.3 of the 1987 EPA guidance document [*PM~10~ SIP Development Guideline*](https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P1006IKV.TXT).
+[^6]: Although PM~2.5~ speciation monitoring has been conducted since 2000, the trends in Figure 25 begin in 2006 to avoid losing CSN sites, which experienced a change in EC and OC sampling methods between 2007 and 2010.
